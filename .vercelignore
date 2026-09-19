@@ -1,0 +1,47 @@
+# ==========================================
+# AttendanceAI Vercel Deployment Ignore
+# ==========================================
+
+# Gradio local interface (run locally via run_gradio.bat)
+gradio/**
+
+# Backend unit and integration tests
+backend/tests/**
+
+# Local SQLite databases (production uses Neon PostgreSQL)
+backend/attendance.db
+backend/test_alembic_fresh.db
+*.db
+*.sqlite
+*.sqlite3
+
+# Local file uploads
+backend/uploads/**
+uploads/**
+
+# Pytest and runtime caches
+backend/.pytest_cache/**
+.pytest_cache/**
+backend/scratch_test_multi_what_if.py
+*scratch*
+scratch/**
+
+# Windows batch scripts and Dockerfiles
+*.bat
+docker-compose.yml
+backend/Dockerfile
+gradio/Dockerfile
+
+# Python bytecode
+**/__pycache__/**
+*.pyc
+*.pyo
+
+# Version control
+.git/**
+.github/**
+
+# Documentation files not required by runtime
+DEPLOYMENT.md
+DEPLOYMENT_ENV_MAP.md
+understand.md

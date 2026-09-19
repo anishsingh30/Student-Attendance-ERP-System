@@ -3,6 +3,11 @@
   "buildCommand": "cd frontend && npm install && npm run build",
   "outputDirectory": "frontend/dist",
   "framework": "vite",
+  "functions": {
+    "api/index.py": {
+      "excludeFiles": "{frontend/**,node_modules/**,gradio/**,backend/tests/**,backend/alembic/**,backend/attendance.db,backend/test_alembic_fresh.db,backend/uploads/**,docker-compose.yml,**/*.md,**/*.bat}"
+    }
+  },
   "rewrites": [
     {
       "source": "/api/(.*)",
