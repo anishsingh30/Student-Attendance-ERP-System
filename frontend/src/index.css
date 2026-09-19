@@ -1,0 +1,156 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-[#F7F8FA] dark:bg-black text-[#111827] dark:text-white font-sans antialiased min-h-screen selection:bg-blue-100 selection:text-blue-900;
+  }
+}
+
+/* Custom crisp scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #F3F4F6;
+}
+
+.dark ::-webkit-scrollbar-track {
+  background: #0A0A0A;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #D1D5DB;
+  border-radius: 9999px;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: #262626;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #9CA3AF;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #383838;
+}
+
+/* Reusable ERP Core Cards & Panels */
+.glass-panel {
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+}
+
+.dark .glass-panel {
+  background: #0A0A0A;
+  border: 1px solid #262626;
+}
+
+.glass-card {
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04);
+  transition: all 0.18s ease;
+}
+
+.dark .glass-card {
+  background: #0A0A0A;
+  border: 1px solid #262626;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.4);
+}
+
+.glass-card:hover {
+  border-color: #D1D5DB;
+  box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.05);
+}
+
+.dark .glass-card:hover {
+  border-color: #383838;
+  box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.5);
+}
+
+/* Standardized ERP Micro-Interaction Classes */
+.erp-card {
+  background-color: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04);
+  transition: all 0.18s ease;
+}
+
+.dark .erp-card {
+  background-color: #0A0A0A;
+  border: 1px solid #262626;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.4);
+}
+
+.erp-card-interactive {
+  background-color: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04);
+  transition: all 0.18s ease;
+}
+
+.dark .erp-card-interactive {
+  background-color: #0A0A0A;
+  border: 1px solid #262626;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.4);
+}
+
+.erp-card-interactive:hover {
+  transform: translateY(-2px);
+  border-color: #CBD5E1;
+  box-shadow: 0 6px 16px -2px rgba(0, 0, 0, 0.07);
+}
+
+.dark .erp-card-interactive:hover {
+  border-color: #383838;
+  box-shadow: 0 6px 16px -2px rgba(0, 0, 0, 0.5);
+}
+
+.erp-button {
+  transition: all 0.18s ease;
+}
+
+.erp-button:hover {
+  transform: scale(1.01);
+}
+
+.erp-button:active {
+  transform: scale(0.98);
+}
+
+.erp-nav-item {
+  transition: all 0.18s ease;
+}
+
+.erp-nav-item:hover {
+  transform: translateX(3px);
+  background-color: #F1F5F9;
+  color: #1D4ED8;
+}
+
+.dark .erp-nav-item:hover {
+  background-color: #141414;
+  color: #60A5FA;
+}
+
+.erp-table-row {
+  transition: background-color 0.15s ease;
+}
+
+.erp-table-row:hover {
+  background-color: #F8FAFC;
+}
+
+.dark .erp-table-row:hover {
+  background-color: #111111;
+}
+

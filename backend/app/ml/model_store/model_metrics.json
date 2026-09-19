@@ -1,0 +1,85 @@
+{
+  "model_version": "v2.1.0-rf-leakage-free",
+  "algorithm": "RandomForestClassifier",
+  "hyperparameters": {
+    "n_estimators": "100",
+    "max_depth": "5",
+    "min_samples_split": "2",
+    "random_state": "42",
+    "class_weight": "balanced"
+  },
+  "feature_schema": [
+    "overall_percentage",
+    "recent_5_rate",
+    "consecutive_absences",
+    "sessions_conducted",
+    "classes_remaining",
+    "days_since_last_presence"
+  ],
+  "target_definition": "Attendance Trajectory Shortage Risk Tier (0=SAFE, 1=WARNING, 2=SHORTAGE, 3=CRITICAL)",
+  "split_methodology": "GroupShuffleSplit (grouped by student_id to prevent intra-student correlation leakage)",
+  "total_empirical_samples": 144,
+  "raw_train_samples": 108,
+  "augmented_train_samples": 108,
+  "test_samples": 36,
+  "class_distribution": {
+    "SAFE": 89,
+    "WARNING": 8,
+    "SHORTAGE": 18,
+    "CRITICAL": 29
+  },
+  "leakage_prevention_verified": true,
+  "evaluated_at": "2026-09-19T19:20:25.520557+00:00",
+  "metrics": {
+    "accuracy": 1.0,
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1_score": 1.0
+  },
+  "baseline_comparison": {
+    "baseline_accuracy": 0.8889,
+    "baseline_precision": 0.963,
+    "baseline_recall": 0.8889,
+    "baseline_f1_score": 0.9081
+  },
+  "labels": [
+    "SAFE",
+    "WARNING",
+    "SHORTAGE",
+    "CRITICAL"
+  ],
+  "confusion_matrix": [
+    [
+      15,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      2,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      6,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      13
+    ]
+  ],
+  "feature_importances": {
+    "overall_percentage": 0.764,
+    "recent_5_rate": 0.0955,
+    "consecutive_absences": 0.0563,
+    "sessions_conducted": 0.0088,
+    "classes_remaining": 0.008,
+    "days_since_last_presence": 0.0674
+  }
+}
