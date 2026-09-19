@@ -28,9 +28,13 @@ async def lifespan(app: FastAPI):
     else:
         logger.info("Production mode: schema management governed via Alembic migrations.")
 
-    attendance_scheduler.start()
+    if settings.SCHEDULER_IN_PROCESS and not os.getenv("VERCEL"):
+        attendance_scheduler.start()
+    else:
+        logger.info("In-process scheduler disabled; scheduled scans triggered via cron or manual dispatch.")
     yield
-    attendance_scheduler.stop()
+    if settings.SCHEDULER_IN_PROCESS and not os.getenv("VERCEL"):
+        attendance_scheduler.stop()
 
 
 app = FastAPI(
@@ -106,7 +110,12 @@ import os
 from fastapi.staticfiles import StaticFiles
 
 uploads_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "uploads")
-os.makedirs(uploads_path, exist_ok=True)
+try:
+    os.makedirs(uploads_path, exist_ok=True)
+except OSError:
+    # Serverless platforms (such as Vercel) have a read-only code root; use /tmp for ephemeral uploads
+    uploads_path = "/tmp/uploads"
+    os.makedirs(uploads_path, exist_ok=True)
 app.mount("/uploads", StaticFiles(directory=uploads_path), name="uploads")
 
 # Include Routers
@@ -168,8 +177,10 @@ def health_readiness():
             db.close()
 
     # 2. Scheduler check
+    scheduler_mode = "serverless_cron" if os.getenv("VERCEL") or not settings.SCHEDULER_IN_PROCESS else "in_process"
     checks["scheduler"] = {
-        "status": "running" if attendance_scheduler.is_running else "stopped",
+        "mode": scheduler_mode,
+        "status": "running" if attendance_scheduler.is_running else ("active_via_cron" if scheduler_mode == "serverless_cron" else "stopped"),
         "interval_hours": attendance_scheduler.interval_hours
     }
 

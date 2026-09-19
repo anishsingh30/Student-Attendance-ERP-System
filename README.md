@@ -270,7 +270,17 @@ docker compose up --build -d
 
 ---
 
-## 🧪 11. Automated Test Suite
+## ⚡ 11. Vercel Production Deployment
+
+The project is natively structured for **Unified Monorepo Deployment on Vercel**:
+- **Single Vercel Project**: Builds React frontend to `frontend/dist` and executes FastAPI ASGI backend via `api/index.py`.
+- **Stateless Serverless Execution**: In-process background loops are automatically replaced by **Vercel Cron Jobs** targeting `/api/scheduler/cron-trigger`.
+- **External PostgreSQL Required**: Production database state must reside on a managed PostgreSQL provider (Neon, Supabase, AWS RDS). Set `DATABASE_URL=postgresql://...`.
+- **Step-by-step setup and environment variables**: See **[DEPLOYMENT.md](file:///a:/Flexi/DEPLOYMENT.md#7-vercel-production-deployment-guide)**.
+
+---
+
+## 🧪 12. Automated Test Suite
 
 The project includes an automated test suite with **125 tests and 100% pass rate**:
 ```bash

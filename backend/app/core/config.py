@@ -94,6 +94,8 @@ class Settings(BaseSettings):
     # Automated Attendance Monitoring Scheduler
     SCHEDULER_ENABLED: bool = True
     SCHEDULER_INTERVAL_HOURS: int = 24
+    SCHEDULER_IN_PROCESS: bool = True
+    CRON_SECRET: str = ""
 
     # Default University Attendance Thresholds
     DEFAULT_THRESHOLD_GREEN: float = 80.0
@@ -121,6 +123,15 @@ class Settings(BaseSettings):
         # Resolve SECRET_KEY after fields are loaded from env_file/os.environ
         resolved = _resolve_secret_key(self.SECRET_KEY, self.ENVIRONMENT)
         object.__setattr__(self, "SECRET_KEY", resolved)
+
+        # Normalize postgres:// to postgresql:// for SQLAlchemy 2.0 / Alembic
+        if self.DATABASE_URL and self.DATABASE_URL.startswith("postgres://"):
+            normalized_url = self.DATABASE_URL.replace("postgres://", "postgresql://", 1)
+            object.__setattr__(self, "DATABASE_URL", normalized_url)
+
+        # In serverless environments (e.g. Vercel), disable in-process scheduler loop by default
+        if os.getenv("VERCEL") == "1" or os.getenv("AWS_LAMBDA_FUNCTION_NAME"):
+            object.__setattr__(self, "SCHEDULER_IN_PROCESS", False)
 
         # Parse CORS_ALLOWED_ORIGINS if set as comma-separated string
         if self.CORS_ALLOWED_ORIGINS:

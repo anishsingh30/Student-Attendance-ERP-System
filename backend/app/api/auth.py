@@ -18,7 +18,11 @@ from app.services.audit_service import log_system_action
 router = APIRouter(prefix="/auth", tags=["Authentication"])
 
 AVATAR_UPLOAD_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "uploads", "avatars")
-os.makedirs(AVATAR_UPLOAD_DIR, exist_ok=True)
+try:
+    os.makedirs(AVATAR_UPLOAD_DIR, exist_ok=True)
+except OSError:
+    AVATAR_UPLOAD_DIR = "/tmp/uploads/avatars"
+    os.makedirs(AVATAR_UPLOAD_DIR, exist_ok=True)
 MAX_PHOTO_SIZE = 2 * 1024 * 1024  # 2MB
 ALLOWED_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp"}
 
