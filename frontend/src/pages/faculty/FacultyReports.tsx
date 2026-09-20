@@ -147,11 +147,11 @@ export const FacultyReports: React.FC = () => {
             Export classroom attendance registers and compliance rosters.
           </p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 w-full sm:w-auto">
           <a
             href={getCsvDownloadUrl()}
             download
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white dark:bg-[#121215] hover:bg-slate-50 dark:hover:bg-[#18181B] border border-slate-200 dark:border-[#27272A] text-slate-700 dark:text-zinc-300 rounded-md text-xs font-medium shadow-xs transition-colors"
+            className="w-full sm:w-auto justify-center inline-flex items-center gap-1.5 px-3 py-1.5 bg-white dark:bg-[#121215] hover:bg-slate-50 dark:hover:bg-[#18181B] border border-slate-200 dark:border-[#27272A] text-slate-700 dark:text-zinc-300 rounded-md text-xs font-medium shadow-xs transition-colors"
           >
             <Download className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
             <span>Export Course CSV</span>
@@ -160,13 +160,13 @@ export const FacultyReports: React.FC = () => {
       </div>
 
       {/* Course Selector & Search Toolbar */}
-      <div className="flex flex-wrap items-center justify-between gap-3 bg-white dark:bg-[#121215] p-3 rounded-lg border border-slate-200 dark:border-[#27272A] shadow-xs">
-        <div className="flex items-center gap-2">
-          <label className="text-[11px] font-semibold uppercase text-slate-500 dark:text-zinc-400">Course:</label>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white dark:bg-[#121215] p-3 rounded-lg border border-slate-200 dark:border-[#27272A] shadow-xs">
+        <div className="flex items-center gap-2 w-full sm:w-auto">
+          <label className="text-[11px] font-semibold uppercase text-slate-500 dark:text-zinc-400 shrink-0">Course:</label>
           <select
             value={selectedSubjectId}
             onChange={(e) => handleSubjectChange(Number(e.target.value))}
-            className="px-2.5 py-1 text-xs bg-white dark:bg-[#18181B] border border-slate-200 dark:border-[#27272A] rounded-md text-slate-900 dark:text-zinc-100 focus:outline-none focus:ring-1 focus:ring-blue-600"
+            className="w-full sm:w-auto max-w-full px-2.5 py-1 text-xs bg-white dark:bg-[#18181B] border border-slate-200 dark:border-[#27272A] rounded-md text-slate-900 dark:text-zinc-100 focus:outline-none focus:ring-1 focus:ring-blue-600"
           >
             {subjects.map((sub) => (
               <option key={sub.id} value={sub.id}>
@@ -176,8 +176,8 @@ export const FacultyReports: React.FC = () => {
           </select>
         </div>
 
-        <div className="flex items-center gap-2">
-          <div className="relative min-w-[200px]">
+        <div className="flex items-center gap-2 w-full sm:w-auto">
+          <div className="relative w-full sm:w-auto sm:min-w-[200px]">
             <input
               type="text"
               value={search}

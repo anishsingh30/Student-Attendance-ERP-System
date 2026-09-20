@@ -142,7 +142,7 @@ export const StudentAlerts: React.FC = () => {
                   <h3 className="text-sm font-bold text-slate-900 dark:text-zinc-100">{a.title}</h3>
                 </div>
 
-                <div className="text-right sm:self-center">
+                <div className="text-left sm:text-right sm:self-center">
                   <span className="text-base font-bold text-slate-900 dark:text-zinc-100">{a.current_percentage}%</span>
                   <span className="text-[11px] text-slate-500 dark:text-zinc-400 block">
                     {a.classes_attended} / {a.classes_conducted} sessions (Requirement: {a.required_percentage}%)

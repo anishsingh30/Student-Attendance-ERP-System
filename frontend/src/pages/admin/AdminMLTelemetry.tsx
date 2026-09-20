@@ -118,11 +118,11 @@ export const AdminMLTelemetry: React.FC = () => {
         </div>
 
         {/* Action Toolbar */}
-        <div className="flex items-center gap-2.5">
+        <div className="flex flex-wrap items-center gap-2.5 w-full sm:w-auto">
           <button
             onClick={fetchMetrics}
             disabled={loading}
-            className="inline-flex items-center gap-1.5 py-1.5 px-3 bg-white dark:bg-[#18181B] border border-slate-200 dark:border-[#27272A] text-slate-700 dark:text-zinc-300 hover:bg-slate-50 dark:hover:bg-zinc-800 text-xs font-medium rounded-md shadow-xs transition-colors cursor-pointer disabled:opacity-50"
+            className="flex-1 sm:flex-initial justify-center inline-flex items-center gap-1.5 py-1.5 px-3 bg-white dark:bg-[#18181B] border border-slate-200 dark:border-[#27272A] text-slate-700 dark:text-zinc-300 hover:bg-slate-50 dark:hover:bg-zinc-800 text-xs font-medium rounded-md shadow-xs transition-colors cursor-pointer disabled:opacity-50"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
             <span>Refresh</span>
@@ -130,7 +130,7 @@ export const AdminMLTelemetry: React.FC = () => {
           <button
             onClick={handleRetrain}
             disabled={retrainLoading}
-            className="inline-flex items-center gap-1.5 py-1.5 px-3 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded-md shadow-xs transition-colors cursor-pointer disabled:opacity-50"
+            className="flex-1 sm:flex-initial justify-center inline-flex items-center gap-1.5 py-1.5 px-3 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded-md shadow-xs transition-colors cursor-pointer disabled:opacity-50"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${retrainLoading ? 'animate-spin' : ''}`} />
             <span>{retrainLoading ? 'Retraining...' : 'Retrain Model'}</span>
@@ -263,7 +263,7 @@ export const AdminMLTelemetry: React.FC = () => {
           </div>
 
           {/* KPI Metrics Grid */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
             <div className="bg-white dark:bg-[#121215] border border-slate-200 dark:border-[#27272A] rounded-lg p-4 shadow-xs">
               <span className="text-xs text-slate-500 dark:text-zinc-400 block font-medium mb-1">Empirical Accuracy</span>
               <div className="flex items-baseline gap-2">
@@ -345,7 +345,7 @@ export const AdminMLTelemetry: React.FC = () => {
 
               {matrix.length > 0 && labels.length > 0 ? (
                 <div className="border border-slate-200 dark:border-[#27272A] rounded-md overflow-x-auto text-xs">
-                  <table className="w-full border-collapse text-center">
+                  <table className="w-full min-w-[420px] border-collapse text-center">
                     <thead>
                       <tr className="bg-slate-50 dark:bg-[#18181B] text-slate-700 dark:text-zinc-300 font-semibold border-b border-slate-200 dark:border-[#27272A]">
                         <th className="py-2.5 px-3 text-left bg-slate-100/70 dark:bg-[#141416]">Actual \ Predicted</th>

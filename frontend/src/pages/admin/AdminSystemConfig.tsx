@@ -257,18 +257,18 @@ export const AdminSystemConfig: React.FC = () => {
               </div>
             </div>
 
-            <div className="flex gap-2 pt-1">
+            <div className="flex flex-col sm:flex-row gap-2 pt-1">
               <button
                 onClick={handleSaveScheduler}
                 disabled={actionLoading}
-                className="flex-1 py-1.5 px-3 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded-md shadow-xs transition-colors cursor-pointer"
+                className="w-full sm:flex-1 py-1.5 px-3 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded-md shadow-xs transition-colors cursor-pointer text-center"
               >
                 Save Schedule Settings
               </button>
               <button
                 onClick={handleTriggerRun}
                 disabled={actionLoading}
-                className="inline-flex items-center justify-center gap-1.5 py-1.5 px-3 bg-slate-900 dark:bg-zinc-800 hover:bg-slate-800 dark:hover:bg-zinc-700 text-white text-xs font-medium rounded-md shadow-xs transition-colors cursor-pointer border border-transparent dark:border-[#27272A] disabled:opacity-50"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 py-1.5 px-3 bg-slate-900 dark:bg-zinc-800 hover:bg-slate-800 dark:hover:bg-zinc-700 text-white text-xs font-medium rounded-md shadow-xs transition-colors cursor-pointer border border-transparent dark:border-[#27272A] disabled:opacity-50"
               >
                 {actionLoading ? (
                   <RefreshCw className="w-3.5 h-3.5 text-emerald-400 animate-spin" />
@@ -337,17 +337,17 @@ export const AdminSystemConfig: React.FC = () => {
               </div>
             </div>
 
-            <div className="flex gap-2 pt-1">
+            <div className="flex flex-col sm:flex-row gap-2 pt-1">
               <a
                 href="/admin/telemetry"
-                className="flex-1 py-1.5 px-3 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded-md shadow-xs transition-colors cursor-pointer text-center inline-flex items-center justify-center"
+                className="w-full sm:flex-1 py-1.5 px-3 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded-md shadow-xs transition-colors cursor-pointer text-center inline-flex items-center justify-center"
               >
                 Inspect Telemetry &amp; Matrix
               </a>
               <button
                 onClick={handleRetrainML}
                 disabled={retrainLoading}
-                className="inline-flex items-center justify-center gap-1 py-1.5 px-3 bg-white dark:bg-[#18181B] border border-slate-200 dark:border-[#27272A] text-slate-700 dark:text-zinc-300 hover:bg-slate-50 dark:hover:bg-zinc-800 text-xs font-medium rounded-md shadow-xs transition-colors cursor-pointer"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-1 py-1.5 px-3 bg-white dark:bg-[#18181B] border border-slate-200 dark:border-[#27272A] text-slate-700 dark:text-zinc-300 hover:bg-slate-50 dark:hover:bg-zinc-800 text-xs font-medium rounded-md shadow-xs transition-colors cursor-pointer"
               >
                 <RefreshCw className={`w-3.5 h-3.5 ${retrainLoading ? 'animate-spin' : ''}`} /> Retrain Model
               </button>

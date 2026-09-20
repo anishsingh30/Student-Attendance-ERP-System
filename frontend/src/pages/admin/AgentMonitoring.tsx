@@ -93,7 +93,7 @@ export const AgentMonitoring: React.FC = () => {
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-2.5 w-full sm:w-auto">
           {engineStatus && (
             <div className="hidden md:block text-right">
               <span className="text-[10px] text-slate-400 dark:text-zinc-500 font-medium">Model Engine:</span>
@@ -104,7 +104,7 @@ export const AgentMonitoring: React.FC = () => {
           <button
             onClick={handleTriggerRun}
             disabled={executing}
-            className="px-3.5 py-1.5 rounded-md bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-xs font-medium text-white shadow-xs transition-colors inline-flex items-center gap-1.5 cursor-pointer"
+            className="w-full sm:w-auto justify-center px-3.5 py-1.5 rounded-md bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-xs font-medium text-white shadow-xs transition-colors inline-flex items-center gap-1.5 cursor-pointer"
           >
             {executing ? (
               <>

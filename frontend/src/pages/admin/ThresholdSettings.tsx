@@ -179,11 +179,11 @@ export const ThresholdSettings: React.FC = () => {
             </p>
           </div>
 
-          <div className="pt-3 border-t border-slate-100 dark:border-[#27272A] flex items-center justify-between">
+          <div className="pt-3 border-t border-slate-100 dark:border-[#27272A] flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5">
             <button
               type="button"
               onClick={handleResetDefaults}
-              className="px-3 py-1.5 rounded-md bg-slate-100 dark:bg-[#18181B] hover:bg-slate-200 dark:hover:bg-[#202025] text-xs font-medium text-slate-700 dark:text-zinc-300 transition-colors inline-flex items-center gap-1.5"
+              className="px-3 py-1.5 rounded-md bg-slate-100 dark:bg-[#18181B] hover:bg-slate-200 dark:hover:bg-[#202025] text-xs font-medium text-slate-700 dark:text-zinc-300 transition-colors inline-flex items-center justify-center gap-1.5"
             >
               <RotateCcw className="w-3.5 h-3.5" />
               <span>Reset Standards (80 / 75 / 65)</span>
@@ -192,7 +192,7 @@ export const ThresholdSettings: React.FC = () => {
             <button
               type="submit"
               disabled={saving}
-              className="px-4 py-1.5 rounded-md bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-xs font-medium text-white transition-colors shadow-xs inline-flex items-center gap-1.5"
+              className="px-4 py-1.5 rounded-md bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-xs font-medium text-white transition-colors shadow-xs inline-flex items-center justify-center gap-1.5"
             >
               <Save className="w-3.5 h-3.5" />
               <span>{saving ? 'Saving...' : 'Save Thresholds'}</span>

@@ -167,10 +167,10 @@ export const StudentDashboard: React.FC = () => {
           </div>
 
           {/* Primary & Secondary Action Groups */}
-          <div className="flex items-center flex-wrap gap-2">
+          <div className="flex items-center flex-wrap gap-2 w-full sm:w-auto">
             <a
               href="/student/attendance"
-              className="erp-btn erp-btn-primary px-3.5 py-2 text-xs font-semibold shadow-xs"
+              className="erp-btn erp-btn-primary flex-1 sm:flex-initial justify-center px-3.5 py-2 text-xs font-semibold shadow-xs"
             >
               <CalendarCheck className="w-4 h-4" />
               <span>View Attendance</span>
@@ -178,7 +178,7 @@ export const StudentDashboard: React.FC = () => {
 
             <a
               href="/student/simulator"
-              className="erp-btn erp-btn-secondary px-3.5 py-2 text-xs font-medium shadow-xs"
+              className="erp-btn erp-btn-secondary flex-1 sm:flex-initial justify-center px-3.5 py-2 text-xs font-medium shadow-xs"
             >
               <Calculator className="w-4 h-4 text-blue-600 dark:text-blue-400" />
               <span>What-If Simulation</span>
@@ -186,23 +186,25 @@ export const StudentDashboard: React.FC = () => {
 
             <div className="h-4 w-px bg-slate-200 dark:border-[#27272A] mx-1 hidden sm:block" />
 
-            <a
-              href="/student/alerts"
-              className="erp-btn erp-btn-secondary p-2 text-slate-600 dark:text-zinc-300"
-              title="Official Notices"
-              aria-label="Official Notices"
-            >
-              <Bell className="w-4 h-4" />
-            </a>
+            <div className="flex items-center gap-2">
+              <a
+                href="/student/alerts"
+                className="erp-btn erp-btn-secondary p-2 text-slate-600 dark:text-zinc-300"
+                title="Official Notices"
+                aria-label="Official Notices"
+              >
+                <Bell className="w-4 h-4" />
+              </a>
 
-            <a
-              href="/profile"
-              className="erp-btn erp-btn-secondary p-2 text-slate-600 dark:text-zinc-300"
-              title="Student Profile"
-              aria-label="Student Profile"
-            >
-              <User className="w-4 h-4" />
-            </a>
+              <a
+                href="/profile"
+                className="erp-btn erp-btn-secondary p-2 text-slate-600 dark:text-zinc-300"
+                title="Student Profile"
+                aria-label="Student Profile"
+              >
+                <User className="w-4 h-4" />
+              </a>
+            </div>
           </div>
         </div>
       </div>
@@ -218,7 +220,7 @@ export const StudentDashboard: React.FC = () => {
           </span>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-5 divide-y md:divide-y-0 md:divide-x divide-slate-100 dark:divide-[#27272A]">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 divide-y sm:divide-y-0 sm:divide-x divide-slate-100 dark:divide-[#27272A]">
           {/* Overall Attendance */}
           <div className="p-4 sm:p-5">
             <span className="text-[11px] font-semibold text-slate-500 dark:text-zinc-400 uppercase tracking-wider block">
@@ -377,7 +379,7 @@ export const StudentDashboard: React.FC = () => {
 
         {/* Academic Table with Sticky Header and Bounded Scrolling */}
         <div className="overflow-x-auto overflow-y-auto max-h-[440px]">
-          <table className="w-full text-left text-xs border-collapse">
+          <table className="w-full min-w-[720px] text-left text-xs border-collapse">
             <thead className="sticky top-0 z-10 bg-slate-50 dark:bg-[#18181B] text-slate-600 dark:text-zinc-400 border-b border-slate-200 dark:border-[#27272A] uppercase tracking-wider font-semibold text-[10px]">
               <tr>
                 <th className="px-4 py-3 bg-slate-50 dark:bg-[#18181B]">Subject</th>

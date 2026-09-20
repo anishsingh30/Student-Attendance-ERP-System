@@ -59,8 +59,8 @@ export const MLTelemetryModal: React.FC<MLTelemetryModalProps> = ({ isOpen, onCl
     : [];
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 dark:bg-black/80 backdrop-blur-xs flex items-center justify-center p-4">
-      <div className="bg-white dark:bg-[#121215] rounded-xl border border-slate-200 dark:border-[#27272A] shadow-xl max-w-2xl w-full p-6 animate-in fade-in duration-200 max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 dark:bg-black/80 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4">
+      <div className="bg-white dark:bg-[#121215] rounded-xl border border-slate-200 dark:border-[#27272A] shadow-xl max-w-2xl w-full p-4 sm:p-6 animate-in fade-in duration-200 max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-[#27272A] mb-5">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-lg bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-900/50 flex items-center justify-center text-blue-600 dark:text-blue-400">
@@ -153,7 +153,7 @@ export const MLTelemetryModal: React.FC<MLTelemetryModalProps> = ({ isOpen, onCl
                   </span>
                 </div>
                 <div className="border border-slate-200 dark:border-[#27272A] rounded-lg overflow-x-auto text-xs">
-                  <table className="w-full border-collapse text-center">
+                  <table className="w-full min-w-[380px] border-collapse text-center">
                     <thead>
                       <tr className="bg-slate-50 dark:bg-[#18181B] text-slate-600 dark:text-zinc-300 font-semibold border-b border-slate-200 dark:border-[#27272A]">
                         <th className="py-2 px-3 text-left bg-slate-100/60 dark:bg-[#141416]">Actual \ Pred</th>

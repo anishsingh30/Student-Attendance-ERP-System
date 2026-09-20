@@ -35,7 +35,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, curr
   }, [currentPath]);
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#09090B] text-slate-900 dark:text-zinc-100 antialiased selection:bg-blue-100 selection:text-blue-900 transition-colors duration-150">
+    <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#09090B] text-slate-900 dark:text-zinc-100 antialiased selection:bg-blue-100 selection:text-blue-900 transition-colors duration-150 overflow-x-hidden">
       <Sidebar 
         currentPath={currentPath} 
         isCollapsed={isCollapsed}
@@ -44,7 +44,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, curr
         onCloseMobile={() => setIsMobileOpen(false)} 
       />
       
-      <div className={`flex flex-col min-h-screen transition-all duration-200 ${
+      <div className={`flex flex-col min-h-screen w-full min-w-0 transition-all duration-200 ${
         isCollapsed ? 'md:pl-16' : 'md:pl-64'
       }`}>
         <Navbar 
@@ -52,7 +52,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, curr
           isSidebarCollapsed={isCollapsed}
           onToggleSidebar={toggleCollapse}
         />
-        <main className="flex-1 p-4 sm:p-6 max-w-7xl w-full mx-auto">
+        <main className="flex-1 px-3 py-4 sm:px-6 sm:py-6 max-w-7xl w-full mx-auto min-w-0">
           {children}
         </main>
       </div>

@@ -325,7 +325,7 @@ export const SubjectManagement: React.FC = () => {
       <div className="bg-white dark:bg-[#121215] p-3 rounded-lg border border-slate-200 dark:border-[#27272A] shadow-xs flex flex-wrap items-center justify-between gap-3 text-xs">
         <div className="flex flex-wrap items-center gap-2.5 flex-1">
           {/* Search Input */}
-          <div className="relative min-w-[200px] flex-1 max-w-sm">
+          <div className="relative min-w-full sm:min-w-[200px] flex-1 sm:max-w-sm">
             <Search className="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 dark:text-zinc-500" />
             <input
               type="text"
@@ -515,28 +515,28 @@ export const SubjectManagement: React.FC = () => {
 
       {/* ADD SUBJECT MODAL */}
       {isAddModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
-          <div className="bg-white dark:bg-[#121215] border border-slate-200 dark:border-[#27272A] rounded-lg max-w-lg w-full p-5 shadow-xl space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-[#27272A]">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-xs">
+          <div className="bg-white dark:bg-[#121215] border border-slate-200 dark:border-[#27272A] rounded-lg max-w-lg w-full max-h-[90vh] flex flex-col p-4 sm:p-5 shadow-xl space-y-4 overflow-hidden">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-[#27272A] shrink-0">
               <div className="flex items-center gap-2">
                 <BookOpen className="w-4 h-4 text-blue-600 dark:text-blue-400" />
                 <h3 className="text-sm font-semibold text-slate-900 dark:text-zinc-100">Add Curriculum Course</h3>
               </div>
               <button
                 onClick={() => setIsAddModalOpen(false)}
-                className="text-slate-400 hover:text-slate-600 dark:hover:text-zinc-300"
+                className="text-slate-400 hover:text-slate-600 dark:hover:text-zinc-300 p-1"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
 
             {formErrors.submit && (
-              <div className="p-2.5 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/50 text-rose-700 dark:text-rose-300 rounded-md text-xs">
+              <div className="p-2.5 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/50 text-rose-700 dark:text-rose-300 rounded-md text-xs shrink-0">
                 {formErrors.submit}
               </div>
             )}
 
-            <form onSubmit={handleAddSubmit} className="space-y-3 text-xs">
+            <form onSubmit={handleAddSubmit} className="space-y-3 text-xs overflow-y-auto flex-1">
               <div>
                 <label className="block text-slate-700 dark:text-zinc-300 font-medium mb-1">
                   Course Code <span className="text-rose-500">*</span>
@@ -565,7 +565,7 @@ export const SubjectManagement: React.FC = () => {
                 {formErrors.name && <p className="text-rose-500 text-[11px] mt-1">{formErrors.name}</p>}
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="block text-slate-700 dark:text-zinc-300 font-medium mb-1">
                     Department <span className="text-rose-500">*</span>
@@ -658,9 +658,9 @@ export const SubjectManagement: React.FC = () => {
 
       {/* EDIT SUBJECT MODAL */}
       {editingSubject && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
-          <div className="bg-white dark:bg-[#121215] border border-slate-200 dark:border-[#27272A] rounded-lg max-w-lg w-full p-5 shadow-xl space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-[#27272A]">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-xs">
+          <div className="bg-white dark:bg-[#121215] border border-slate-200 dark:border-[#27272A] rounded-lg max-w-lg w-full max-h-[90vh] flex flex-col p-4 sm:p-5 shadow-xl space-y-4 overflow-hidden">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-[#27272A] shrink-0">
               <div className="flex items-center gap-2">
                 <Edit2 className="w-4 h-4 text-blue-600 dark:text-blue-400" />
                 <h3 className="text-sm font-semibold text-slate-900 dark:text-zinc-100">
@@ -669,19 +669,19 @@ export const SubjectManagement: React.FC = () => {
               </div>
               <button
                 onClick={() => setEditingSubject(null)}
-                className="text-slate-400 hover:text-slate-600 dark:hover:text-zinc-300"
+                className="text-slate-400 hover:text-slate-600 dark:hover:text-zinc-300 p-1"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
 
             {formErrors.submit && (
-              <div className="p-2.5 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/50 text-rose-700 dark:text-rose-300 rounded-md text-xs">
+              <div className="p-2.5 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/50 text-rose-700 dark:text-rose-300 rounded-md text-xs shrink-0">
                 {formErrors.submit}
               </div>
             )}
 
-            <form onSubmit={handleEditSubmit} className="space-y-3 text-xs">
+            <form onSubmit={handleEditSubmit} className="space-y-3 text-xs overflow-y-auto flex-1">
               <div>
                 <label className="block text-slate-700 dark:text-zinc-300 font-medium mb-1">
                   Course Code <span className="text-rose-500">*</span>
@@ -708,7 +708,7 @@ export const SubjectManagement: React.FC = () => {
                 {formErrors.name && <p className="text-rose-500 text-[11px] mt-1">{formErrors.name}</p>}
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="block text-slate-700 dark:text-zinc-300 font-medium mb-1">Department</label>
                   <select
@@ -807,8 +807,8 @@ export const SubjectManagement: React.FC = () => {
 
       {/* CONFIRMATION DIALOG (ARCHIVE / REMOVE) */}
       {confirmSubject && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
-          <div className="bg-white dark:bg-[#121215] border border-slate-200 dark:border-[#27272A] rounded-lg max-w-md w-full p-5 shadow-xl space-y-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-xs">
+          <div className="bg-white dark:bg-[#121215] border border-slate-200 dark:border-[#27272A] rounded-lg max-w-md w-full max-h-[90vh] flex flex-col p-4 sm:p-5 shadow-xl space-y-4 overflow-hidden">
             <div className="flex items-center gap-3 text-amber-600 dark:text-amber-400">
               <div className="w-9 h-9 rounded-full bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900/50 flex items-center justify-center shrink-0">
                 <AlertTriangle className="w-4 h-4" />

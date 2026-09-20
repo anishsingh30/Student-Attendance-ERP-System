@@ -218,7 +218,7 @@ export const StudentAI: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
         
         {/* Left Column (8 cols): Conversation Workspace */}
-        <div className="lg:col-span-8 bg-white dark:bg-[#121215] border border-slate-200 dark:border-[#27272A] rounded-lg shadow-xs flex flex-col h-[600px] overflow-hidden">
+        <div className="lg:col-span-8 bg-white dark:bg-[#121215] border border-slate-200 dark:border-[#27272A] rounded-lg shadow-xs flex flex-col h-[520px] sm:h-[600px] overflow-hidden">
           
           {/* Conversation Header */}
           <div className="px-4 py-3 border-b border-slate-100 dark:border-[#27272A] bg-slate-50/50 dark:bg-[#151518] flex items-center justify-between">

@@ -60,13 +60,13 @@ export const AuditLogsPage: React.FC = () => {
       </div>
 
       {/* Filter Chips */}
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="flex flex-wrap items-center gap-1.5">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="flex items-center gap-1.5 overflow-x-auto max-w-full pb-1 -mb-1 scrollbar-none whitespace-nowrap">
           {['', 'LOGIN', 'ATTENDANCE', 'CSV', 'AGENT', 'THRESHOLD', 'ALERT', 'SUBJECT'].map((term) => (
             <button
               key={term}
               onClick={() => handleActionChange(term)}
-              className={`erp-btn px-2.5 py-1 text-xs font-medium ${
+              className={`erp-btn px-2.5 py-1 text-xs font-medium shrink-0 ${
                 filterAction === term
                   ? 'erp-btn-primary'
                   : 'erp-btn-secondary'
@@ -85,7 +85,7 @@ export const AuditLogsPage: React.FC = () => {
       {/* Bounded Audit Log Table */}
       <div className="bg-white dark:bg-[#121215] rounded-lg overflow-hidden border border-slate-200 dark:border-[#27272A] shadow-xs flex flex-col">
         <div className="w-full overflow-x-auto overflow-y-auto max-h-[60vh]">
-          <table className="w-full text-left text-xs border-collapse">
+          <table className="w-full min-w-[700px] text-left text-xs border-collapse">
             <thead className="sticky top-0 z-10 bg-slate-50 dark:bg-[#18181B] text-slate-600 dark:text-zinc-400 border-b border-slate-200 dark:border-[#27272A] uppercase tracking-wider font-semibold text-[10px]">
               <tr>
                 <th className="px-4 py-3 bg-slate-50 dark:bg-[#18181B]">Timestamp</th>
@@ -149,7 +149,7 @@ export const AuditLogsPage: React.FC = () => {
 
         {/* Dynamic Pagination Bar */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3 px-4 py-2 border-t border-slate-200 dark:border-[#27272A] bg-slate-50/50 dark:bg-[#141417] text-xs">
-          <div className="text-slate-500 dark:text-zinc-400">
+          <div className="text-slate-500 dark:text-zinc-400 text-center sm:text-left">
             Showing{' '}
             <strong className="text-slate-900 dark:text-zinc-200 font-mono">
               {totalLogs === 0 ? 0 : (currentPage - 1) * pageSize + 1}
@@ -161,7 +161,7 @@ export const AuditLogsPage: React.FC = () => {
             of <strong className="text-slate-900 dark:text-zinc-200 font-mono">{totalLogs}</strong> audit events
           </div>
 
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1 flex-wrap justify-center">
             <button
               onClick={() => handlePageChange(currentPage - 1)}
               disabled={currentPage <= 1 || loading}

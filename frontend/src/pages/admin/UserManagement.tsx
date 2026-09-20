@@ -269,7 +269,7 @@ export const UserManagement: React.FC = () => {
       {/* Filter and Search Bar */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         {/* Role Tabs */}
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-1.5 overflow-x-auto max-w-full pb-1 -mb-1 scrollbar-none">
           {[
             { key: '', label: 'All Accounts' },
             { key: 'student', label: 'Students' },
@@ -279,7 +279,7 @@ export const UserManagement: React.FC = () => {
             <button
               key={t.key}
               onClick={() => handleRoleFilterChange(t.key)}
-              className={`px-3 py-1 rounded-md text-xs font-medium transition-colors ${
+              className={`px-3 py-1 rounded-md text-xs font-medium transition-colors whitespace-nowrap ${
                 roleFilter === t.key
                   ? 'bg-blue-600 text-white shadow-xs'
                   : 'bg-white dark:bg-[#121215] border border-slate-200 dark:border-[#27272A] text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-zinc-100 hover:bg-slate-50 dark:hover:bg-zinc-800'
@@ -291,13 +291,13 @@ export const UserManagement: React.FC = () => {
         </div>
 
         {/* Search Input */}
-        <form onSubmit={handleSearchSubmit} className="relative flex items-center">
+        <form onSubmit={handleSearchSubmit} className="relative flex items-center w-full sm:w-auto">
           <input
             type="text"
             placeholder="Search by name, email, roll number..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-72 pl-8 pr-3 py-1 text-xs bg-white dark:bg-[#18181B] border border-slate-200 dark:border-[#27272A] rounded-md text-slate-900 dark:text-zinc-100 placeholder-slate-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-blue-600"
+            className="w-full sm:w-72 pl-8 pr-8 py-1 text-xs bg-white dark:bg-[#18181B] border border-slate-200 dark:border-[#27272A] rounded-md text-slate-900 dark:text-zinc-100 placeholder-slate-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-blue-600"
           />
           <Search className="w-3.5 h-3.5 text-slate-400 dark:text-zinc-500 absolute left-2.5 pointer-events-none" />
           {searchTerm && (
@@ -319,7 +319,7 @@ export const UserManagement: React.FC = () => {
       {/* Bounded Users Table */}
       <div className="bg-white dark:bg-[#121215] rounded-lg overflow-hidden border border-slate-200 dark:border-[#27272A] shadow-xs flex flex-col">
         <div className="w-full overflow-x-auto overflow-y-auto max-h-[60vh]">
-          <table className="w-full text-left text-xs border-collapse">
+          <table className="w-full min-w-[720px] text-left text-xs border-collapse">
             <thead className="sticky top-0 z-10 bg-slate-50 dark:bg-[#18181B] text-slate-600 dark:text-zinc-400 border-b border-slate-200 dark:border-[#27272A] uppercase tracking-wider font-semibold text-[10px]">
               <tr>
                 <th className="px-4 py-3 bg-slate-50 dark:bg-[#18181B]">User</th>
@@ -475,9 +475,9 @@ export const UserManagement: React.FC = () => {
 
       {/* Add Student Modal */}
       {isAddStudentOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
-          <div className="bg-white dark:bg-[#121215] rounded-lg border border-slate-200 dark:border-[#27272A] shadow-xl w-full max-w-lg overflow-hidden">
-            <div className="flex items-center justify-between p-4 border-b border-slate-100 dark:border-[#27272A] bg-slate-50 dark:bg-[#18181B]">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-xs">
+          <div className="bg-white dark:bg-[#121215] rounded-lg border border-slate-200 dark:border-[#27272A] shadow-xl w-full max-w-lg max-h-[90vh] flex flex-col overflow-hidden">
+            <div className="flex items-center justify-between p-4 border-b border-slate-100 dark:border-[#27272A] bg-slate-50 dark:bg-[#18181B] shrink-0">
               <div className="flex items-center gap-2">
                 <div className="w-7 h-7 rounded bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-900/50 flex items-center justify-center text-blue-600 dark:text-blue-400">
                   <GraduationCap className="w-4 h-4" />
@@ -487,13 +487,13 @@ export const UserManagement: React.FC = () => {
                   <p className="text-[11px] text-slate-500 dark:text-zinc-400">Enroll student in academic registry</p>
                 </div>
               </div>
-              <button onClick={() => setIsAddStudentOpen(false)} className="text-slate-400 dark:text-zinc-500 hover:text-slate-600 dark:hover:text-zinc-200">
+              <button onClick={() => setIsAddStudentOpen(false)} className="text-slate-400 dark:text-zinc-500 hover:text-slate-600 dark:hover:text-zinc-200 p-1">
                 <X className="w-4 h-4" />
               </button>
             </div>
 
-            <form onSubmit={handleAddStudent} className="p-4 space-y-3">
-              <div className="grid grid-cols-2 gap-3">
+            <form onSubmit={handleAddStudent} className="p-4 space-y-3 overflow-y-auto flex-1">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs font-medium text-slate-700 dark:text-zinc-300 mb-1">Full Name</label>
                   <input
@@ -518,7 +518,7 @@ export const UserManagement: React.FC = () => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs font-medium text-slate-700 dark:text-zinc-300 mb-1">Email Address</label>
                   <input
@@ -543,7 +543,7 @@ export const UserManagement: React.FC = () => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-3 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div>
                   <label className="block text-xs font-medium text-slate-700 dark:text-zinc-300 mb-1">Department</label>
                   <select
@@ -604,9 +604,9 @@ export const UserManagement: React.FC = () => {
 
       {/* Add Faculty Modal */}
       {isAddFacultyOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
-          <div className="bg-white dark:bg-[#121215] rounded-lg border border-slate-200 dark:border-[#27272A] shadow-xl w-full max-w-lg overflow-hidden">
-            <div className="flex items-center justify-between p-4 border-b border-slate-100 dark:border-[#27272A] bg-slate-50 dark:bg-[#18181B]">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-xs">
+          <div className="bg-white dark:bg-[#121215] rounded-lg border border-slate-200 dark:border-[#27272A] shadow-xl w-full max-w-lg max-h-[90vh] flex flex-col overflow-hidden">
+            <div className="flex items-center justify-between p-4 border-b border-slate-100 dark:border-[#27272A] bg-slate-50 dark:bg-[#18181B] shrink-0">
               <div className="flex items-center gap-2">
                 <div className="w-7 h-7 rounded bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-900/50 flex items-center justify-center text-indigo-600 dark:text-indigo-400">
                   <Users className="w-4 h-4" />
@@ -616,13 +616,13 @@ export const UserManagement: React.FC = () => {
                   <p className="text-[11px] text-slate-500 dark:text-zinc-400">Register faculty credentials and course assignments</p>
                 </div>
               </div>
-              <button onClick={() => setIsAddFacultyOpen(false)} className="text-slate-400 dark:text-zinc-500 hover:text-slate-600 dark:hover:text-zinc-200">
+              <button onClick={() => setIsAddFacultyOpen(false)} className="text-slate-400 dark:text-zinc-500 hover:text-slate-600 dark:hover:text-zinc-200 p-1">
                 <X className="w-4 h-4" />
               </button>
             </div>
 
-            <form onSubmit={handleAddFaculty} className="p-4 space-y-3">
-              <div className="grid grid-cols-2 gap-3">
+            <form onSubmit={handleAddFaculty} className="p-4 space-y-3 overflow-y-auto flex-1">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs font-medium text-slate-700 dark:text-zinc-300 mb-1">Full Name</label>
                   <input
@@ -647,7 +647,7 @@ export const UserManagement: React.FC = () => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs font-medium text-slate-700 dark:text-zinc-300 mb-1">Email Address</label>
                   <input
@@ -756,9 +756,9 @@ export const UserManagement: React.FC = () => {
 
       {/* Reset Password Modal */}
       {resetPwUser && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
-          <div className="bg-white dark:bg-[#121215] rounded-lg border border-slate-200 dark:border-[#27272A] shadow-xl w-full max-w-md overflow-hidden">
-            <div className="flex items-center justify-between p-3.5 border-b border-slate-100 dark:border-[#27272A] bg-slate-50 dark:bg-[#18181B]">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-xs">
+          <div className="bg-white dark:bg-[#121215] rounded-lg border border-slate-200 dark:border-[#27272A] shadow-xl w-full max-w-md max-h-[90vh] flex flex-col overflow-hidden">
+            <div className="flex items-center justify-between p-3.5 border-b border-slate-100 dark:border-[#27272A] bg-slate-50 dark:bg-[#18181B] shrink-0">
               <div className="flex items-center gap-2">
                 <KeyRound className="w-4 h-4 text-blue-600 dark:text-blue-400" />
                 <h3 className="text-xs font-semibold text-slate-900 dark:text-zinc-100">Administrator Password Reset</h3>
@@ -769,13 +769,13 @@ export const UserManagement: React.FC = () => {
                   setNewPassword('');
                   setConfirmPassword('');
                 }} 
-                className="text-slate-400 dark:text-zinc-500 hover:text-slate-600 dark:hover:text-zinc-200"
+                className="text-slate-400 dark:text-zinc-500 hover:text-slate-600 dark:hover:text-zinc-200 p-1"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
 
-            <form onSubmit={handleResetPassword} className="p-4 space-y-3 text-xs">
+            <form onSubmit={handleResetPassword} className="p-4 space-y-3 text-xs overflow-y-auto flex-1">
               <div className="p-2.5 bg-slate-50 dark:bg-[#18181B] border border-slate-200 dark:border-[#27272A] rounded-md space-y-1">
                 <div className="flex items-center justify-between">
                   <span className="text-slate-500 dark:text-zinc-400">Account:</span>

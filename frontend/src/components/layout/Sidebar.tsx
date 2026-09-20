@@ -18,7 +18,8 @@ import {
   User as UserIcon,
   Shield,
   FileText,
-  Settings
+  Settings,
+  X
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { Tooltip } from '../common/Tooltip';
@@ -155,6 +156,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   <ChevronLeft className="w-4 h-4" />
                 </button>
               </Tooltip>
+            )}
+
+            {onCloseMobile && (
+              <button
+                onClick={onCloseMobile}
+                className="md:hidden flex items-center justify-center w-7 h-7 rounded-md text-slate-500 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-zinc-100 hover:bg-slate-100 dark:hover:bg-[#18181B] transition-colors focus:outline-none focus:ring-2 focus:ring-blue-600"
+                aria-label="Close navigation menu"
+              >
+                <X className="w-4 h-4" />
+              </button>
             )}
           </>
         ) : (
@@ -354,7 +365,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
           <div className="flex items-center justify-between">
             <span className="font-mono text-[10px] text-slate-400 dark:text-zinc-500">v1.0 • ERP Core</span>
             <button
-              onClick={() => logout()}
+              onClick={() => {
+                onCloseMobile?.();
+                logout();
+              }}
               className="inline-flex items-center gap-1 text-[11px] font-medium text-slate-500 dark:text-zinc-400 hover:text-rose-600 dark:hover:text-rose-400 transition-colors"
               title="Sign out of AttendanceAI"
             >
@@ -366,7 +380,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
           <div className="flex justify-center">
             <Tooltip content="Sign Out" position="right">
               <button
-                onClick={() => logout()}
+                onClick={() => {
+                  onCloseMobile?.();
+                  logout();
+                }}
                 className="p-1.5 rounded-md text-slate-500 dark:text-zinc-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-slate-100 dark:hover:bg-[#18181B] transition-colors"
                 aria-label="Sign Out"
               >

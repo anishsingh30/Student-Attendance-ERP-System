@@ -98,12 +98,12 @@ export const Navbar: React.FC<NavbarProps> = ({
             </Tooltip>
           )}
 
-          <div className="hidden sm:flex items-center gap-2">
+          <div className="flex items-center gap-2">
             <span className="text-xs font-bold text-slate-900 dark:text-zinc-100 tracking-tight">
-              AttendanceAI
+              Attendance<span className="text-blue-600">AI</span>
             </span>
-            <span className="text-slate-300 dark:text-zinc-700">|</span>
-            <span className="text-xs text-slate-500 dark:text-zinc-400 font-medium">
+            <span className="hidden sm:inline text-slate-300 dark:text-zinc-700">|</span>
+            <span className="hidden sm:inline text-xs text-slate-500 dark:text-zinc-400 font-medium">
               Student Attendance ERP System
             </span>
           </div>
@@ -137,7 +137,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               <div 
                 role="dialog"
                 aria-label="Notifications Drawer"
-                className="absolute right-0 mt-2 w-80 sm:w-96 rounded-lg border border-slate-200 dark:border-[#27272A] bg-white dark:bg-[#121215] shadow-lg p-3.5 z-50 animate-erp-dropdown text-slate-800 dark:text-zinc-200"
+                className="absolute right-0 mt-2 w-[calc(100vw-1.5rem)] sm:w-96 max-w-sm rounded-lg border border-slate-200 dark:border-[#27272A] bg-white dark:bg-[#121215] shadow-lg p-3.5 z-50 animate-erp-dropdown text-slate-800 dark:text-zinc-200"
               >
                 <div className="flex items-center justify-between pb-2.5 border-b border-slate-100 dark:border-[#27272A]">
                   <div className="flex items-center gap-2">

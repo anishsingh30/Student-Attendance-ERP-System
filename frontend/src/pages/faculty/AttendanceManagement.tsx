@@ -253,10 +253,10 @@ export const AttendanceManagement: React.FC = () => {
           </div>
 
           {/* Workflow Tabs */}
-          <div className="inline-flex rounded-md border border-slate-200 dark:border-[#27272A] p-0.5 bg-slate-50 dark:bg-[#18181B]">
+          <div className="inline-flex rounded-md border border-slate-200 dark:border-[#27272A] p-0.5 bg-slate-50 dark:bg-[#18181B] w-full sm:w-auto">
             <button
               onClick={() => setActiveTab('session')}
-              className={`px-3 py-1.5 rounded text-xs font-semibold transition-colors inline-flex items-center gap-1.5 ${
+              className={`flex-1 sm:flex-initial justify-center px-3 py-1.5 rounded text-xs font-semibold transition-colors inline-flex items-center gap-1.5 ${
                 activeTab === 'session'
                   ? 'bg-blue-600 text-white shadow-xs'
                   : 'text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-zinc-100'
@@ -268,7 +268,7 @@ export const AttendanceManagement: React.FC = () => {
 
             <button
               onClick={() => setActiveTab('csv')}
-              className={`px-3 py-1.5 rounded text-xs font-semibold transition-colors inline-flex items-center gap-1.5 ${
+              className={`flex-1 sm:flex-initial justify-center px-3 py-1.5 rounded text-xs font-semibold transition-colors inline-flex items-center gap-1.5 ${
                 activeTab === 'csv'
                   ? 'bg-blue-600 text-white shadow-xs'
                   : 'text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-zinc-100'
@@ -389,7 +389,7 @@ export const AttendanceManagement: React.FC = () => {
           {/* Interactive Roster Table */}
           <div className="bg-white dark:bg-[#121215] border border-slate-200 dark:border-[#27272A] rounded-lg overflow-hidden shadow-xs">
             <div className="overflow-x-auto overflow-y-auto max-h-[500px]">
-              <table className="w-full text-left text-xs border-collapse">
+              <table className="w-full min-w-[650px] text-left text-xs border-collapse">
                 <thead className="sticky top-0 z-10 bg-slate-50 dark:bg-[#18181B] text-slate-600 dark:text-zinc-400 border-b border-slate-200 dark:border-[#27272A] uppercase tracking-wider font-semibold text-[10px]">
                   <tr>
                     <th className="px-4 py-3 bg-slate-50 dark:bg-[#18181B]">Roll Number</th>
@@ -441,7 +441,7 @@ export const AttendanceManagement: React.FC = () => {
                             <button
                               type="button"
                               onClick={() => handleStatusToggle(st.student_id, 'PRESENT')}
-                              className={`px-3 py-1 rounded text-xs font-bold transition-all duration-150 active:scale-95 flex items-center gap-1 ${
+                              className={`px-3.5 py-1.5 rounded text-xs font-bold transition-all duration-150 active:scale-95 flex items-center gap-1.5 min-h-[36px] ${
                                 st.status === 'PRESENT'
                                   ? 'bg-emerald-600 text-white shadow-xs'
                                   : 'text-slate-500 dark:text-zinc-400 hover:text-emerald-700'
@@ -453,7 +453,7 @@ export const AttendanceManagement: React.FC = () => {
                             <button
                               type="button"
                               onClick={() => handleStatusToggle(st.student_id, 'ABSENT')}
-                              className={`px-3 py-1 rounded text-xs font-bold transition-all duration-150 active:scale-95 flex items-center gap-1 ${
+                              className={`px-3.5 py-1.5 rounded text-xs font-bold transition-all duration-150 active:scale-95 flex items-center gap-1.5 min-h-[36px] ${
                                 st.status === 'ABSENT'
                                   ? 'bg-rose-600 text-white shadow-xs'
                                   : 'text-slate-500 dark:text-zinc-400 hover:text-rose-700'

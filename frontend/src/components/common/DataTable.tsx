@@ -84,7 +84,7 @@ export function DataTable<T>({
         className={`w-full overflow-x-auto overflow-y-auto ${maxHeight}`}
         style={{ scrollBehavior: 'smooth' }}
       >
-        <table className={`w-full text-left text-xs border-collapse ${tableClassName}`}>
+        <table className={`w-full text-left text-xs border-collapse ${tableClassName ? tableClassName : 'min-w-[650px]'}`}>
           <thead className="sticky top-0 z-10 bg-slate-50 dark:bg-[#18181B] border-b border-slate-200 dark:border-[#27272A] shadow-[0_1px_2px_rgba(0,0,0,0.03)] dark:shadow-[0_1px_2px_rgba(0,0,0,0.3)]">
             <tr>
               {columns.map((col, idx) => {
@@ -180,7 +180,7 @@ export function DataTable<T>({
       {/* Dynamic Record Count & Pagination Bar */}
       {pagination && (
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3 px-3.5 py-2.5 border-t border-slate-200 dark:border-[#27272A] bg-slate-50/50 dark:bg-[#151518] text-xs">
-          <div className="flex items-center gap-3 text-slate-600 dark:text-zinc-400 font-medium">
+          <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 sm:gap-3 text-slate-600 dark:text-zinc-400 font-medium text-center sm:text-left">
             <span>
               Showing <strong className="text-slate-900 dark:text-zinc-100 font-mono">{startRecord}</strong>–
               <strong className="text-slate-900 dark:text-zinc-100 font-mono">{endRecord}</strong> of{' '}
@@ -205,7 +205,7 @@ export function DataTable<T>({
             )}
           </div>
 
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1 flex-wrap justify-center">
             <button
               onClick={() => pagination.onPageChange(page - 1)}
               disabled={page <= 1 || loading}

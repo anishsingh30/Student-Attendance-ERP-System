@@ -107,10 +107,10 @@ export const AdminDashboard: React.FC = () => {
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap w-full sm:w-auto">
           <a
             href="/admin/settings"
-            className="erp-btn erp-btn-secondary px-3 py-1.5 text-xs inline-flex items-center gap-1.5"
+            className="erp-btn erp-btn-secondary flex-1 sm:flex-initial justify-center px-3 py-1.5 text-xs inline-flex items-center gap-1.5"
           >
             <Sliders className="w-3.5 h-3.5 text-slate-500 dark:text-zinc-400" />
             <span>Attendance Thresholds</span>
@@ -119,7 +119,7 @@ export const AdminDashboard: React.FC = () => {
           <button
             onClick={handleRunAgent}
             disabled={agentRunning}
-            className="erp-btn erp-btn-primary px-3.5 py-1.5 text-xs font-medium inline-flex items-center gap-1.5"
+            className="erp-btn erp-btn-primary flex-1 sm:flex-initial justify-center px-3.5 py-1.5 text-xs font-medium inline-flex items-center gap-1.5"
           >
             {agentRunning ? (
               <RefreshCw className="w-3.5 h-3.5 animate-spin" />
@@ -150,7 +150,7 @@ export const AdminDashboard: React.FC = () => {
           </span>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 divide-y md:divide-y-0 md:divide-x divide-slate-100 dark:divide-[#27272A]">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-slate-100 dark:divide-[#27272A]">
           {/* Institutional Users */}
           <div className="p-4 sm:p-5">
             <span className="text-[11px] font-semibold text-slate-500 dark:text-zinc-400 uppercase tracking-wider block">

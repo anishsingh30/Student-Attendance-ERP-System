@@ -225,17 +225,17 @@ export const ProfilePage: React.FC = () => {
               </div>
             </div>
 
-            <div className="flex items-center gap-2 mb-1">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 mb-1 w-full sm:w-auto">
               <a
                 href={role === 'student' ? '/student/dashboard' : (role === 'faculty' ? '/faculty/dashboard' : '/admin/dashboard')}
-                className="px-3.5 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-xs font-semibold text-white transition-all shadow-xs inline-flex items-center gap-1.5 erp-button"
+                className="justify-center px-3.5 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-xs font-semibold text-white transition-all shadow-xs inline-flex items-center gap-1.5 erp-button"
               >
                 <span>Go to Dashboard</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </a>
               <button
                 onClick={logout}
-                className="px-3.5 py-2 rounded-lg bg-slate-100 dark:bg-[#18181B] hover:bg-rose-50 dark:hover:bg-rose-950/30 text-slate-700 dark:text-zinc-300 hover:text-rose-700 dark:hover:text-rose-400 border border-slate-200 dark:border-[#27272A] hover:border-rose-200 dark:hover:border-rose-800 text-xs font-semibold transition-all inline-flex items-center gap-1.5 erp-button cursor-pointer"
+                className="justify-center px-3.5 py-2 rounded-lg bg-slate-100 dark:bg-[#18181B] hover:bg-rose-50 dark:hover:bg-rose-950/30 text-slate-700 dark:text-zinc-300 hover:text-rose-700 dark:hover:text-rose-400 border border-slate-200 dark:border-[#27272A] hover:border-rose-200 dark:hover:border-rose-800 text-xs font-semibold transition-all inline-flex items-center gap-1.5 erp-button cursor-pointer"
               >
                 <LogOut className="w-3.5 h-3.5" />
                 <span>Sign Out</span>

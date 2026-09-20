@@ -105,8 +105,8 @@ export const AdminNotifications: React.FC = () => {
       )}
 
       {/* Filters */}
-      <div className="flex flex-wrap items-center justify-between gap-3 bg-white dark:bg-[#121215] p-3 rounded-lg border border-slate-200 dark:border-[#27272A] shadow-xs text-xs">
-        <div className="flex items-center gap-3">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white dark:bg-[#121215] p-3 rounded-lg border border-slate-200 dark:border-[#27272A] shadow-xs text-xs">
+        <div className="flex flex-wrap items-center gap-3">
           <div className="flex items-center gap-1.5">
             <span className="font-medium text-slate-600 dark:text-zinc-400">Channel:</span>
             <select
@@ -145,7 +145,7 @@ export const AdminNotifications: React.FC = () => {
       {/* Bounded Notifications Table */}
       <div className="bg-white dark:bg-[#121215] border border-slate-200 dark:border-[#27272A] rounded-lg shadow-xs overflow-hidden flex flex-col">
         <div className="w-full overflow-x-auto overflow-y-auto max-h-[60vh]">
-          <table className="w-full text-xs text-left border-collapse">
+          <table className="w-full min-w-[780px] text-xs text-left border-collapse">
             <thead className="sticky top-0 z-10 bg-slate-50 dark:bg-[#18181B] text-slate-600 dark:text-zinc-400 font-semibold border-b border-slate-200 dark:border-[#27272A]">
               <tr>
                 <th className="py-2.5 px-3.5 bg-slate-50 dark:bg-[#18181B]">ID</th>
@@ -235,7 +235,7 @@ export const AdminNotifications: React.FC = () => {
 
         {/* Dynamic Pagination Bar */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3 px-4 py-2 bg-slate-50/50 dark:bg-[#141417] border-t border-slate-200 dark:border-[#27272A] text-xs">
-          <div className="text-slate-500 dark:text-zinc-400">
+          <div className="text-slate-500 dark:text-zinc-400 text-center sm:text-left">
             Showing{' '}
             <strong className="text-slate-900 dark:text-zinc-200 font-mono">
               {totalNotifications === 0 ? 0 : (currentPage - 1) * pageSize + 1}
@@ -247,7 +247,7 @@ export const AdminNotifications: React.FC = () => {
             of <strong className="text-slate-900 dark:text-zinc-200 font-mono">{totalNotifications}</strong> delivery records
           </div>
 
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1 flex-wrap justify-center">
             <button
               onClick={() => {
                 const p = currentPage - 1;

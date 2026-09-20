@@ -90,10 +90,10 @@ export const FacultyDashboard: React.FC = () => {
           </div>
 
           {/* Primary Action: Record Attendance, Secondary Actions */}
-          <div className="flex items-center flex-wrap gap-2">
+          <div className="flex items-center flex-wrap gap-2 w-full sm:w-auto">
             <a
               href="/faculty/attendance?tab=manual"
-              className="erp-btn erp-btn-primary px-4 py-2 text-xs font-semibold inline-flex items-center gap-1.5"
+              className="erp-btn erp-btn-primary flex-1 sm:flex-initial justify-center px-4 py-2 text-xs font-semibold inline-flex items-center gap-1.5"
             >
               <CalendarCheck className="w-4 h-4" />
               <span>Record Attendance</span>
@@ -101,7 +101,7 @@ export const FacultyDashboard: React.FC = () => {
 
             <a
               href="/faculty/attendance?tab=csv"
-              className="erp-btn erp-btn-secondary px-3.5 py-2 text-xs font-medium inline-flex items-center gap-1.5"
+              className="erp-btn erp-btn-secondary flex-1 sm:flex-initial justify-center px-3.5 py-2 text-xs font-medium inline-flex items-center gap-1.5"
             >
               <FileSpreadsheet className="w-4 h-4 text-blue-600 dark:text-blue-400" />
               <span>Import Attendance</span>
@@ -149,7 +149,7 @@ export const FacultyDashboard: React.FC = () => {
           </button>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-5 divide-y md:divide-y-0 md:divide-x divide-slate-100 dark:divide-[#27272A]">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 divide-y sm:divide-y-0 sm:divide-x divide-slate-100 dark:divide-[#27272A]">
           <div className="p-4 sm:p-5">
             <span className="text-[11px] font-semibold text-slate-500 dark:text-zinc-400 uppercase tracking-wider block">
               Assigned Courses

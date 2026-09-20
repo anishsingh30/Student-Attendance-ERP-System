@@ -402,7 +402,7 @@ export const WhatIfSimulator: React.FC = () => {
                 </div>
 
                 {/* Comparative Metric Hierarchy */}
-                <div className="grid grid-cols-3 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   
                   {/* Current */}
                   <div className="p-3.5 rounded-md bg-slate-50 dark:bg-[#18181B] border border-slate-200 dark:border-[#27272A]">

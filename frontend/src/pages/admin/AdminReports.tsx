@@ -72,7 +72,7 @@ export const AdminReports: React.FC = () => {
       </div>
 
       {/* Tabs */}
-      <div className="flex border-b border-slate-200 dark:border-[#27272A] gap-5 text-xs font-medium">
+      <div className="flex border-b border-slate-200 dark:border-[#27272A] gap-5 text-xs font-medium overflow-x-auto max-w-full pb-1 -mb-1 scrollbar-none whitespace-nowrap">
         <button
           onClick={() => setActiveTab('at-risk')}
           className={`pb-2.5 transition-colors border-b-2 ${
@@ -116,21 +116,20 @@ export const AdminReports: React.FC = () => {
       </div>
 
       {/* Search and refresh toolbar */}
-      <div className="flex items-center justify-between gap-3">
-        <div className="relative max-w-xs w-full">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="relative max-w-full sm:max-w-xs w-full">
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search report records..."
-            className="w-full pl-8 pr-3 py-1 text-xs bg-white dark:bg-[#18181B] border border-slate-200 dark:border-[#27272A] rounded-md text-slate-900 dark:text-zinc-100 placeholder-slate-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-blue-600 shadow-xs"
+            className="w-full px-3 py-1.5 text-xs bg-white dark:bg-[#18181B] border border-slate-200 dark:border-[#27272A] rounded-md text-slate-900 dark:text-zinc-100 placeholder-slate-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-blue-600"
           />
-          <Filter className="w-3.5 h-3.5 absolute left-2.5 top-2 text-slate-400 dark:text-zinc-500" />
         </div>
         <button
           onClick={loadData}
           disabled={loading}
-          className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium bg-white dark:bg-[#18181B] border border-slate-200 dark:border-[#27272A] text-slate-700 dark:text-zinc-300 hover:bg-slate-50 dark:hover:bg-zinc-800 rounded-md shadow-xs transition-colors"
+          className="erp-btn erp-btn-secondary px-3 py-1.5 text-xs font-medium inline-flex items-center gap-1.5 self-start sm:self-auto"
         >
           <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} /> Refresh
         </button>
@@ -147,7 +146,7 @@ export const AdminReports: React.FC = () => {
       <div className="bg-white dark:bg-[#121215] border border-slate-200 dark:border-[#27272A] rounded-lg shadow-xs overflow-hidden flex flex-col">
         <div className="overflow-x-auto overflow-y-auto max-h-[62vh]">
           {activeTab === 'at-risk' && (
-            <table className="w-full text-xs text-left border-collapse">
+            <table className="w-full min-w-[700px] text-xs text-left border-collapse">
               <thead className="sticky top-0 z-10 bg-slate-50 dark:bg-[#18181B] text-slate-600 dark:text-zinc-400 font-semibold border-b border-slate-200 dark:border-[#27272A]">
                 <tr>
                   <th className="py-2.5 px-3.5 bg-slate-50 dark:bg-[#18181B]">Roll Number</th>
@@ -205,7 +204,7 @@ export const AdminReports: React.FC = () => {
           )}
 
           {activeTab === 'subjects' && (
-            <table className="w-full text-xs text-left border-collapse">
+            <table className="w-full min-w-[650px] text-xs text-left border-collapse">
               <thead className="sticky top-0 z-10 bg-slate-50 dark:bg-[#18181B] text-slate-600 dark:text-zinc-400 font-semibold border-b border-slate-200 dark:border-[#27272A]">
                 <tr>
                   <th className="py-2.5 px-3.5 bg-slate-50 dark:bg-[#18181B]">Subject Code</th>
@@ -244,7 +243,7 @@ export const AdminReports: React.FC = () => {
           )}
 
           {activeTab === 'departments' && (
-            <table className="w-full text-xs text-left border-collapse">
+            <table className="w-full min-w-[650px] text-xs text-left border-collapse">
               <thead className="sticky top-0 z-10 bg-slate-50 dark:bg-[#18181B] text-slate-600 dark:text-zinc-400 font-semibold border-b border-slate-200 dark:border-[#27272A]">
                 <tr>
                   <th className="py-2.5 px-3.5 bg-slate-50 dark:bg-[#18181B]">Department</th>
@@ -281,7 +280,7 @@ export const AdminReports: React.FC = () => {
           )}
 
           {activeTab === 'agent-runs' && (
-            <table className="w-full text-xs text-left border-collapse">
+            <table className="w-full min-w-[750px] text-xs text-left border-collapse">
               <thead className="sticky top-0 z-10 bg-slate-50 dark:bg-[#18181B] text-slate-600 dark:text-zinc-400 font-semibold border-b border-slate-200 dark:border-[#27272A]">
                 <tr>
                   <th className="py-2.5 px-3.5 bg-slate-50 dark:bg-[#18181B]">Run ID</th>

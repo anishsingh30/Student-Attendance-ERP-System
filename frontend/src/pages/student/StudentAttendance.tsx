@@ -374,7 +374,7 @@ export const StudentAttendance: React.FC = () => {
       {/* 5. Official Attendance Records Table (Bounded Scrolling with Sticky Header) */}
       <div className="bg-white dark:bg-[#121215] border border-slate-200 dark:border-[#27272A] rounded-lg overflow-hidden shadow-xs">
         <div className="overflow-x-auto overflow-y-auto max-h-[500px]">
-          <table className="w-full text-left text-xs border-collapse">
+          <table className="w-full min-w-[650px] text-left text-xs border-collapse">
             <thead className="sticky top-0 z-10 bg-slate-50 dark:bg-[#18181B] text-slate-600 dark:text-zinc-400 border-b border-slate-200 dark:border-[#27272A] uppercase tracking-wider font-semibold text-[10px]">
               <tr>
                 <th className="px-4 py-3 bg-slate-50 dark:bg-[#18181B] whitespace-nowrap">Session Date</th>
