@@ -78,6 +78,7 @@ def retrain_ml_model(
     """
     try:
         metrics = train_and_evaluate_model(db)
+        ml_predictor.reload()
         return {"status": "SUCCESS", "message": "ML model successfully retrained and evaluated.", "results": metrics}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Model retraining failed: {str(e)}")

@@ -70,6 +70,21 @@ class MLAttendancePredictor:
             logger.error(f"Failed to load ML model artifact: {e}")
             return False
 
+    def reload(self) -> bool:
+        """Forces immediate reload of the persisted model artifact from disk into memory."""
+        try:
+            if os.path.exists(MODEL_PATH):
+                self._model = joblib.load(MODEL_PATH)
+                logger.info(f"Reloaded persisted ML model from {MODEL_PATH}")
+                return True
+            else:
+                self._model = None
+                return False
+        except Exception as e:
+            logger.error(f"Failed to reload persisted model: {e}")
+            self._model = None
+            return False
+
     def explain_factors(self, features: List[float]) -> List[Dict[str, Any]]:
         """
         Generates understandable risk factor explanations based on extracted features.

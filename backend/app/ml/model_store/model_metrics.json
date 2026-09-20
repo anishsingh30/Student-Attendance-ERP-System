@@ -29,7 +29,7 @@
     "CRITICAL": 29
   },
   "leakage_prevention_verified": true,
-  "evaluated_at": "2026-09-20T12:17:38.602860+00:00",
+  "evaluated_at": "2026-09-20T13:00:33.204266+00:00",
   "metrics": {
     "accuracy": 1.0,
     "precision": 1.0,
