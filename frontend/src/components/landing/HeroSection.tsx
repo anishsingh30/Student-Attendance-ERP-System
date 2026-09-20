@@ -39,7 +39,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   return (
     <section 
       id="hero" 
-      className="relative pt-8 pb-16 lg:pt-14 lg:pb-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-white via-[#F8FAFC] to-[#F1F5F9] dark:from-black dark:via-[#050505] dark:to-black border-b border-slate-200 dark:border-[#262626] overflow-hidden"
+      className="relative pt-8 pb-16 lg:pt-14 lg:pb-24 px-4 sm:px-6 lg:px-8 bg-slate-50 dark:bg-[#09090B] border-b border-slate-200 dark:border-[#27272A] overflow-hidden"
     >
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 items-center">
@@ -48,57 +48,59 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           <div className="lg:col-span-6 space-y-6 text-left">
             
             {/* Eyebrow Institutional Badge */}
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-950/40 border border-blue-200/80 dark:border-blue-800/60 text-blue-700 dark:text-blue-300 text-xs font-semibold shadow-2xs">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-950/40 border border-blue-200/80 dark:border-blue-800/60 text-blue-700 dark:text-blue-300 text-xs font-semibold shadow-2xs font-mono">
               <ShieldCheck className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400 flex-shrink-0" />
-              <span>University Attendance Management &amp; Early Warning System</span>
+              <span>University Academic Operations</span>
             </div>
 
             {/* Main Headline */}
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-[1.15]">
-              Academic Attendance ERP with{' '}
-              <span className="text-blue-600 dark:text-blue-400">
-                Deterministic Intelligence.
+            <div>
+              <span className="text-sm font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400 block mb-1">
+                AttendanceAI
               </span>
-            </h1>
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-[1.15]">
+                Student Attendance ERP System
+              </h1>
+            </div>
 
             {/* Supporting Copy */}
-            <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed max-w-xl">
-              AttendanceAI continuously monitors attendance, identifies risk, calculates recovery requirements, and helps students, faculty, and administrators act before attendance problems become serious.
+            <p className="text-sm sm:text-base text-slate-600 dark:text-zinc-300 leading-relaxed max-w-xl">
+              Monitor attendance, identify shortage risk, and coordinate timely academic intervention across university departments, faculty instructors, and students.
             </p>
 
             {/* CTAs */}
             <div className="flex flex-wrap items-center gap-3 pt-2">
               <a
                 href={getPortalHref()}
-                className="px-5 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-semibold shadow-sm inline-flex items-center gap-2 hover:scale-[1.01] active:scale-[0.98] transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-600"
+                className="px-5 py-3 rounded-md bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-semibold shadow-sm inline-flex items-center gap-2 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-600"
               >
-                <span>Access Your Portal</span>
+                <span>Access University Portal</span>
                 <ArrowRight className="w-4 h-4" />
               </a>
 
               <a
                 href="#how-it-works"
                 onClick={handleExploreClick}
-                className="px-5 py-3 rounded-xl bg-white dark:bg-[#111111] hover:bg-slate-50 dark:hover:bg-[#1A1A1A] border border-slate-300 dark:border-[#262626] text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white text-xs sm:text-sm font-semibold shadow-2xs inline-flex items-center gap-2 transition-all hover:border-slate-400 dark:hover:border-[#383838] focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-400"
+                className="px-5 py-3 rounded-md bg-white dark:bg-[#121215] hover:bg-slate-50 dark:hover:bg-[#18181B] border border-slate-300 dark:border-[#27272A] text-slate-700 dark:text-zinc-200 hover:text-slate-900 dark:hover:text-white text-xs sm:text-sm font-semibold shadow-2xs inline-flex items-center gap-2 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400"
               >
-                <span>Explore How It Works</span>
-                <ArrowDown className="w-4 h-4 text-slate-500 dark:text-slate-400" />
+                <span>Explore Workflow</span>
+                <ArrowDown className="w-4 h-4 text-slate-500 dark:text-zinc-400" />
               </a>
             </div>
 
             {/* Institutional Trust Highlights */}
-            <div className="pt-4 border-t border-slate-200/80 dark:border-[#262626] grid grid-cols-1 sm:grid-cols-3 gap-3">
-              <div className="flex items-center gap-2 text-slate-700 dark:text-slate-300 text-xs font-medium">
+            <div className="pt-4 border-t border-slate-200 dark:border-[#27272A] grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div className="flex items-center gap-2 text-slate-700 dark:text-zinc-300 text-xs font-medium">
                 <CheckCircle2 className="w-4 h-4 text-blue-600 dark:text-blue-400 flex-shrink-0" />
                 <span>Statutory {statutoryThreshold}% Verification</span>
               </div>
-              <div className="flex items-center gap-2 text-slate-700 dark:text-slate-300 text-xs font-medium">
+              <div className="flex items-center gap-2 text-slate-700 dark:text-zinc-300 text-xs font-medium">
                 <Calculator className="w-4 h-4 text-blue-600 dark:text-blue-400 flex-shrink-0" />
-                <span>Deterministic Math Engine</span>
+                <span>Early Warning &amp; Debarment Risk</span>
               </div>
-              <div className="flex items-center gap-2 text-slate-700 dark:text-slate-300 text-xs font-medium">
+              <div className="flex items-center gap-2 text-slate-700 dark:text-zinc-300 text-xs font-medium">
                 <Shield className="w-4 h-4 text-blue-600 dark:text-blue-400 flex-shrink-0" />
-                <span>Role-Based Academic RBAC</span>
+                <span>Role-Based University Portals</span>
               </div>
             </div>
 

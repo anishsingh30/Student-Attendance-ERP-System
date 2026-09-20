@@ -202,57 +202,22 @@ class AttendanceMonitoringAgent:
                         if email_service:
                             email_service.dispatch_notification_email(self.db, notif.id)
 
-            # 7. GENERATING_EXPLANATION
+            # 7. CREATING_ALERT & IDEMPOTENCY RESOLUTION
             actionable_cases = critical_cases + shortage_cases + borderline_cases
             sm.transition_to(
-                AgentStage.GENERATING_EXPLANATION,
-                f"Generating qualitative academic guidance and recovery pathways for {len(actionable_cases)} cases."
-            )
-
-            alerts_to_create = []
-            for item in actionable_cases:
-                st = item["student"]
-                sub = item["subject"]
-                m = item["metrics"]
-                ml_info = item["ml_prediction"]
-                student_name = st.user.full_name if st.user else "Student"
-                risk_lvl = item["effective_risk_level"]
-
-                narrative = llm_provider.generate_personalized_alert_explanation(
-                    student_name=student_name,
-                    subject_name=sub.name,
-                    current_pct=m["percentage"],
-                    required_pct=m["required_threshold"],
-                    attended=m["classes_attended"],
-                    conducted=m["classes_conducted"],
-                    classes_needed=m["consecutive_classes_needed"],
-                    risk_level=risk_lvl
-                )
-                alerts_to_create.append({
-                    "student": st,
-                    "subject": sub,
-                    "metrics": m,
-                    "effective_risk_level": risk_lvl,
-                    "ml_info": ml_info,
-                    "narrative": narrative
-                })
-
-            # 8. CREATING_ALERT (Database Idempotency Check)
-            sm.transition_to(
                 AgentStage.CREATING_ALERT,
-                "Persisting official alerts with database idempotency to prevent duplicate notification spam."
+                "Evaluating alert idempotency and preparing official academic interventions."
             )
 
             created_alerts: List[Alert] = []
             skipped_duplicates = 0
             cutoff_dt = datetime.now(timezone.utc) - timedelta(hours=24)
+            cases_to_publish: List[Dict[str, Any]] = []
 
-            for item in alerts_to_create:
+            for item in actionable_cases:
                 st = item["student"]
                 sub = item["subject"]
-                m = item["metrics"]
                 risk_lvl = item["effective_risk_level"]
-                narrative = item["narrative"]
 
                 if not force_notify:
                     existing_alert = self.db.query(Alert).filter(
@@ -275,21 +240,48 @@ class AttendanceMonitoringAgent:
                                 existing_alert.is_resolved = True
                                 self.db.commit()
 
-                # Create official alert
-                alert = self.tools.generate_alert(
-                    student_id=st.id,
-                    subject_id=sub.id,
-                    risk_level=risk_lvl,
-                    current_pct=m["percentage"],
-                    required_pct=m["required_threshold"],
-                    attended=m["classes_attended"],
-                    conducted=m["classes_conducted"],
-                    classes_required=m["consecutive_classes_needed"],
-                    title=narrative["title"],
-                    explanation=narrative["explanation"],
-                    recommended_action=narrative["recommended_action"]
+                cases_to_publish.append(item)
+
+            # 8. GENERATING_EXPLANATION (Personalized qualitative guidance for new/escalated alerts)
+            if cases_to_publish:
+                sm.transition_to(
+                    AgentStage.GENERATING_EXPLANATION,
+                    f"Generating qualitative academic guidance and recovery pathways for {len(cases_to_publish)} alerts."
                 )
-                created_alerts.append(alert)
+
+                for item in cases_to_publish:
+                    st = item["student"]
+                    sub = item["subject"]
+                    m = item["metrics"]
+                    ml_info = item["ml_prediction"]
+                    student_name = st.user.full_name if st.user else "Student"
+                    risk_lvl = item["effective_risk_level"]
+
+                    narrative = llm_provider.generate_personalized_alert_explanation(
+                        student_name=student_name,
+                        subject_name=sub.name,
+                        current_pct=m["percentage"],
+                        required_pct=m["required_threshold"],
+                        attended=m["classes_attended"],
+                        conducted=m["classes_conducted"],
+                        classes_needed=m["consecutive_classes_needed"],
+                        risk_level=risk_lvl
+                    )
+
+                    alert = self.tools.generate_alert(
+                        student_id=st.id,
+                        subject_id=sub.id,
+                        risk_level=risk_lvl,
+                        current_pct=m["percentage"],
+                        required_pct=m["required_threshold"],
+                        attended=m["classes_attended"],
+                        conducted=m["classes_conducted"],
+                        classes_required=m["consecutive_classes_needed"],
+                        title=narrative["title"],
+                        explanation=narrative["explanation"],
+                        recommended_action=narrative["recommended_action"]
+                    )
+                    created_alerts.append(alert)
 
             sm.run.alerts_created = len(created_alerts)
             self.db.commit()

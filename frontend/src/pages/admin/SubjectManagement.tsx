@@ -13,7 +13,6 @@ import {
   X,
   Layers,
   GraduationCap,
-  Sparkles,
   ShieldCheck,
   AlertCircle
 } from 'lucide-react';
@@ -268,34 +267,34 @@ export const SubjectManagement: React.FC = () => {
   });
 
   return (
-    <div className="space-y-6 max-w-6xl mx-auto pb-12 animate-fade-in">
+    <div className="space-y-5 max-w-6xl mx-auto pb-10">
       {/* Header with Add Subject Action */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-slate-200 dark:border-[#262626]">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-200 dark:border-[#27272A]">
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">Course Subjects & Curriculum</h1>
-            <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-400 border border-blue-200 dark:border-blue-900/50">
-              {subjects.length} Courses Monitored
+            <h1 className="text-xl font-bold text-slate-900 dark:text-zinc-100 tracking-tight">Course Subjects &amp; Curriculum</h1>
+            <span className="px-2 py-0.5 rounded text-[11px] font-semibold bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-400 border border-blue-200 dark:border-blue-900/50">
+              {subjects.length} Courses Active
             </span>
           </div>
-          <p className="text-xs text-slate-500 dark:text-[#A3A3A3] mt-1">
-            Authoritative curriculum database of courses, session targets, and historical enrollment requirements.
+          <p className="text-xs text-slate-500 dark:text-zinc-400 mt-0.5">
+            Institutional curriculum catalog of academic courses, session quotas, and requirements.
           </p>
         </div>
 
         <button
           onClick={handleOpenAdd}
-          className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-semibold shadow-xs transition-all cursor-pointer erp-button"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-xs font-medium shadow-xs transition-colors cursor-pointer"
         >
-          <Plus className="w-4 h-4" />
-          <span>Add Subject</span>
+          <Plus className="w-3.5 h-3.5" />
+          <span>Add Course</span>
         </button>
       </div>
 
       {/* Feedback Banner */}
       {feedback && (
         <div
-          className={`p-3.5 rounded-xl border text-xs flex items-center justify-between gap-3 ${
+          className={`p-3 rounded-md border text-xs flex items-center justify-between gap-3 ${
             feedback.type === 'success'
               ? 'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-200 dark:border-emerald-900/50 text-emerald-800 dark:text-emerald-300'
               : feedback.type === 'info'
@@ -323,27 +322,27 @@ export const SubjectManagement: React.FC = () => {
       )}
 
       {/* Search & Filter Toolbar */}
-      <div className="bg-white dark:bg-[#111111] p-4 rounded-xl border border-slate-200 dark:border-[#262626] shadow-xs flex flex-wrap items-center justify-between gap-4 text-xs">
-        <div className="flex flex-wrap items-center gap-3 flex-1">
+      <div className="bg-white dark:bg-[#121215] p-3 rounded-lg border border-slate-200 dark:border-[#27272A] shadow-xs flex flex-wrap items-center justify-between gap-3 text-xs">
+        <div className="flex flex-wrap items-center gap-2.5 flex-1">
           {/* Search Input */}
-          <div className="relative min-w-[220px] flex-1 max-w-sm">
-            <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-[#737373]" />
+          <div className="relative min-w-[200px] flex-1 max-w-sm">
+            <Search className="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 dark:text-zinc-500" />
             <input
               type="text"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="Search course code or title..."
-              className="w-full pl-9 pr-3 py-1.5 bg-white dark:bg-[#141414] border border-slate-300 dark:border-[#262626] rounded-lg text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-[#737373] focus:outline-none focus:ring-2 focus:ring-blue-600 shadow-xs font-medium"
+              className="w-full pl-8 pr-3 py-1 bg-white dark:bg-[#18181B] border border-slate-200 dark:border-[#27272A] rounded-md text-slate-900 dark:text-zinc-100 placeholder-slate-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-blue-600"
             />
           </div>
 
           {/* Department Filter */}
           <div className="flex items-center gap-1.5">
-            <span className="font-semibold text-slate-600 dark:text-[#A3A3A3]">Dept:</span>
+            <span className="font-medium text-slate-500 dark:text-zinc-400">Dept:</span>
             <select
               value={deptFilter}
               onChange={(e) => setDeptFilter(e.target.value)}
-              className="px-2.5 py-1.5 bg-white dark:bg-[#141414] border border-slate-300 dark:border-[#262626] rounded-lg text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-600 font-medium"
+              className="px-2.5 py-1 bg-white dark:bg-[#18181B] border border-slate-200 dark:border-[#27272A] rounded-md text-slate-900 dark:text-zinc-100 focus:outline-none focus:ring-1 focus:ring-blue-600 text-xs"
             >
               <option value="">All Departments</option>
               {availableDepartments.map((dept) => (
@@ -356,11 +355,11 @@ export const SubjectManagement: React.FC = () => {
 
           {/* Semester Filter */}
           <div className="flex items-center gap-1.5">
-            <span className="font-semibold text-slate-600 dark:text-[#A3A3A3]">Sem:</span>
+            <span className="font-medium text-slate-500 dark:text-zinc-400">Sem:</span>
             <select
               value={semFilter}
               onChange={(e) => setSemFilter(e.target.value)}
-              className="px-2.5 py-1.5 bg-white dark:bg-[#141414] border border-slate-300 dark:border-[#262626] rounded-lg text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-600 font-medium"
+              className="px-2.5 py-1 bg-white dark:bg-[#18181B] border border-slate-200 dark:border-[#27272A] rounded-md text-slate-900 dark:text-zinc-100 focus:outline-none focus:ring-1 focus:ring-blue-600 text-xs"
             >
               <option value="">All Semesters</option>
               {availableSemesters.map((s) => (
@@ -373,11 +372,11 @@ export const SubjectManagement: React.FC = () => {
 
           {/* Status Filter */}
           <div className="flex items-center gap-1.5">
-            <span className="font-semibold text-slate-600 dark:text-[#A3A3A3]">Status:</span>
+            <span className="font-medium text-slate-500 dark:text-zinc-400">Status:</span>
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="px-2.5 py-1.5 bg-white dark:bg-[#141414] border border-slate-300 dark:border-[#262626] rounded-lg text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-600 font-medium"
+              className="px-2.5 py-1 bg-white dark:bg-[#18181B] border border-slate-200 dark:border-[#27272A] rounded-md text-slate-900 dark:text-zinc-100 focus:outline-none focus:ring-1 focus:ring-blue-600 text-xs"
             >
               <option value="ALL">All Curriculum</option>
               <option value="ACTIVE">Active Courses</option>
@@ -386,80 +385,80 @@ export const SubjectManagement: React.FC = () => {
           </div>
         </div>
 
-        <div className="text-slate-500 dark:text-[#A3A3A3] font-medium font-mono text-[11px]">
+        <div className="text-slate-500 dark:text-zinc-400 font-mono text-[11px]">
           Showing <strong>{filteredSubjects.length}</strong> of <strong>{subjects.length}</strong> courses
         </div>
       </div>
 
       {/* Bounded Scrollable Catalog Grid */}
-      <div className="bg-white/50 dark:bg-[#111111]/40 border border-slate-200 dark:border-[#262626] rounded-xl p-4 shadow-xs">
+      <div className="bg-white dark:bg-[#121215] border border-slate-200 dark:border-[#27272A] rounded-lg p-4 shadow-xs">
         <div className="max-h-[64vh] overflow-y-auto pr-1">
           {loading ? (
-            <div className="py-20 text-center text-xs text-slate-500 dark:text-[#A3A3A3]">
+            <div className="py-20 text-center text-xs text-slate-500 dark:text-zinc-400">
               Loading dynamic curriculum catalog...
             </div>
           ) : filteredSubjects.length === 0 ? (
             <div className="py-16 text-center">
-              <BookOpen className="w-10 h-10 text-slate-300 dark:text-[#404040] mx-auto mb-2" />
-              <p className="text-sm font-semibold text-slate-700 dark:text-[#D4D4D4]">No courses match current filters</p>
-              <p className="text-xs text-slate-400 dark:text-[#737373] mt-1">Try resetting the department or semester filter.</p>
+              <BookOpen className="w-8 h-8 text-slate-300 dark:text-zinc-600 mx-auto mb-2" />
+              <p className="text-sm font-semibold text-slate-700 dark:text-zinc-300">No courses match current filters</p>
+              <p className="text-xs text-slate-400 dark:text-zinc-500 mt-1">Try resetting the department or semester filter.</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
               {filteredSubjects.map((sub) => {
                 const isArchived = !sub.is_active;
                 return (
                   <div
                     key={sub.id}
-                    className={`bg-white dark:bg-[#111111] border rounded-xl p-5 shadow-xs transition-all duration-180 flex flex-col justify-between ${
+                    className={`bg-white dark:bg-[#18181B] border rounded-lg p-4 shadow-xs flex flex-col justify-between ${
                       isArchived
-                        ? 'border-slate-200/80 dark:border-[#262626] opacity-75 bg-slate-50/50 dark:bg-[#141414]'
-                        : 'border-slate-200 dark:border-[#262626] hover:border-slate-300 dark:hover:border-[#383838] hover:shadow-md hover:-translate-y-0.5'
+                        ? 'border-slate-200/80 dark:border-[#27272A] opacity-70 bg-slate-50/50 dark:bg-[#141417]'
+                        : 'border-slate-200 dark:border-[#27272A] hover:border-slate-300 dark:hover:border-zinc-700'
                     }`}
                   >
                     <div>
                       {/* Badge bar */}
                       <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center gap-1.5">
-                          <span className="font-mono text-xs font-bold text-blue-700 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/40 px-2.5 py-0.5 rounded-md border border-blue-200 dark:border-blue-900/50">
+                          <span className="font-mono text-xs font-semibold text-blue-700 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/40 px-2 py-0.5 rounded border border-blue-200 dark:border-blue-900/50">
                             {sub.code}
                           </span>
                           {isArchived ? (
-                            <span className="text-[10px] font-semibold text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/40 px-2 py-0.5 rounded-md border border-amber-200 dark:border-amber-900/50">
+                            <span className="text-[10px] font-semibold text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/40 px-1.5 py-0.5 rounded border border-amber-200 dark:border-amber-900/50">
                               Archived
                             </span>
                           ) : (
-                            <span className="text-[10px] font-semibold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-2 py-0.5 rounded-md border border-emerald-200 dark:border-emerald-900/50">
+                            <span className="text-[10px] font-semibold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-1.5 py-0.5 rounded border border-emerald-200 dark:border-emerald-900/50">
                               Active
                             </span>
                           )}
                         </div>
-                        <span className="text-[11px] font-mono text-slate-500 dark:text-[#A3A3A3] font-medium">
+                        <span className="text-[11px] font-mono text-slate-500 dark:text-zinc-400">
                           Sem {sub.semester}
                         </span>
                       </div>
 
                       {/* Course Title & Dept */}
-                      <h3 className="text-sm font-bold text-slate-900 dark:text-white mt-2 leading-snug">
+                      <h3 className="text-sm font-semibold text-slate-900 dark:text-zinc-100 mt-1 leading-snug">
                         {sub.name}
                       </h3>
-                      <p className="text-xs text-slate-500 dark:text-[#A3A3A3] mt-0.5">{sub.department}</p>
+                      <p className="text-xs text-slate-500 dark:text-zinc-400 mt-0.5">{sub.department}</p>
 
                       {/* Details row */}
-                      <div className="mt-4 pt-3 border-t border-slate-100 dark:border-[#262626] grid grid-cols-2 gap-2 text-xs text-slate-600 dark:text-[#A3A3A3]">
+                      <div className="mt-3 pt-2.5 border-t border-slate-100 dark:border-[#27272A] grid grid-cols-2 gap-2 text-xs text-slate-600 dark:text-zinc-400">
                         <div>
-                          <span className="text-[10px] text-slate-400 dark:text-[#737373] uppercase font-bold block">
+                          <span className="text-[10px] text-slate-400 dark:text-zinc-500 uppercase font-semibold block">
                             Target Sessions
                           </span>
-                          <strong className="text-slate-900 dark:text-white font-mono">
+                          <strong className="text-slate-900 dark:text-zinc-200 font-mono">
                             {sub.total_classes_scheduled} classes
                           </strong>
                         </div>
                         <div>
-                          <span className="text-[10px] text-slate-400 dark:text-[#737373] uppercase font-bold block">
+                          <span className="text-[10px] text-slate-400 dark:text-zinc-500 uppercase font-semibold block">
                             Credits
                           </span>
-                          <strong className="text-slate-900 dark:text-white font-mono">
+                          <strong className="text-slate-900 dark:text-zinc-200 font-mono">
                             {sub.credits ?? 3} Credit units
                           </strong>
                         </div>
@@ -467,7 +466,7 @@ export const SubjectManagement: React.FC = () => {
 
                       {/* Referential metrics if present */}
                       {(sub.attendance_records_count !== undefined || sub.alerts_count !== undefined) && (
-                        <div className="mt-2 text-[10px] text-slate-400 dark:text-[#737373] flex items-center gap-3 font-mono">
+                        <div className="mt-2 text-[10px] text-slate-400 dark:text-zinc-500 flex items-center gap-3 font-mono">
                           {sub.attendance_records_count !== undefined && (
                             <span>{sub.attendance_records_count} attendance logs</span>
                           )}
@@ -477,10 +476,10 @@ export const SubjectManagement: React.FC = () => {
                     </div>
 
                     {/* Action buttons */}
-                    <div className="mt-4 pt-3 border-t border-slate-100 dark:border-[#262626] flex items-center justify-end gap-2">
+                    <div className="mt-3 pt-2.5 border-t border-slate-100 dark:border-[#27272A] flex items-center justify-end gap-1.5">
                       <button
                         onClick={() => handleOpenEdit(sub)}
-                        className="p-1.5 rounded-lg border border-slate-200 dark:border-[#262626] text-slate-700 dark:text-[#D4D4D4] hover:bg-slate-50 dark:hover:bg-[#1a1a1a] transition-colors"
+                        className="p-1 rounded border border-slate-200 dark:border-[#27272A] text-slate-600 dark:text-zinc-300 hover:bg-slate-50 dark:hover:bg-zinc-800 transition-colors"
                         title="Edit course details"
                       >
                         <Edit2 className="w-3.5 h-3.5" />
@@ -489,7 +488,7 @@ export const SubjectManagement: React.FC = () => {
                       {isArchived ? (
                         <button
                           onClick={() => setConfirmSubject({ subject: sub, action: 'unarchive' })}
-                          className="px-2.5 py-1 text-xs font-semibold rounded-lg bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-900/50 hover:bg-emerald-100 transition-colors inline-flex items-center gap-1"
+                          className="px-2 py-1 text-xs font-medium rounded bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-900/50 hover:bg-emerald-100 transition-colors inline-flex items-center gap-1"
                           title="Restore to active catalog"
                         >
                           <RotateCcw className="w-3 h-3" />
@@ -498,7 +497,7 @@ export const SubjectManagement: React.FC = () => {
                       ) : (
                         <button
                           onClick={() => setConfirmSubject({ subject: sub, action: 'archive_or_delete' })}
-                          className="px-2.5 py-1 text-xs font-semibold rounded-lg bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-400 border border-rose-200 dark:border-rose-900/50 hover:bg-rose-100 transition-colors inline-flex items-center gap-1"
+                          className="px-2 py-1 text-xs font-medium rounded bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-400 border border-rose-200 dark:border-rose-900/50 hover:bg-rose-100 transition-colors inline-flex items-center gap-1"
                           title="Archive or remove subject"
                         >
                           <Archive className="w-3 h-3" />
@@ -516,30 +515,30 @@ export const SubjectManagement: React.FC = () => {
 
       {/* ADD SUBJECT MODAL */}
       {isAddModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fade-in">
-          <div className="bg-white dark:bg-[#111111] border border-slate-200 dark:border-[#262626] rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-[#262626]">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
+          <div className="bg-white dark:bg-[#121215] border border-slate-200 dark:border-[#27272A] rounded-lg max-w-lg w-full p-5 shadow-xl space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-[#27272A]">
               <div className="flex items-center gap-2">
-                <BookOpen className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-                <h3 className="text-base font-bold text-slate-900 dark:text-white">Add Curriculum Subject</h3>
+                <BookOpen className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                <h3 className="text-sm font-semibold text-slate-900 dark:text-zinc-100">Add Curriculum Course</h3>
               </div>
               <button
                 onClick={() => setIsAddModalOpen(false)}
-                className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+                className="text-slate-400 hover:text-slate-600 dark:hover:text-zinc-300"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
 
             {formErrors.submit && (
-              <div className="p-3 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/50 text-rose-700 dark:text-rose-300 rounded-lg text-xs">
+              <div className="p-2.5 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/50 text-rose-700 dark:text-rose-300 rounded-md text-xs">
                 {formErrors.submit}
               </div>
             )}
 
-            <form onSubmit={handleAddSubmit} className="space-y-3.5 text-xs">
+            <form onSubmit={handleAddSubmit} className="space-y-3 text-xs">
               <div>
-                <label className="block text-slate-700 dark:text-[#D4D4D4] font-semibold mb-1">
+                <label className="block text-slate-700 dark:text-zinc-300 font-medium mb-1">
                   Course Code <span className="text-rose-500">*</span>
                 </label>
                 <input
@@ -547,34 +546,34 @@ export const SubjectManagement: React.FC = () => {
                   placeholder="e.g. CS507"
                   value={formData.code}
                   onChange={(e) => setFormData({ ...formData, code: e.target.value.toUpperCase() })}
-                  className="w-full px-3 py-2 bg-white dark:bg-[#141414] border border-slate-300 dark:border-[#262626] rounded-lg text-slate-900 dark:text-white font-mono uppercase focus:outline-none focus:ring-2 focus:ring-blue-600"
+                  className="w-full px-3 py-1.5 bg-white dark:bg-[#18181B] border border-slate-200 dark:border-[#27272A] rounded-md text-slate-900 dark:text-zinc-100 font-mono uppercase focus:outline-none focus:ring-1 focus:ring-blue-600"
                 />
                 {formErrors.code && <p className="text-rose-500 text-[11px] mt-1">{formErrors.code}</p>}
               </div>
 
               <div>
-                <label className="block text-slate-700 dark:text-[#D4D4D4] font-semibold mb-1">
-                  Subject Title <span className="text-rose-500">*</span>
+                <label className="block text-slate-700 dark:text-zinc-300 font-medium mb-1">
+                  Course Title <span className="text-rose-500">*</span>
                 </label>
                 <input
                   type="text"
                   placeholder="e.g. Distributed Computing & Cloud Infrastructure"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full px-3 py-2 bg-white dark:bg-[#141414] border border-slate-300 dark:border-[#262626] rounded-lg text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-600"
+                  className="w-full px-3 py-1.5 bg-white dark:bg-[#18181B] border border-slate-200 dark:border-[#27272A] rounded-md text-slate-900 dark:text-zinc-100 focus:outline-none focus:ring-1 focus:ring-blue-600"
                 />
                 {formErrors.name && <p className="text-rose-500 text-[11px] mt-1">{formErrors.name}</p>}
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-slate-700 dark:text-[#D4D4D4] font-semibold mb-1">
+                  <label className="block text-slate-700 dark:text-zinc-300 font-medium mb-1">
                     Department <span className="text-rose-500">*</span>
                   </label>
                   <select
                     value={formData.department}
                     onChange={(e) => setFormData({ ...formData, department: e.target.value })}
-                    className="w-full px-3 py-2 bg-white dark:bg-[#141414] border border-slate-300 dark:border-[#262626] rounded-lg text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-600"
+                    className="w-full px-3 py-1.5 bg-white dark:bg-[#18181B] border border-slate-200 dark:border-[#27272A] rounded-md text-slate-900 dark:text-zinc-100 focus:outline-none focus:ring-1 focus:ring-blue-600"
                   >
                     {availableDepartments.map((dept) => (
                       <option key={dept} value={dept}>
@@ -585,13 +584,13 @@ export const SubjectManagement: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="block text-slate-700 dark:text-[#D4D4D4] font-semibold mb-1">
+                  <label className="block text-slate-700 dark:text-zinc-300 font-medium mb-1">
                     Semester (1–8) <span className="text-rose-500">*</span>
                   </label>
                   <select
                     value={formData.semester}
                     onChange={(e) => setFormData({ ...formData, semester: Number(e.target.value) })}
-                    className="w-full px-3 py-2 bg-white dark:bg-[#141414] border border-slate-300 dark:border-[#262626] rounded-lg text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-600"
+                    className="w-full px-3 py-1.5 bg-white dark:bg-[#18181B] border border-slate-200 dark:border-[#27272A] rounded-md text-slate-900 dark:text-zinc-100 focus:outline-none focus:ring-1 focus:ring-blue-600"
                   >
                     {availableSemesters.map((s) => (
                       <option key={s} value={s}>
@@ -604,7 +603,7 @@ export const SubjectManagement: React.FC = () => {
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-slate-700 dark:text-[#D4D4D4] font-semibold mb-1">
+                  <label className="block text-slate-700 dark:text-zinc-300 font-medium mb-1">
                     Target Scheduled Sessions <span className="text-rose-500">*</span>
                   </label>
                   <input
@@ -613,7 +612,7 @@ export const SubjectManagement: React.FC = () => {
                     max="150"
                     value={formData.total_classes_scheduled}
                     onChange={(e) => setFormData({ ...formData, total_classes_scheduled: Number(e.target.value) })}
-                    className="w-full px-3 py-2 bg-white dark:bg-[#141414] border border-slate-300 dark:border-[#262626] rounded-lg text-slate-900 dark:text-white font-mono focus:outline-none focus:ring-2 focus:ring-blue-600"
+                    className="w-full px-3 py-1.5 bg-white dark:bg-[#18181B] border border-slate-200 dark:border-[#27272A] rounded-md text-slate-900 dark:text-zinc-100 font-mono focus:outline-none focus:ring-1 focus:ring-blue-600"
                   />
                   {formErrors.total_classes_scheduled && (
                     <p className="text-rose-500 text-[11px] mt-1">{formErrors.total_classes_scheduled}</p>
@@ -621,7 +620,7 @@ export const SubjectManagement: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="block text-slate-700 dark:text-[#D4D4D4] font-semibold mb-1">
+                  <label className="block text-slate-700 dark:text-zinc-300 font-medium mb-1">
                     Credits (Units)
                   </label>
                   <input
@@ -630,26 +629,26 @@ export const SubjectManagement: React.FC = () => {
                     max="10"
                     value={formData.credits}
                     onChange={(e) => setFormData({ ...formData, credits: Number(e.target.value) })}
-                    className="w-full px-3 py-2 bg-white dark:bg-[#141414] border border-slate-300 dark:border-[#262626] rounded-lg text-slate-900 dark:text-white font-mono focus:outline-none focus:ring-2 focus:ring-blue-600"
+                    className="w-full px-3 py-1.5 bg-white dark:bg-[#18181B] border border-slate-200 dark:border-[#27272A] rounded-md text-slate-900 dark:text-zinc-100 font-mono focus:outline-none focus:ring-1 focus:ring-blue-600"
                   />
                   {formErrors.credits && <p className="text-rose-500 text-[11px] mt-1">{formErrors.credits}</p>}
                 </div>
               </div>
 
-              <div className="pt-3 border-t border-slate-100 dark:border-[#262626] flex items-center justify-end gap-2">
+              <div className="pt-3 border-t border-slate-100 dark:border-[#27272A] flex items-center justify-end gap-2">
                 <button
                   type="button"
                   onClick={() => setIsAddModalOpen(false)}
-                  className="px-4 py-2 bg-slate-100 dark:bg-[#1c1c1c] text-slate-700 dark:text-[#D4D4D4] hover:bg-slate-200 dark:hover:bg-[#262626] rounded-lg font-semibold transition-colors"
+                  className="px-3 py-1.5 bg-slate-100 dark:bg-[#18181B] text-slate-700 dark:text-zinc-300 hover:bg-slate-200 dark:hover:bg-zinc-800 rounded-md font-medium transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white rounded-lg font-semibold transition-colors shadow-xs"
+                  className="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white rounded-md font-medium transition-colors shadow-xs"
                 >
-                  {submitting ? 'Saving Course...' : 'Create Course'}
+                  {submitting ? 'Saving...' : 'Create Course'}
                 </button>
               </div>
             </form>
@@ -659,63 +658,63 @@ export const SubjectManagement: React.FC = () => {
 
       {/* EDIT SUBJECT MODAL */}
       {editingSubject && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fade-in">
-          <div className="bg-white dark:bg-[#111111] border border-slate-200 dark:border-[#262626] rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-[#262626]">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
+          <div className="bg-white dark:bg-[#121215] border border-slate-200 dark:border-[#27272A] rounded-lg max-w-lg w-full p-5 shadow-xl space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-[#27272A]">
               <div className="flex items-center gap-2">
-                <Edit2 className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-                <h3 className="text-base font-bold text-slate-900 dark:text-white">
-                  Edit Subject [{editingSubject.code}]
+                <Edit2 className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                <h3 className="text-sm font-semibold text-slate-900 dark:text-zinc-100">
+                  Edit Course [{editingSubject.code}]
                 </h3>
               </div>
               <button
                 onClick={() => setEditingSubject(null)}
-                className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+                className="text-slate-400 hover:text-slate-600 dark:hover:text-zinc-300"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
 
             {formErrors.submit && (
-              <div className="p-3 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/50 text-rose-700 dark:text-rose-300 rounded-lg text-xs">
+              <div className="p-2.5 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/50 text-rose-700 dark:text-rose-300 rounded-md text-xs">
                 {formErrors.submit}
               </div>
             )}
 
-            <form onSubmit={handleEditSubmit} className="space-y-3.5 text-xs">
+            <form onSubmit={handleEditSubmit} className="space-y-3 text-xs">
               <div>
-                <label className="block text-slate-700 dark:text-[#D4D4D4] font-semibold mb-1">
+                <label className="block text-slate-700 dark:text-zinc-300 font-medium mb-1">
                   Course Code <span className="text-rose-500">*</span>
                 </label>
                 <input
                   type="text"
                   value={formData.code}
                   onChange={(e) => setFormData({ ...formData, code: e.target.value.toUpperCase() })}
-                  className="w-full px-3 py-2 bg-white dark:bg-[#141414] border border-slate-300 dark:border-[#262626] rounded-lg text-slate-900 dark:text-white font-mono uppercase focus:outline-none focus:ring-2 focus:ring-blue-600"
+                  className="w-full px-3 py-1.5 bg-white dark:bg-[#18181B] border border-slate-200 dark:border-[#27272A] rounded-md text-slate-900 dark:text-zinc-100 font-mono uppercase focus:outline-none focus:ring-1 focus:ring-blue-600"
                 />
                 {formErrors.code && <p className="text-rose-500 text-[11px] mt-1">{formErrors.code}</p>}
               </div>
 
               <div>
-                <label className="block text-slate-700 dark:text-[#D4D4D4] font-semibold mb-1">
-                  Subject Title <span className="text-rose-500">*</span>
+                <label className="block text-slate-700 dark:text-zinc-300 font-medium mb-1">
+                  Course Title <span className="text-rose-500">*</span>
                 </label>
                 <input
                   type="text"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full px-3 py-2 bg-white dark:bg-[#141414] border border-slate-300 dark:border-[#262626] rounded-lg text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-600"
+                  className="w-full px-3 py-1.5 bg-white dark:bg-[#18181B] border border-slate-200 dark:border-[#27272A] rounded-md text-slate-900 dark:text-zinc-100 focus:outline-none focus:ring-1 focus:ring-blue-600"
                 />
                 {formErrors.name && <p className="text-rose-500 text-[11px] mt-1">{formErrors.name}</p>}
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-slate-700 dark:text-[#D4D4D4] font-semibold mb-1">Department</label>
+                  <label className="block text-slate-700 dark:text-zinc-300 font-medium mb-1">Department</label>
                   <select
                     value={formData.department}
                     onChange={(e) => setFormData({ ...formData, department: e.target.value })}
-                    className="w-full px-3 py-2 bg-white dark:bg-[#141414] border border-slate-300 dark:border-[#262626] rounded-lg text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-600"
+                    className="w-full px-3 py-1.5 bg-white dark:bg-[#18181B] border border-slate-200 dark:border-[#27272A] rounded-md text-slate-900 dark:text-zinc-100 focus:outline-none focus:ring-1 focus:ring-blue-600"
                   >
                     {availableDepartments.map((dept) => (
                       <option key={dept} value={dept}>
@@ -726,11 +725,11 @@ export const SubjectManagement: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="block text-slate-700 dark:text-[#D4D4D4] font-semibold mb-1">Semester</label>
+                  <label className="block text-slate-700 dark:text-zinc-300 font-medium mb-1">Semester</label>
                   <select
                     value={formData.semester}
                     onChange={(e) => setFormData({ ...formData, semester: Number(e.target.value) })}
-                    className="w-full px-3 py-2 bg-white dark:bg-[#141414] border border-slate-300 dark:border-[#262626] rounded-lg text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-600"
+                    className="w-full px-3 py-1.5 bg-white dark:bg-[#18181B] border border-slate-200 dark:border-[#27272A] rounded-md text-slate-900 dark:text-zinc-100 focus:outline-none focus:ring-1 focus:ring-blue-600"
                   >
                     {availableSemesters.map((s) => (
                       <option key={s} value={s}>
@@ -743,7 +742,7 @@ export const SubjectManagement: React.FC = () => {
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-slate-700 dark:text-[#D4D4D4] font-semibold mb-1">
+                  <label className="block text-slate-700 dark:text-zinc-300 font-medium mb-1">
                     Scheduled Sessions
                   </label>
                   <input
@@ -752,7 +751,7 @@ export const SubjectManagement: React.FC = () => {
                     max="150"
                     value={formData.total_classes_scheduled}
                     onChange={(e) => setFormData({ ...formData, total_classes_scheduled: Number(e.target.value) })}
-                    className="w-full px-3 py-2 bg-white dark:bg-[#141414] border border-slate-300 dark:border-[#262626] rounded-lg text-slate-900 dark:text-white font-mono focus:outline-none focus:ring-2 focus:ring-blue-600"
+                    className="w-full px-3 py-1.5 bg-white dark:bg-[#18181B] border border-slate-200 dark:border-[#27272A] rounded-md text-slate-900 dark:text-zinc-100 font-mono focus:outline-none focus:ring-1 focus:ring-blue-600"
                   />
                   {formErrors.total_classes_scheduled && (
                     <p className="text-rose-500 text-[11px] mt-1">{formErrors.total_classes_scheduled}</p>
@@ -760,14 +759,14 @@ export const SubjectManagement: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="block text-slate-700 dark:text-[#D4D4D4] font-semibold mb-1">Credits</label>
+                  <label className="block text-slate-700 dark:text-zinc-300 font-medium mb-1">Credits</label>
                   <input
                     type="number"
                     min="1"
                     max="10"
                     value={formData.credits}
                     onChange={(e) => setFormData({ ...formData, credits: Number(e.target.value) })}
-                    className="w-full px-3 py-2 bg-white dark:bg-[#141414] border border-slate-300 dark:border-[#262626] rounded-lg text-slate-900 dark:text-white font-mono focus:outline-none focus:ring-2 focus:ring-blue-600"
+                    className="w-full px-3 py-1.5 bg-white dark:bg-[#18181B] border border-slate-200 dark:border-[#27272A] rounded-md text-slate-900 dark:text-zinc-100 font-mono focus:outline-none focus:ring-1 focus:ring-blue-600"
                   />
                 </div>
               </div>
@@ -778,27 +777,27 @@ export const SubjectManagement: React.FC = () => {
                   id="edit_is_active"
                   checked={formData.is_active}
                   onChange={(e) => setFormData({ ...formData, is_active: e.target.checked })}
-                  className="rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                  className="rounded border-slate-300 dark:border-zinc-700 text-blue-600 focus:ring-blue-500"
                 />
-                <label htmlFor="edit_is_active" className="text-slate-700 dark:text-[#D4D4D4] font-semibold">
+                <label htmlFor="edit_is_active" className="text-slate-700 dark:text-zinc-300 font-medium">
                   Course Active in Enrollment Catalog
                 </label>
               </div>
 
-              <div className="pt-3 border-t border-slate-100 dark:border-[#262626] flex items-center justify-end gap-2">
+              <div className="pt-3 border-t border-slate-100 dark:border-[#27272A] flex items-center justify-end gap-2">
                 <button
                   type="button"
                   onClick={() => setEditingSubject(null)}
-                  className="px-4 py-2 bg-slate-100 dark:bg-[#1c1c1c] text-slate-700 dark:text-[#D4D4D4] hover:bg-slate-200 dark:hover:bg-[#262626] rounded-lg font-semibold transition-colors"
+                  className="px-3 py-1.5 bg-slate-100 dark:bg-[#18181B] text-slate-700 dark:text-zinc-300 hover:bg-slate-200 dark:hover:bg-zinc-800 rounded-md font-medium transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white rounded-lg font-semibold transition-colors shadow-xs"
+                  className="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white rounded-md font-medium transition-colors shadow-xs"
                 >
-                  {submitting ? 'Updating...' : 'Save Changes'}
+                  {submitting ? 'Saving...' : 'Save Changes'}
                 </button>
               </div>
             </form>
@@ -808,30 +807,30 @@ export const SubjectManagement: React.FC = () => {
 
       {/* CONFIRMATION DIALOG (ARCHIVE / REMOVE) */}
       {confirmSubject && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fade-in">
-          <div className="bg-white dark:bg-[#111111] border border-slate-200 dark:border-[#262626] rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
+          <div className="bg-white dark:bg-[#121215] border border-slate-200 dark:border-[#27272A] rounded-lg max-w-md w-full p-5 shadow-xl space-y-4">
             <div className="flex items-center gap-3 text-amber-600 dark:text-amber-400">
-              <div className="w-10 h-10 rounded-full bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900/50 flex items-center justify-center shrink-0">
-                <AlertTriangle className="w-5 h-5" />
+              <div className="w-9 h-9 rounded-full bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900/50 flex items-center justify-center shrink-0">
+                <AlertTriangle className="w-4 h-4" />
               </div>
               <div>
-                <h3 className="text-base font-bold text-slate-900 dark:text-white">
+                <h3 className="text-sm font-semibold text-slate-900 dark:text-zinc-100">
                   {confirmSubject.action === 'archive_or_delete'
                     ? `Archive or Remove "${confirmSubject.subject.name}"?`
                     : `Reactivate "${confirmSubject.subject.name}"?`}
                 </h3>
-                <p className="text-[11px] font-mono text-slate-500 dark:text-[#A3A3A3]">
+                <p className="text-[11px] font-mono text-slate-500 dark:text-zinc-400">
                   Code: {confirmSubject.subject.code}
                 </p>
               </div>
             </div>
 
-            <div className="text-xs text-slate-600 dark:text-[#A3A3A3] leading-relaxed space-y-2">
+            <div className="text-xs text-slate-600 dark:text-zinc-400 leading-relaxed space-y-2">
               {confirmSubject.action === 'archive_or_delete' ? (
                 <>
                   <p>
                     If this course has existing attendance records, student alerts, or faculty assignments, it will be{' '}
-                    <strong className="text-slate-900 dark:text-white">Archived</strong> rather than permanently deleted.
+                    <strong className="text-slate-900 dark:text-zinc-100">Archived</strong> rather than permanently deleted.
                   </p>
                   <p className="text-amber-700 dark:text-amber-400 font-medium">
                     This protects historical academic percentages, compliance audits, and statutory reports while removing the course from active rosters.
@@ -844,12 +843,12 @@ export const SubjectManagement: React.FC = () => {
               )}
             </div>
 
-            <div className="pt-3 border-t border-slate-100 dark:border-[#262626] flex items-center justify-end gap-2 text-xs">
+            <div className="pt-3 border-t border-slate-100 dark:border-[#27272A] flex items-center justify-end gap-2 text-xs">
               <button
                 type="button"
                 onClick={() => setConfirmSubject(null)}
                 disabled={submitting}
-                className="px-4 py-2 bg-slate-100 dark:bg-[#1c1c1c] text-slate-700 dark:text-[#D4D4D4] hover:bg-slate-200 dark:hover:bg-[#262626] rounded-lg font-semibold transition-colors"
+                className="px-3 py-1.5 bg-slate-100 dark:bg-[#18181B] text-slate-700 dark:text-zinc-300 hover:bg-slate-200 dark:hover:bg-zinc-800 rounded-md font-medium transition-colors"
               >
                 Cancel
               </button>
@@ -857,7 +856,7 @@ export const SubjectManagement: React.FC = () => {
                 type="button"
                 onClick={handleExecuteArchiveOrDelete}
                 disabled={submitting}
-                className={`px-4 py-2 text-white rounded-lg font-semibold transition-colors shadow-xs ${
+                className={`px-3 py-1.5 text-white rounded-md font-medium transition-colors shadow-xs ${
                   confirmSubject.action === 'archive_or_delete'
                     ? 'bg-rose-600 hover:bg-rose-700'
                     : 'bg-emerald-600 hover:bg-emerald-700'

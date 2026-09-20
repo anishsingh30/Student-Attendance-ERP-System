@@ -6,7 +6,7 @@
 [![React](https://img.shields.io/badge/React-18.3-61DAFB.svg)](https://react.dev/)
 [![Scikit-Learn](https://img.shields.io/badge/Scikit--Learn-1.4.2-F7931E.svg)](https://scikit-learn.org/)
 [![Tests](https://img.shields.io/badge/Tests-125%20Passed%20(100%25)-success.svg)](https://docs.pytest.org/)
-[![Design](https://img.shields.io/badge/UI-Light%20University%20ERP-2563EB.svg)](https://tailwindcss.com/)
+[![Design](https://img.shields.io/badge/UI-Dual--Theme%20ERP-2563EB.svg)](https://tailwindcss.com/)
 
 ---
 
@@ -28,12 +28,10 @@ $$\text{Attendance Facts} \ + \ \text{Deterministic Math} \ + \ \text{Institutio
 
 ## 📑 2. Documentation Suite
 
-- **[ARCHITECTURE.md](file:///a:/Flexi/ARCHITECTURE.md)**: In-depth technical architecture, component diagrams, database schema, and subsystem interactions.
-- **[SECURITY.md](file:///a:/Flexi/SECURITY.md)**: 12-domain security audit detailing IDOR prevention, SQL injection defense, prompt sandboxing, CSV sanitization, and credential hashing.
-- **[API.md](file:///a:/Flexi/API.md)**: Complete REST API documentation for all 12 router modules.
-- **[AGENT.md](file:///a:/Flexi/AGENT.md)**: Detailed specifications of the 10-stage autonomous Agent State Machine, controlled tool ecosystem, and alert idempotency.
-- **[DEPLOYMENT.md](file:///a:/Flexi/DEPLOYMENT.md)**: Local development setup, Docker Compose deployment, and database backup procedures.
-- **[understand.md](file:///a:/Flexi/understand.md)**: Exhaustive walkthrough of codebase implementation and viva defense strategies.
+- **[ARCHITECTURE.md](docs/ARCHITECTURE.md)**: In-depth technical architecture, component diagrams, database schema, and subsystem interactions.
+- **[API.md](docs/API.md)**: Complete REST API documentation for all 12 router modules.
+- **[AGENT.md](docs/AGENT.md)**: Detailed specifications of the 10-stage autonomous Agent State Machine, controlled tool ecosystem, and alert idempotency.
+- **[DEPLOYMENT.md](docs/DEPLOYMENT.md)**: Local development setup, Docker Compose deployment, Vercel production deployment, and database backup procedures.
 
 ---
 
@@ -247,26 +245,17 @@ npm run dev -- --host 127.0.0.1 --port 5173
 ```
 - Web Portal: `http://127.0.0.1:5173`
 
-### 4. Gradio AI Demonstration (Optional)
-In a separate terminal:
-```bash
-cd gradio
-pip install -r requirements.txt
-python app.py
-```
-- Gradio Interface: `http://127.0.0.1:7860`
-
 ---
 
 ## 🐳 10. Docker Deployment
 
-Launch the complete ecosystem (Frontend, Backend, PostgreSQL, and Gradio) with a single command:
+Launch the complete ecosystem (Frontend, Backend, and PostgreSQL) with a single command:
 ```bash
 docker compose up --build -d
 ```
 - Frontend Portal: `http://localhost:3000`
 - Backend API Docs: `http://localhost:8000/docs`
-- Gradio AI Demo: `http://localhost:7860`
+
 
 ---
 
@@ -276,7 +265,7 @@ The project is natively structured for **Unified Monorepo Deployment on Vercel**
 - **Single Vercel Project**: Builds React frontend to `frontend/dist` and executes FastAPI ASGI backend via `api/index.py`.
 - **Stateless Serverless Execution**: In-process background loops are automatically replaced by **Vercel Cron Jobs** targeting `/api/scheduler/cron-trigger`.
 - **External PostgreSQL Required**: Production database state must reside on a managed PostgreSQL provider (Neon, Supabase, AWS RDS). Set `DATABASE_URL=postgresql://...`.
-- **Step-by-step setup and environment variables**: See **[DEPLOYMENT.md](file:///a:/Flexi/DEPLOYMENT.md#7-vercel-production-deployment-guide)**.
+- **Step-by-step setup and environment variables**: See **[DEPLOYMENT.md](docs/DEPLOYMENT.md#7-vercel-production-deployment-guide)**.
 
 ---
 

@@ -1,3 +1,4 @@
+from datetime import datetime, timezone
 from typing import Dict, Any, List, Optional
 from sqlalchemy.orm import Session
 from app.models.user import User
@@ -220,6 +221,7 @@ class AttendanceTools:
             existing.title = clean_title
             existing.explanation = clean_explanation
             existing.recommended_action = recommended_action
+            existing.created_at = datetime.now(timezone.utc)
             self.db.commit()
             self.db.refresh(existing)
             return existing

@@ -1,21 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { 
   Calculator, 
-  Bot, 
-  ArrowRight, 
+  CheckCircle2, 
+  AlertTriangle, 
+  MinusCircle, 
+  PlusCircle, 
+  RotateCw, 
+  Info, 
+  Users, 
   ShieldCheck, 
   ShieldAlert, 
-  MinusCircle, 
-  PlusCircle,
-  RefreshCw,
-  AlertCircle,
-  Users,
-  Info
+  ArrowRight,
+  BookOpen,
+  HelpCircle
 } from 'lucide-react';
 import { api } from '../../api/client';
 import { useAuth } from '../../context/AuthContext';
-import { StudentDashboardData, WhatIfResponse } from '../../types';
-import { RiskBadge } from '../../components/common/RiskBadge';
+import { WhatIfResponse } from '../../types';
 
 interface SubjectOption {
   id: number;
@@ -68,7 +69,6 @@ export const WhatIfSimulator: React.FC = () => {
           runSimulation(targetSubId, 0, 2);
         }
       } else {
-        // Faculty / Admin
         const [subList, stList] = await Promise.all([
           role === 'admin' ? api.getAdminSubjects() : api.getFacultySubjects(),
           api.getFacultyStudents()
@@ -123,7 +123,7 @@ export const WhatIfSimulator: React.FC = () => {
       setResult(res);
     } catch (e: any) {
       console.error('Simulation failed:', e);
-      setError(e.message || 'Mathematical simulation failed for the requested parameters.');
+      setError(e.message || 'Simulation calculation failed for requested parameters.');
     } finally {
       setLoading(false);
     }
@@ -155,72 +155,87 @@ export const WhatIfSimulator: React.FC = () => {
     }
   };
 
+  const selectedSubjectData = subjects.find(s => s.id === selectedSubjectId);
+
   if (initLoading) {
     return (
       <div className="flex items-center justify-center min-h-[50vh]">
         <div className="flex flex-col items-center gap-3">
-          <RefreshCw className="w-8 h-8 text-blue-600 animate-spin" />
-          <p className="text-xs text-slate-500 font-medium">Loading authoritative course attendance data...</p>
+          <RotateCw className="w-8 h-8 text-blue-600 animate-spin" />
+          <p className="text-xs text-slate-500 dark:text-zinc-400 font-medium">Loading course attendance data...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="space-y-6 animate-fade-in max-w-5xl mx-auto pb-12">
+    <div className="space-y-6 max-w-6xl mx-auto pb-12">
       
-      {/* Header */}
-      <div>
-        <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800/60 text-blue-700 dark:text-blue-300 text-xs font-semibold mb-2">
-          <Calculator className="w-3.5 h-3.5" />
-          <span>Authoritative Backend Simulation Engine</span>
-        </div>
-        <h1 className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">What-If Attendance Simulator</h1>
-        <p className="text-xs text-slate-500 dark:text-[#A3A3A3] mt-1 max-w-2xl">
-          Model future attendance scenarios before absences occur. Calculations are executed strictly by the backend statutory math engine to guarantee 100% mathematical precision.
-        </p>
-      </div>
+      {/* 1. Page Header */}
+      <div className="bg-white dark:bg-[#121215] border border-slate-200 dark:border-[#27272A] rounded-lg p-5 shadow-xs">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <h1 className="text-xl font-bold text-slate-900 dark:text-zinc-100 tracking-tight">
+              Attendance What-If Simulator
+            </h1>
+            <p className="text-xs text-slate-500 dark:text-zinc-400 mt-0.5">
+              Deterministic scenario modeling tool for forecasting future eligibility against university minimum attendance requirements
+            </p>
+          </div>
 
-      {/* Hypothetical Notice Banner */}
-      <div className="p-3.5 rounded-xl bg-amber-50/70 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/50 flex items-center gap-2.5 text-amber-900 dark:text-amber-300 text-xs font-medium">
-        <Info className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0" />
-        <span>
-          <strong>Hypothetical Simulation Mode:</strong> Adjusting parameters below will NOT modify your official academic records or attendance history.
-        </span>
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded bg-slate-100 dark:bg-[#18181B] text-slate-600 dark:text-zinc-300 text-xs font-mono border border-slate-200 dark:border-[#27272A]">
+            <Info className="w-3.5 h-3.5 text-blue-600" />
+            <span>Authoritative Backend Formula</span>
+          </div>
+        </div>
       </div>
 
       {error && (
-        <div className="p-3.5 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800/60 flex items-center justify-between gap-2 text-rose-800 dark:text-rose-300 text-xs">
+        <div className="p-3.5 rounded-lg bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/50 flex items-center justify-between gap-2 text-xs text-rose-800 dark:text-rose-300">
           <div className="flex items-center gap-2">
-            <AlertCircle className="w-4 h-4 text-rose-600 dark:text-rose-400 shrink-0" />
+            <AlertTriangle className="w-4 h-4 text-rose-600 shrink-0" />
             <span>{error}</span>
           </div>
           <button
             onClick={loadData}
-            className="px-2.5 py-1 bg-white dark:bg-[#141414] border border-rose-300 dark:border-rose-800 rounded text-rose-800 dark:text-rose-300 hover:bg-rose-100 dark:hover:bg-rose-950/60 font-semibold cursor-pointer"
+            className="px-2.5 py-1 bg-white dark:bg-[#18181B] border border-rose-200 dark:border-rose-900 rounded font-medium hover:bg-rose-50"
           >
             Retry
           </button>
         </div>
       )}
 
-      {/* Simulator Workspace */}
+      {/* 2. Structured Academic Workspace: LEFT Scenario Inputs, RIGHT Projected Result */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         
-        {/* Left Col: Controls */}
-        <div className="lg:col-span-5 space-y-5">
+        {/* ======================================================== */}
+        {/* LEFT: SCENARIO INPUTS                                    */}
+        {/* ======================================================== */}
+        <div className="lg:col-span-5 bg-white dark:bg-[#121215] border border-slate-200 dark:border-[#27272A] rounded-lg p-5 shadow-xs space-y-5">
           
-          {/* Student Selector for Faculty / Admin */}
+          <div className="pb-3 border-b border-slate-100 dark:border-[#27272A] flex items-center justify-between">
+            <h2 className="text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-zinc-100">
+              Scenario Parameters
+            </h2>
+            {loading && (
+              <span className="text-[11px] text-blue-600 dark:text-blue-400 flex items-center gap-1 font-medium">
+                <RotateCw className="w-3 h-3 animate-spin" />
+                <span>Recalculating...</span>
+              </span>
+            )}
+          </div>
+
+          {/* Student Selector (Faculty / Admin only) */}
           {role !== 'student' && students.length > 0 && (
-            <div className="bg-white dark:bg-[#111111] p-5 rounded-xl border border-slate-200 dark:border-[#262626] shadow-xs">
-              <label className="block text-xs font-bold text-slate-800 dark:text-[#D4D4D4] mb-2 uppercase tracking-wider flex items-center gap-1.5">
-                <Users className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
-                <span>Target Student</span>
+            <div>
+              <label className="block text-[11px] font-semibold text-slate-700 dark:text-zinc-300 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
+                <Users className="w-3.5 h-3.5 text-blue-600" />
+                <span>Student</span>
               </label>
               <select
                 value={selectedStudentId || ''}
                 onChange={(e) => handleStudentChange(Number(e.target.value))}
-                className="w-full bg-white dark:bg-[#141414] border border-slate-300 dark:border-[#262626] rounded-lg px-3 py-2 text-xs text-slate-900 dark:text-[#F5F5F5] focus:outline-none focus:ring-2 focus:ring-blue-600 font-medium"
+                className="erp-input w-full bg-white dark:bg-[#18181B] border border-slate-200 dark:border-[#27272A] rounded-md px-3 py-2 text-xs text-slate-900 dark:text-zinc-100"
               >
                 {students.map((st) => (
                   <option key={st.student_id} value={st.student_id}>
@@ -231,181 +246,228 @@ export const WhatIfSimulator: React.FC = () => {
             </div>
           )}
 
-          {/* Subject Picker */}
-          <div className="bg-white dark:bg-[#111111] p-5 rounded-xl border border-slate-200 dark:border-[#262626] shadow-xs">
-            <label className="block text-xs font-bold text-slate-800 dark:text-[#D4D4D4] mb-2 uppercase tracking-wider">
-              1. Select Subject ({subjects.length} available)
+          {/* Subject Selector */}
+          <div>
+            <label className="block text-[11px] font-semibold text-slate-700 dark:text-zinc-300 uppercase tracking-wider mb-1.5">
+              1. Enrolled Subject
             </label>
-            {subjects.length === 0 ? (
-              <p className="text-xs text-slate-400 dark:text-[#737373] py-3 text-center">No authorized subjects found.</p>
-            ) : (
-              <div className="space-y-2 max-h-64 overflow-y-auto pr-1">
-                {subjects.map((s) => (
-                  <div
-                    key={s.id}
-                    onClick={() => handleSubjectChange(s.id)}
-                    className={`p-3 rounded-lg border cursor-pointer transition-all flex items-center justify-between text-xs erp-button ${
-                      selectedSubjectId === s.id
-                        ? 'bg-blue-50/70 dark:bg-blue-950/50 border-blue-500 text-slate-900 dark:text-white font-medium shadow-xs ring-1 ring-blue-400'
-                        : 'bg-slate-50 dark:bg-[#171717] border-slate-200 dark:border-[#262626] text-slate-600 dark:text-[#A3A3A3] hover:bg-slate-100 dark:hover:bg-[#202020] hover:text-slate-900 dark:hover:text-white'
-                    }`}
-                  >
-                    <div className="min-w-0 pr-2">
-                      <span className="font-mono text-[10px] text-slate-500 dark:text-[#A3A3A3] block">{s.code}</span>
-                      <strong className="font-semibold text-slate-900 dark:text-white truncate block">{s.name}</strong>
-                    </div>
-                    {s.percentage !== undefined && (
-                      <div className="text-right shrink-0">
-                        <span className="font-bold text-slate-900 dark:text-white">{s.percentage}%</span>
-                        <span className="text-[10px] block text-slate-500 dark:text-[#A3A3A3]">{s.classes_attended}/{s.classes_conducted}</span>
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            )}
+            <select
+              value={selectedSubjectId || ''}
+              onChange={(e) => handleSubjectChange(Number(e.target.value))}
+              className="erp-input w-full bg-white dark:bg-[#18181B] border border-slate-200 dark:border-[#27272A] rounded-md px-3 py-2 text-xs text-slate-900 dark:text-zinc-100 font-medium"
+            >
+              {subjects.map((s) => (
+                <option key={s.id} value={s.id}>
+                  {s.code} — {s.name} {s.percentage !== undefined ? `(${s.percentage}%)` : ''}
+                </option>
+              ))}
+            </select>
           </div>
 
-          {/* Scenario Sliders */}
-          <div className="bg-white dark:bg-[#111111] p-5 rounded-xl border border-slate-200 dark:border-[#262626] shadow-xs space-y-6">
-            <h3 className="text-xs font-bold text-slate-800 dark:text-[#D4D4D4] uppercase tracking-wider">
-              2. Define Attendance Scenario
-            </h3>
-
-            {/* Slider: Miss Next Classes */}
-            <div>
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-xs font-medium text-slate-700 dark:text-[#CBD5E1] flex items-center gap-1.5">
-                  <MinusCircle className="w-4 h-4 text-rose-500 dark:text-rose-400" />
-                  <span>Hypothetical Absences</span>
-                </span>
-                <span className="font-mono text-sm font-bold text-rose-700 dark:text-rose-300 px-2 py-0.5 rounded bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800/60">
-                  +{classesToMiss}
-                </span>
-              </div>
-              <input
-                type="range"
-                min="0"
-                max="10"
-                step="1"
-                value={classesToMiss}
-                onChange={(e) => handleMissChange(parseInt(e.target.value))}
-                className="w-full h-1.5 bg-slate-200 dark:bg-[#262626] rounded-lg appearance-none cursor-pointer accent-rose-600"
-              />
-              <div className="flex justify-between text-[10px] text-slate-400 dark:text-[#737373] mt-1">
-                <span>0</span>
-                <span>5</span>
-                <span>10 classes</span>
-              </div>
-            </div>
-
-            {/* Slider: Attend Next Classes */}
-            <div>
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-xs font-medium text-slate-700 dark:text-[#CBD5E1] flex items-center gap-1.5">
-                  <PlusCircle className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-                  <span>Consecutive Presences</span>
-                </span>
-                <span className="font-mono text-sm font-bold text-emerald-700 dark:text-emerald-300 px-2 py-0.5 rounded bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/60">
-                  +{classesToAttend}
-                </span>
-              </div>
-              <input
-                type="range"
-                min="0"
-                max="15"
-                step="1"
-                value={classesToAttend}
-                onChange={(e) => handleAttendChange(parseInt(e.target.value))}
-                className="w-full h-1.5 bg-slate-200 dark:bg-[#262626] rounded-lg appearance-none cursor-pointer accent-emerald-600"
-              />
-              <div className="flex justify-between text-[10px] text-slate-400 dark:text-[#737373] mt-1">
-                <span>0</span>
-                <span>7</span>
-                <span>15 classes</span>
-              </div>
-            </div>
-
-            <div className="pt-2 border-t border-slate-100 dark:border-[#262626] flex items-center justify-between">
-              <button
-                onClick={() => {
-                  setClassesToMiss(2);
-                  setClassesToAttend(0);
-                  if (selectedSubjectId) runSimulation(selectedSubjectId, 0, 2, selectedStudentId);
-                }}
-                className="text-xs font-medium text-slate-500 dark:text-[#A3A3A3] hover:text-slate-800 dark:hover:text-white transition-colors cursor-pointer"
-              >
-                Reset Default (Miss 2)
-              </button>
-              {loading && (
-                <div className="flex items-center gap-1 text-xs text-blue-600 dark:text-blue-400 font-medium">
-                  <RefreshCw className="w-3 h-3 animate-spin" />
-                  <span>Computing...</span>
+          {/* Current Subject Standing Display */}
+          {selectedSubjectData && (
+            <div className="p-3.5 rounded-md bg-slate-50 dark:bg-[#18181B] border border-slate-200 dark:border-[#27272A]">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-zinc-400 block mb-1">
+                Current Registered Attendance
+              </span>
+              <div className="flex items-baseline justify-between">
+                <div>
+                  <span className="text-xl font-bold text-slate-900 dark:text-zinc-100">
+                    {result ? result.current_percentage : selectedSubjectData.percentage}%
+                  </span>
+                  <span className="text-xs text-slate-500 dark:text-zinc-400 ml-2">
+                    ({result ? result.current_attended : selectedSubjectData.classes_attended} / {result ? result.current_conducted : selectedSubjectData.classes_conducted} sessions)
+                  </span>
                 </div>
-              )}
+                <span className="font-mono text-xs font-semibold text-slate-600 dark:text-zinc-400">
+                  Cutoff: {result ? result.required_threshold : 75}%
+                </span>
+              </div>
+            </div>
+          )}
+
+          {/* Future Classes: Planned Absences */}
+          <div className="space-y-2 pt-2 border-t border-slate-100 dark:border-[#27272A]">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-semibold text-slate-800 dark:text-zinc-200 flex items-center gap-1.5">
+                <MinusCircle className="w-4 h-4 text-rose-600" />
+                <span>Planned Future Absences</span>
+              </span>
+              <span className="font-mono text-xs font-bold text-rose-700 dark:text-rose-300 px-2 py-0.5 rounded bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/50">
+                +{classesToMiss} classes
+              </span>
             </div>
 
+            <input
+              type="range"
+              min="0"
+              max="12"
+              step="1"
+              value={classesToMiss}
+              onChange={(e) => handleMissChange(parseInt(e.target.value))}
+              className="w-full h-2 bg-slate-200 dark:bg-[#27272A] rounded-lg appearance-none cursor-pointer accent-rose-600"
+            />
+
+            <div className="flex justify-between text-[10px] text-slate-400 dark:text-zinc-500 font-mono">
+              <span>0 (No absence)</span>
+              <span>6 classes</span>
+              <span>12 classes</span>
+            </div>
+          </div>
+
+          {/* Future Classes: Planned Attendance */}
+          <div className="space-y-2 pt-2 border-t border-slate-100 dark:border-[#27272A]">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-semibold text-slate-800 dark:text-zinc-200 flex items-center gap-1.5">
+                <PlusCircle className="w-4 h-4 text-emerald-600" />
+                <span>Planned Consecutive Presences</span>
+              </span>
+              <span className="font-mono text-xs font-bold text-emerald-700 dark:text-emerald-300 px-2 py-0.5 rounded bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900/50">
+                +{classesToAttend} classes
+              </span>
+            </div>
+
+            <input
+              type="range"
+              min="0"
+              max="15"
+              step="1"
+              value={classesToAttend}
+              onChange={(e) => handleAttendChange(parseInt(e.target.value))}
+              className="w-full h-2 bg-slate-200 dark:bg-[#27272A] rounded-lg appearance-none cursor-pointer accent-emerald-600"
+            />
+
+            <div className="flex justify-between text-[10px] text-slate-400 dark:text-zinc-500 font-mono">
+              <span>0 (None)</span>
+              <span>7 classes</span>
+              <span>15 classes</span>
+            </div>
+          </div>
+
+          {/* Quick Presets */}
+          <div className="pt-2 border-t border-slate-100 dark:border-[#27272A] flex flex-wrap gap-2">
+            <button
+              type="button"
+              onClick={() => {
+                setClassesToMiss(2);
+                setClassesToAttend(0);
+                if (selectedSubjectId) runSimulation(selectedSubjectId, 0, 2, selectedStudentId);
+              }}
+              className="erp-btn erp-btn-secondary px-2.5 py-1 text-[11px]"
+            >
+              Preset: Miss 2 Lectures
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setClassesToMiss(0);
+                setClassesToAttend(5);
+                if (selectedSubjectId) runSimulation(selectedSubjectId, 5, 0, selectedStudentId);
+              }}
+              className="erp-btn erp-btn-secondary px-2.5 py-1 text-[11px]"
+            >
+              Preset: Attend Next 5
+            </button>
           </div>
 
         </div>
 
-        {/* Right Col: Mathematical Projection & AI Narrative */}
-        <div className="lg:col-span-7 space-y-6">
-          
+        {/* ======================================================== */}
+        {/* RIGHT: PROJECTED RESULT                                  */}
+        {/* ======================================================== */}
+        <div className="lg:col-span-7 space-y-5">
           {result ? (
             <>
-              {/* Projection Comparison Card */}
-              <div className="p-6 rounded-xl bg-white dark:bg-[#111111] border border-slate-200 dark:border-[#262626] shadow-xs">
-                <div className="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-[#262626]">
+              {/* Projected Result Block */}
+              <div className="bg-white dark:bg-[#121215] border border-slate-200 dark:border-[#27272A] rounded-lg p-5 shadow-xs space-y-5">
+                
+                <div className="pb-3 border-b border-slate-100 dark:border-[#27272A] flex items-center justify-between">
                   <div>
-                    <span className="font-mono text-xs font-semibold text-slate-500 dark:text-[#A3A3A3]">{result.subject_code}</span>
-                    <h3 className="text-base font-bold text-slate-900 dark:text-white">{result.subject_name}</h3>
-                    {result.student_name && role !== 'student' && (
-                      <p className="text-xs text-slate-500 dark:text-[#A3A3A3] mt-0.5 font-medium">Student: {result.student_name}</p>
-                    )}
+                    <span className="font-mono text-xs font-semibold text-slate-500 dark:text-zinc-400">
+                      {result.subject_code}
+                    </span>
+                    <h3 className="text-base font-bold text-slate-900 dark:text-zinc-100 mt-0.5">
+                      {result.subject_name}
+                    </h3>
                   </div>
-                  <RiskBadge level={result.projected_risk_level} />
+
+                  {/* Standing Badge */}
+                  <span className={`px-2.5 py-1 rounded text-xs font-bold border ${
+                    result.is_above_threshold
+                      ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-900/50'
+                      : 'bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 border-rose-200 dark:border-rose-900/50'
+                  }`}>
+                    {result.is_above_threshold ? 'ELIGIBLE' : 'BELOW REQUIREMENT'}
+                  </span>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4 my-6">
+                {/* Comparative Metric Hierarchy */}
+                <div className="grid grid-cols-3 gap-3">
+                  
                   {/* Current */}
-                  <div className="p-4 rounded-lg bg-slate-50 dark:bg-[#171717] border border-slate-200 dark:border-[#262626]">
-                    <p className="text-[11px] uppercase tracking-wider font-semibold text-slate-500 dark:text-[#A3A3A3]">Current Standing</p>
-                    <div className="mt-2 flex items-baseline gap-2">
-                      <span className="text-3xl font-extrabold text-slate-900 dark:text-white">{result.current_percentage}%</span>
-                      <RiskBadge level={result.current_risk_level} size="sm" showLabel={false} />
-                    </div>
-                    <p className="text-xs text-slate-500 dark:text-[#A3A3A3] mt-1">{result.current_attended} of {result.current_conducted} sessions</p>
+                  <div className="p-3.5 rounded-md bg-slate-50 dark:bg-[#18181B] border border-slate-200 dark:border-[#27272A]">
+                    <span className="text-[10px] uppercase tracking-wider font-semibold text-slate-500 dark:text-zinc-400 block">
+                      Current
+                    </span>
+                    <span className="text-2xl font-extrabold text-slate-900 dark:text-zinc-100 mt-1 block">
+                      {result.current_percentage}%
+                    </span>
+                    <span className="text-[11px] text-slate-500 dark:text-zinc-400 mt-0.5 block">
+                      {result.current_attended} / {result.current_conducted} sessions
+                    </span>
                   </div>
 
                   {/* Projected */}
-                  <div className={`p-4 rounded-lg border ${
-                    result.is_above_threshold 
-                      ? 'bg-emerald-50/70 dark:bg-emerald-950/30 border-emerald-200 dark:border-emerald-800/60' 
-                      : 'bg-rose-50/70 dark:bg-rose-950/30 border-rose-200 dark:border-rose-800/60'
+                  <div className={`p-3.5 rounded-md border ${
+                    result.is_above_threshold
+                      ? 'bg-emerald-50/60 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-900/50'
+                      : 'bg-rose-50/60 dark:bg-rose-950/20 border-rose-200 dark:border-rose-900/50'
                   }`}>
-                    <p className="text-[11px] uppercase tracking-wider font-semibold text-slate-500 dark:text-[#A3A3A3]">Projected Result</p>
-                    <div className="mt-2 flex items-baseline gap-2">
-                      <span className={`text-3xl font-extrabold ${result.is_above_threshold ? 'text-emerald-700 dark:text-emerald-300' : 'text-rose-700 dark:text-rose-300'}`}>
+                    <span className="text-[10px] uppercase tracking-wider font-semibold text-slate-500 dark:text-zinc-400 block">
+                      Projected
+                    </span>
+                    <div className="flex items-baseline gap-1.5 mt-1">
+                      <span className={`text-2xl font-extrabold ${
+                        result.is_above_threshold ? 'text-emerald-700 dark:text-emerald-300' : 'text-rose-700 dark:text-rose-300'
+                      }`}>
                         {result.projected_percentage}%
                       </span>
-                      <span className={`text-xs font-bold ${result.percentage_change >= 0 ? 'text-emerald-700 dark:text-emerald-300' : 'text-rose-700 dark:text-rose-300'}`}>
+                      <span className={`text-xs font-semibold ${
+                        result.percentage_change >= 0 ? 'text-emerald-700 dark:text-emerald-400' : 'text-rose-700 dark:text-rose-400'
+                      }`}>
                         {result.percentage_change >= 0 ? `+${result.percentage_change}%` : `${result.percentage_change}%`}
                       </span>
                     </div>
-                    <p className="text-xs text-slate-600 dark:text-[#CBD5E1] mt-1">{result.simulated_classes_attended} of {result.simulated_classes_conducted} sessions</p>
+                    <span className="text-[11px] text-slate-600 dark:text-zinc-400 mt-0.5 block">
+                      {result.simulated_classes_attended} / {result.simulated_classes_conducted} sessions
+                    </span>
                   </div>
+
+                  {/* Required */}
+                  <div className="p-3.5 rounded-md bg-slate-50 dark:bg-[#18181B] border border-slate-200 dark:border-[#27272A]">
+                    <span className="text-[10px] uppercase tracking-wider font-semibold text-slate-500 dark:text-zinc-400 block">
+                      Required
+                    </span>
+                    <span className="text-2xl font-extrabold text-slate-900 dark:text-zinc-100 mt-1 block">
+                      {result.required_threshold}%
+                    </span>
+                    <span className="text-[11px] text-slate-500 dark:text-zinc-400 mt-0.5 block">
+                      University Standard
+                    </span>
+                  </div>
+
                 </div>
 
-                {/* Progress bar comparison */}
-                <div className="space-y-1.5">
-                  <div className="flex justify-between text-xs text-slate-600 dark:text-[#CBD5E1] font-medium">
-                    <span>Projected vs Mandatory {result.required_threshold}% Threshold</span>
-                    <span className="font-bold text-slate-900 dark:text-white">{result.projected_percentage}%</span>
+                {/* Progress Visual against Required Threshold */}
+                <div className="space-y-1.5 pt-1">
+                  <div className="flex justify-between text-xs font-medium text-slate-700 dark:text-zinc-300">
+                    <span>Projected Standing vs Threshold</span>
+                    <span className="font-bold">{result.projected_percentage}%</span>
                   </div>
-                  <div className="w-full bg-slate-100 dark:bg-[#171717] rounded-full h-3 overflow-hidden relative border border-slate-200 dark:border-[#262626]">
+
+                  <div className="w-full bg-slate-100 dark:bg-[#18181B] rounded-full h-3 overflow-hidden relative border border-slate-200 dark:border-[#27272A]">
                     <div
-                      className={`h-full rounded-full transition-all duration-500 ${
+                      className={`h-full rounded-full transition-all duration-300 ${
                         result.is_above_threshold ? 'bg-blue-600' : 'bg-rose-500'
                       }`}
                       style={{ width: `${Math.min(100, Math.max(0, result.projected_percentage))}%` }}
@@ -413,50 +475,73 @@ export const WhatIfSimulator: React.FC = () => {
                     <div
                       className="absolute top-0 bottom-0 w-0.5 bg-amber-500 z-10"
                       style={{ left: `${result.required_threshold}%` }}
-                      title={`Threshold: ${result.required_threshold}%`}
+                      title={`Statutory Requirement: ${result.required_threshold}%`}
                     />
                   </div>
-                  <div className="flex justify-between text-[10px] text-slate-400 dark:text-[#737373]">
+
+                  <div className="flex justify-between text-[10px] text-slate-400 dark:text-zinc-500 font-mono">
                     <span>0%</span>
-                    <span className="text-amber-600 dark:text-amber-400 font-semibold">Cutoff: {result.required_threshold}%</span>
+                    <span className="text-amber-600 dark:text-amber-400 font-semibold">
+                      Required Threshold: {result.required_threshold}%
+                    </span>
                     <span>100%</span>
                   </div>
                 </div>
 
-                {/* Verdict Badge */}
-                <div className="mt-5 p-3 rounded-lg bg-slate-50 dark:bg-[#171717] border border-slate-200 dark:border-[#262626] flex items-center gap-3">
+                {/* Result Verdict Banner */}
+                <div className={`p-3.5 rounded-md border flex items-center gap-3 ${
+                  result.is_above_threshold
+                    ? 'bg-emerald-50 dark:bg-emerald-950/30 border-emerald-200 dark:border-emerald-900/50 text-emerald-900 dark:text-emerald-200'
+                    : 'bg-rose-50 dark:bg-rose-950/30 border-rose-200 dark:border-rose-900/50 text-rose-900 dark:text-rose-200'
+                }`}>
                   {result.is_above_threshold ? (
-                    <>
-                      <ShieldCheck className="w-5 h-5 text-emerald-600 dark:text-emerald-400 shrink-0" />
-                      <p className="text-xs text-emerald-800 dark:text-emerald-300 font-medium">{result.status_summary}</p>
-                    </>
+                    <ShieldCheck className="w-5 h-5 text-emerald-600 shrink-0" />
                   ) : (
-                    <>
-                      <ShieldAlert className="w-5 h-5 text-rose-600 dark:text-rose-400 shrink-0" />
-                      <p className="text-xs text-rose-800 dark:text-rose-300 font-medium">{result.status_summary}</p>
-                    </>
+                    <ShieldAlert className="w-5 h-5 text-rose-600 shrink-0" />
                   )}
+                  <div>
+                    <p className="text-xs font-bold uppercase tracking-wider">
+                      Result: {result.is_above_threshold ? 'Eligible for Examination' : 'Below Requirement — Debarment Risk'}
+                    </p>
+                    <p className="text-xs text-slate-700 dark:text-zinc-300 mt-0.5">
+                      {result.status_summary}
+                    </p>
+                  </div>
                 </div>
 
               </div>
 
-              {/* AI Strategic Reasoning Narrative */}
-              <div className="p-5 rounded-xl bg-blue-50/60 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800/50 shadow-xs">
-                <div className="flex items-center gap-2 mb-2 text-blue-800 dark:text-blue-300 text-xs font-bold uppercase tracking-wider">
-                  <Bot className="w-4 h-4 text-blue-700 dark:text-blue-400" />
-                  <span>Deterministic Scenario Assessment</span>
+              {/* Step-by-Step Calculation Explanation */}
+              <div className="bg-white dark:bg-[#121215] border border-slate-200 dark:border-[#27272A] rounded-lg p-5 shadow-xs space-y-3">
+                <div className="flex items-center gap-2 pb-2 border-b border-slate-100 dark:border-[#27272A]">
+                  <Calculator className="w-4 h-4 text-blue-600" />
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-zinc-100">
+                    Academic Calculation Breakdown
+                  </h4>
                 </div>
-                <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed font-normal">
+
+                <div className="p-3 bg-slate-50 dark:bg-[#18181B] rounded border border-slate-200 dark:border-[#27272A] font-mono text-xs text-slate-800 dark:text-zinc-200 space-y-1.5">
+                  <p className="text-slate-500 dark:text-zinc-400 text-[11px]">
+                    Projected Rate = (Attended Sessions + Planned Presences) / (Conducted Sessions + Total Planned) × 100
+                  </p>
+                  <p className="font-bold text-slate-900 dark:text-zinc-100">
+                    = ({result.current_attended} + {classesToAttend}) / ({result.current_conducted} + {classesToAttend + classesToMiss}) × 100
+                  </p>
+                  <p className="font-bold text-blue-700 dark:text-blue-400">
+                    = {result.simulated_classes_attended} / {result.simulated_classes_conducted} × 100 = {result.projected_percentage}%
+                  </p>
+                </div>
+
+                <p className="text-xs text-slate-600 dark:text-zinc-400 leading-relaxed">
                   {result.ai_explanation}
                 </p>
               </div>
             </>
           ) : (
-            <div className="flex items-center justify-center p-12 bg-white dark:bg-[#111111] border border-slate-200 dark:border-[#262626] rounded-xl text-xs text-slate-500 dark:text-[#A3A3A3]">
-              Select a subject and define a scenario to run the simulator.
+            <div className="bg-white dark:bg-[#121215] border border-slate-200 dark:border-[#27272A] rounded-lg p-12 text-center text-xs text-slate-500">
+              Select an enrolled course and adjust hypothetical parameters on the left to view the projected calculation.
             </div>
           )}
-
         </div>
 
       </div>

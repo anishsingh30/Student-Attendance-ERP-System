@@ -72,47 +72,47 @@ export const AdminNotifications: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6 animate-fade-in pb-12">
+    <div className="space-y-5 pb-10">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-slate-200 dark:border-[#262626]">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-200 dark:border-[#27272A]">
         <div>
-          <h1 className="text-xl font-bold text-slate-900 dark:text-white tracking-tight">Notification Delivery Gateway</h1>
-          <p className="text-xs text-slate-500 dark:text-[#A3A3A3] mt-1">
-            Monitor autonomous alert dispatch across In-App and Email channels with delivery retry tracking.
+          <h1 className="text-xl font-bold text-slate-900 dark:text-zinc-100 tracking-tight">Notification Delivery Gateway</h1>
+          <p className="text-xs text-slate-500 dark:text-zinc-400 mt-0.5">
+            Monitor institutional alert dispatch across In-App and Email channels with delivery retry tracking.
           </p>
         </div>
         <button
           onClick={() => loadNotifications()}
           disabled={loading}
-          className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold bg-white dark:bg-[#111111] border border-slate-300 dark:border-[#262626] text-slate-700 dark:text-[#D4D4D4] hover:bg-slate-50 dark:hover:bg-[#1a1a1a] rounded-lg shadow-xs transition-colors erp-button"
+          className="erp-btn erp-btn-secondary inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium"
         >
           <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} /> Refresh Deliveries
         </button>
       </div>
 
       {actionMsg && (
-        <div className="p-3 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900/50 rounded-xl text-emerald-800 dark:text-emerald-300 text-xs flex items-center gap-2">
+        <div className="p-3 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900/50 rounded-md text-emerald-800 dark:text-emerald-300 text-xs flex items-center gap-2">
           <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-600 dark:text-emerald-400" />
           <span>{actionMsg}</span>
         </div>
       )}
 
       {error && (
-        <div className="p-3 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/50 rounded-xl text-rose-800 dark:text-rose-300 text-xs flex items-center gap-2">
+        <div className="p-3 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/50 rounded-md text-rose-800 dark:text-rose-300 text-xs flex items-center gap-2">
           <ShieldAlert className="w-4 h-4 shrink-0 text-rose-600 dark:text-rose-400" />
           <span>{error}</span>
         </div>
       )}
 
       {/* Filters */}
-      <div className="flex flex-wrap items-center justify-between gap-4 bg-white dark:bg-[#111111] p-4 rounded-xl border border-slate-200 dark:border-[#262626] shadow-xs text-xs">
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2">
-            <span className="font-semibold text-slate-700 dark:text-[#D4D4D4]">Channel:</span>
+      <div className="flex flex-wrap items-center justify-between gap-3 bg-white dark:bg-[#121215] p-3 rounded-lg border border-slate-200 dark:border-[#27272A] shadow-xs text-xs">
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-1.5">
+            <span className="font-medium text-slate-600 dark:text-zinc-400">Channel:</span>
             <select
               value={channelFilter}
               onChange={(e) => setChannelFilter(e.target.value)}
-              className="px-2.5 py-1.5 bg-white dark:bg-[#141414] border border-slate-300 dark:border-[#262626] rounded-lg text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-600"
+              className="erp-input px-2.5 py-1 bg-white dark:bg-[#18181B] border border-slate-200 dark:border-[#27272A] rounded-md text-slate-900 dark:text-zinc-100"
             >
               <option value="">All Channels</option>
               <option value="IN_APP">In-App</option>
@@ -121,12 +121,12 @@ export const AdminNotifications: React.FC = () => {
             </select>
           </div>
 
-          <div className="flex items-center gap-2">
-            <span className="font-semibold text-slate-700 dark:text-[#D4D4D4]">Status:</span>
+          <div className="flex items-center gap-1.5">
+            <span className="font-medium text-slate-600 dark:text-zinc-400">Status:</span>
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="px-2.5 py-1.5 bg-white dark:bg-[#141414] border border-slate-300 dark:border-[#262626] rounded-lg text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-600"
+              className="erp-input px-2.5 py-1 bg-white dark:bg-[#18181B] border border-slate-200 dark:border-[#27272A] rounded-md text-slate-900 dark:text-zinc-100"
             >
               <option value="">All Statuses</option>
               <option value="SENT">Sent</option>
@@ -137,51 +137,51 @@ export const AdminNotifications: React.FC = () => {
           </div>
         </div>
 
-        <div className="text-slate-500 dark:text-[#A3A3A3] font-medium font-mono text-[11px]">
+        <div className="text-slate-500 dark:text-zinc-400 font-mono text-[11px]">
           Showing {notifications.length} of {totalNotifications} total deliveries
         </div>
       </div>
 
       {/* Bounded Notifications Table */}
-      <div className="bg-white dark:bg-[#111111] border border-slate-200 dark:border-[#262626] rounded-xl shadow-xs overflow-hidden flex flex-col">
+      <div className="bg-white dark:bg-[#121215] border border-slate-200 dark:border-[#27272A] rounded-lg shadow-xs overflow-hidden flex flex-col">
         <div className="w-full overflow-x-auto overflow-y-auto max-h-[60vh]">
           <table className="w-full text-xs text-left border-collapse">
-            <thead className="sticky top-0 z-10 bg-slate-50 dark:bg-[#171717] text-slate-600 dark:text-[#A3A3A3] font-semibold border-b border-slate-200 dark:border-[#262626] shadow-[0_1px_2px_rgba(0,0,0,0.03)] dark:shadow-[0_1px_2px_rgba(0,0,0,0.4)]">
+            <thead className="sticky top-0 z-10 bg-slate-50 dark:bg-[#18181B] text-slate-600 dark:text-zinc-400 font-semibold border-b border-slate-200 dark:border-[#27272A]">
               <tr>
-                <th className="py-3 px-4 bg-slate-50 dark:bg-[#171717]">ID</th>
-                <th className="py-3 px-4 bg-slate-50 dark:bg-[#171717]">User ID</th>
-                <th className="py-3 px-4 bg-slate-50 dark:bg-[#171717]">Channel</th>
-                <th className="py-3 px-4 bg-slate-50 dark:bg-[#171717]">Notification Title</th>
-                <th className="py-3 px-4 bg-slate-50 dark:bg-[#171717]">Message Snippet</th>
-                <th className="py-3 px-4 bg-slate-50 dark:bg-[#171717] text-center">Status</th>
-                <th className="py-3 px-4 bg-slate-50 dark:bg-[#171717] text-center">Retries</th>
-                <th className="py-3 px-4 bg-slate-50 dark:bg-[#171717] text-center">Dispatched</th>
-                <th className="py-3 px-4 bg-slate-50 dark:bg-[#171717] text-center">Actions</th>
+                <th className="py-2.5 px-3.5 bg-slate-50 dark:bg-[#18181B]">ID</th>
+                <th className="py-2.5 px-3.5 bg-slate-50 dark:bg-[#18181B]">User ID</th>
+                <th className="py-2.5 px-3.5 bg-slate-50 dark:bg-[#18181B]">Channel</th>
+                <th className="py-2.5 px-3.5 bg-slate-50 dark:bg-[#18181B]">Notification Title</th>
+                <th className="py-2.5 px-3.5 bg-slate-50 dark:bg-[#18181B]">Message Snippet</th>
+                <th className="py-2.5 px-3.5 bg-slate-50 dark:bg-[#18181B] text-center">Status</th>
+                <th className="py-2.5 px-3.5 bg-slate-50 dark:bg-[#18181B] text-center">Retries</th>
+                <th className="py-2.5 px-3.5 bg-slate-50 dark:bg-[#18181B] text-center">Dispatched</th>
+                <th className="py-2.5 px-3.5 bg-slate-50 dark:bg-[#18181B] text-center">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100 dark:divide-[#262626]">
+            <tbody className="divide-y divide-slate-100 dark:divide-[#27272A]">
               {loading ? (
                 <tr>
-                  <td colSpan={9} className="text-center py-12 text-slate-400 dark:text-[#737373]">
+                  <td colSpan={9} className="text-center py-12 text-slate-400 dark:text-zinc-500">
                     <div className="flex items-center justify-center gap-2">
-                      <RotateCw className="w-4 h-4 text-blue-600 dark:text-blue-400 animate-spin" />
+                      <RotateCw className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400 animate-spin" />
                       <span>Loading delivery logs...</span>
                     </div>
                   </td>
                 </tr>
               ) : notifications.length === 0 ? (
                 <tr>
-                  <td colSpan={9} className="text-center py-12 text-slate-400 dark:text-[#737373]">
+                  <td colSpan={9} className="text-center py-12 text-slate-400 dark:text-zinc-500">
                     No notification dispatch records found matching criteria.
                   </td>
                 </tr>
               ) : (
                 notifications.map((n) => (
-                  <tr key={n.id} className="hover:bg-slate-50/50 dark:hover:bg-[#171717]/60 transition-colors erp-table-row">
-                    <td className="py-3 px-4 font-mono font-bold text-slate-900 dark:text-white">#{n.id}</td>
-                    <td className="py-3 px-4 font-mono text-slate-600 dark:text-[#A3A3A3]">User {n.user_id}</td>
-                    <td className="py-3 px-4">
-                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-semibold bg-slate-100 dark:bg-[#1a1a1a] text-slate-700 dark:text-[#D4D4D4] border border-slate-200 dark:border-[#262626]">
+                  <tr key={n.id} className="erp-table-row">
+                    <td className="py-2.5 px-3.5 font-mono font-semibold text-slate-900 dark:text-zinc-100">#{n.id}</td>
+                    <td className="py-2.5 px-3.5 font-mono text-slate-600 dark:text-zinc-400">User {n.user_id}</td>
+                    <td className="py-2.5 px-3.5">
+                      <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[11px] font-medium bg-slate-100 dark:bg-zinc-800 text-slate-700 dark:text-zinc-300 border border-slate-200 dark:border-[#27272A]">
                         {n.channel === 'EMAIL' ? (
                           <Mail className="w-3 h-3 text-blue-600 dark:text-blue-400" />
                         ) : (
@@ -190,13 +190,13 @@ export const AdminNotifications: React.FC = () => {
                         {n.channel || 'IN_APP'}
                       </span>
                     </td>
-                    <td className="py-3 px-4 font-semibold text-slate-900 dark:text-white">{n.title}</td>
-                    <td className="py-3 px-4 text-slate-500 dark:text-[#A3A3A3] max-w-xs truncate" title={n.message}>
+                    <td className="py-2.5 px-3.5 font-medium text-slate-900 dark:text-zinc-100">{n.title}</td>
+                    <td className="py-2.5 px-3.5 text-slate-500 dark:text-zinc-400 max-w-xs truncate" title={n.message}>
                       {n.message}
                     </td>
-                    <td className="py-3 px-4 text-center">
+                    <td className="py-2.5 px-3.5 text-center">
                       <span
-                        className={`px-2 py-0.5 rounded-full text-[11px] font-semibold ${
+                        className={`px-2 py-0.5 rounded text-[10px] font-semibold ${
                           n.status === 'SENT' || n.status === 'READ'
                             ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-900/50'
                             : n.status === 'FAILED'
@@ -207,23 +207,23 @@ export const AdminNotifications: React.FC = () => {
                         {n.status || (n.is_read ? 'READ' : 'SENT')}
                       </span>
                     </td>
-                    <td className="py-3 px-4 text-center font-mono text-slate-600 dark:text-[#A3A3A3]">
+                    <td className="py-2.5 px-3.5 text-center font-mono text-slate-600 dark:text-zinc-400">
                       {n.retry_count ?? 0}
                     </td>
-                    <td className="py-3 px-4 text-center text-slate-500 dark:text-[#A3A3A3] font-mono text-[11px]">
+                    <td className="py-2.5 px-3.5 text-center text-slate-500 dark:text-zinc-400 font-mono text-[11px]">
                       {n.sent_at ? new Date(n.sent_at).toLocaleString() : new Date(n.created_at).toLocaleString()}
                     </td>
-                    <td className="py-3 px-4 text-center">
+                    <td className="py-2.5 px-3.5 text-center">
                       {n.status === 'FAILED' ? (
                         <button
                           onClick={() => handleRetry(n.id)}
                           disabled={retryingId === n.id}
-                          className="inline-flex items-center gap-1 px-2 py-1 bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 hover:bg-rose-100 dark:hover:bg-rose-950/70 rounded text-[11px] font-semibold border border-rose-200 dark:border-rose-900/50 transition-colors cursor-pointer"
+                          className="inline-flex items-center gap-1 px-2 py-0.5 bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 hover:bg-rose-100 dark:hover:bg-rose-950/70 rounded text-[11px] font-medium border border-rose-200 dark:border-rose-900/50 transition-colors cursor-pointer"
                         >
                           <RotateCw className={`w-3 h-3 ${retryingId === n.id ? 'animate-spin' : ''}`} /> Retry
                         </button>
                       ) : (
-                        <span className="text-slate-400 dark:text-[#737373] text-[11px]">—</span>
+                        <span className="text-slate-400 dark:text-zinc-500 text-[11px]">—</span>
                       )}
                     </td>
                   </tr>
@@ -234,17 +234,17 @@ export const AdminNotifications: React.FC = () => {
         </div>
 
         {/* Dynamic Pagination Bar */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 px-4 py-3 border-t border-slate-200 dark:border-[#262626] bg-slate-50/50 dark:bg-[#141414] text-xs">
-          <div className="text-slate-600 dark:text-[#A3A3A3] font-medium">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 px-4 py-2 bg-slate-50/50 dark:bg-[#141417] border-t border-slate-200 dark:border-[#27272A] text-xs">
+          <div className="text-slate-500 dark:text-zinc-400">
             Showing{' '}
-            <strong className="text-slate-900 dark:text-white font-mono">
+            <strong className="text-slate-900 dark:text-zinc-200 font-mono">
               {totalNotifications === 0 ? 0 : (currentPage - 1) * pageSize + 1}
             </strong>
             –
-            <strong className="text-slate-900 dark:text-white font-mono">
+            <strong className="text-slate-900 dark:text-zinc-200 font-mono">
               {Math.min(currentPage * pageSize, totalNotifications)}
             </strong>{' '}
-            of <strong className="text-slate-900 dark:text-white font-mono">{totalNotifications}</strong> delivery records
+            of <strong className="text-slate-900 dark:text-zinc-200 font-mono">{totalNotifications}</strong> delivery records
           </div>
 
           <div className="flex items-center gap-1">
@@ -255,17 +255,17 @@ export const AdminNotifications: React.FC = () => {
                 loadNotifications(p, pageSize);
               }}
               disabled={currentPage <= 1 || loading}
-              className="p-1.5 rounded-lg border border-slate-200 dark:border-[#333333] bg-white dark:bg-[#171717] text-slate-700 dark:text-[#D4D4D4] hover:bg-slate-100 dark:hover:bg-[#222222] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+              className="p-1 rounded border border-slate-200 dark:border-[#27272A] bg-white dark:bg-[#18181B] text-slate-700 dark:text-zinc-300 hover:bg-slate-100 dark:hover:bg-zinc-800 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
               title="Previous Page"
             >
-              <ChevronLeft className="w-4 h-4" />
+              <ChevronLeft className="w-3.5 h-3.5" />
             </button>
 
             {Array.from({ length: totalPages }).map((_, idx) => {
               const p = idx + 1;
               if (totalPages > 6 && Math.abs(p - currentPage) > 2 && p !== 1 && p !== totalPages) {
                 if (p === 2 || p === totalPages - 1) {
-                  return <span key={p} className="px-1 text-slate-400">...</span>;
+                  return <span key={p} className="px-1 text-slate-400 dark:text-zinc-500">...</span>;
                 }
                 return null;
               }
@@ -277,10 +277,10 @@ export const AdminNotifications: React.FC = () => {
                     loadNotifications(p, pageSize);
                   }}
                   disabled={loading}
-                  className={`min-w-[28px] h-7 px-1.5 rounded-lg text-xs font-semibold transition-all ${
+                  className={`min-w-[26px] h-6 px-1 rounded text-xs font-medium transition-colors ${
                     p === currentPage
                       ? 'bg-blue-600 text-white shadow-xs'
-                      : 'bg-white dark:bg-[#171717] border border-slate-200 dark:border-[#333333] text-slate-700 dark:text-[#D4D4D4] hover:bg-slate-100 dark:hover:bg-[#222222]'
+                      : 'bg-white dark:bg-[#18181B] border border-slate-200 dark:border-[#27272A] text-slate-700 dark:text-zinc-300 hover:bg-slate-100 dark:hover:bg-zinc-800'
                   }`}
                 >
                   {p}
@@ -295,10 +295,10 @@ export const AdminNotifications: React.FC = () => {
                 loadNotifications(p, pageSize);
               }}
               disabled={currentPage >= totalPages || loading}
-              className="p-1.5 rounded-lg border border-slate-200 dark:border-[#333333] bg-white dark:bg-[#171717] text-slate-700 dark:text-[#D4D4D4] hover:bg-slate-100 dark:hover:bg-[#222222] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+              className="p-1 rounded border border-slate-200 dark:border-[#27272A] bg-white dark:bg-[#18181B] text-slate-700 dark:text-zinc-300 hover:bg-slate-100 dark:hover:bg-zinc-800 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
               title="Next Page"
             >
-              <ChevronRight className="w-4 h-4" />
+              <ChevronRight className="w-3.5 h-3.5" />
             </button>
           </div>
         </div>

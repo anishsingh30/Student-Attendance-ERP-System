@@ -24,9 +24,8 @@ interface NavbarProps {
 
 export const Navbar: React.FC<NavbarProps> = ({ 
   onMenuToggle, 
-  isMobileOpen,
-  isSidebarCollapsed = false,
-  onToggleSidebar
+  isSidebarCollapsed = false, 
+  onToggleSidebar 
 }) => {
   const { user, logout } = useAuth();
   const { notifications, unreadCount, markAsRead, markAllAsRead } = useNotifications();
@@ -35,7 +34,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   const notifRef = useRef<HTMLDivElement>(null);
   const userRef = useRef<HTMLDivElement>(null);
 
-  // Close dropdowns on outside click
+  // Close dropdowns on outside click or Escape key
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (notifRef.current && !notifRef.current.contains(e.target as Node)) {
@@ -45,8 +44,20 @@ export const Navbar: React.FC<NavbarProps> = ({
         setShowUserDropdown(false);
       }
     };
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setShowNotifications(false);
+        setShowUserDropdown(false);
+      }
+    };
+
     document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
   }, []);
 
   const getInitials = (name?: string) => {
@@ -60,15 +71,15 @@ export const Navbar: React.FC<NavbarProps> = ({
   };
 
   return (
-    <header className="sticky top-0 z-40 w-full bg-white dark:bg-[#050505] border-b border-slate-200 dark:border-[#262626] shadow-xs transition-colors duration-200">
-      <div className="flex h-16 items-center justify-between px-4 sm:px-6">
+    <header className="sticky top-0 z-40 w-full bg-white dark:bg-[#09090B] border-b border-slate-200 dark:border-[#27272A] shadow-xs transition-colors duration-150">
+      <div className="flex h-14 items-center justify-between px-4 sm:px-6">
         
         {/* Left: Sidebar Toggle & Institutional Title */}
         <div className="flex items-center gap-3">
           {/* Mobile Drawer Trigger */}
           <button
             onClick={onMenuToggle}
-            className="md:hidden p-2 rounded-lg text-slate-600 dark:text-[#A3A3A3] hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-[#141414] transition-colors focus:outline-none focus:ring-2 focus:ring-blue-600"
+            className="md:hidden p-1.5 rounded-md text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-zinc-100 hover:bg-slate-100 dark:hover:bg-[#18181B] active:scale-95 transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-blue-600"
             aria-label="Toggle Navigation Menu"
           >
             <Menu className="w-5 h-5" />
@@ -79,7 +90,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             <Tooltip content={isSidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"} position="bottom">
               <button
                 onClick={onToggleSidebar}
-                className="hidden md:flex items-center justify-center p-2 rounded-lg text-slate-600 dark:text-[#A3A3A3] hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-[#141414] transition-colors focus:outline-none focus:ring-2 focus:ring-blue-600"
+                className="hidden md:flex items-center justify-center p-1.5 rounded-md text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-zinc-100 hover:bg-slate-100 dark:hover:bg-[#18181B] active:scale-95 transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-blue-600"
                 aria-label={isSidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
               >
                 <PanelLeft className="w-5 h-5" />
@@ -87,12 +98,12 @@ export const Navbar: React.FC<NavbarProps> = ({
             </Tooltip>
           )}
 
-          <div className="hidden sm:block">
-            <span className="text-xs font-semibold text-slate-900 dark:text-[#F5F5F5] tracking-tight">
-              Apex Institute of Technology
+          <div className="hidden sm:flex items-center gap-2">
+            <span className="text-xs font-bold text-slate-900 dark:text-zinc-100 tracking-tight">
+              AttendanceAI
             </span>
-            <span className="mx-2 text-slate-300 dark:text-[#303030]">|</span>
-            <span className="text-xs text-slate-500 dark:text-[#A3A3A3]">
+            <span className="text-slate-300 dark:text-zinc-700">|</span>
+            <span className="text-xs text-slate-500 dark:text-zinc-400 font-medium">
               Student Attendance ERP System
             </span>
           </div>
@@ -109,13 +120,13 @@ export const Navbar: React.FC<NavbarProps> = ({
             <Tooltip content="Notifications" position="bottom">
               <button
                 onClick={() => setShowNotifications(!showNotifications)}
-                className="relative p-2 rounded-lg text-slate-600 dark:text-[#A3A3A3] hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-[#141414] transition-colors focus:outline-none focus:ring-2 focus:ring-blue-600"
+                className="relative p-1.5 rounded-md text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-zinc-100 hover:bg-slate-100 dark:hover:bg-[#18181B] active:scale-95 transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-blue-600"
                 aria-label="View notifications"
                 aria-expanded={showNotifications}
               >
                 <Bell className="w-5 h-5" />
                 {unreadCount > 0 && (
-                  <span className="absolute top-1.5 right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-blue-600 text-[10px] font-bold text-white ring-2 ring-white dark:ring-black">
+                  <span className="absolute top-1 right-1 flex h-4 min-w-[16px] px-1 items-center justify-center rounded-full bg-blue-600 text-[10px] font-bold text-white ring-2 ring-white dark:ring-[#09090B]">
                     {unreadCount > 9 ? '9+' : unreadCount}
                   </span>
                 )}
@@ -123,12 +134,16 @@ export const Navbar: React.FC<NavbarProps> = ({
             </Tooltip>
 
             {showNotifications && (
-              <div className="absolute right-0 mt-2 w-80 sm:w-96 rounded-xl border border-slate-200 dark:border-[#262626] bg-white dark:bg-[#111111] shadow-xl p-4 z-50 animate-fade-in text-slate-800 dark:text-slate-200">
-                <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-[#262626]">
+              <div 
+                role="dialog"
+                aria-label="Notifications Drawer"
+                className="absolute right-0 mt-2 w-80 sm:w-96 rounded-lg border border-slate-200 dark:border-[#27272A] bg-white dark:bg-[#121215] shadow-lg p-3.5 z-50 animate-erp-dropdown text-slate-800 dark:text-zinc-200"
+              >
+                <div className="flex items-center justify-between pb-2.5 border-b border-slate-100 dark:border-[#27272A]">
                   <div className="flex items-center gap-2">
-                    <h4 className="text-xs font-bold uppercase tracking-wider text-slate-800 dark:text-[#F5F5F5]">Alerts &amp; Notifications</h4>
+                    <h4 className="text-xs font-bold uppercase tracking-wider text-slate-800 dark:text-zinc-200">Alerts &amp; Notifications</h4>
                     {unreadCount > 0 && (
-                      <span className="px-2 py-0.5 rounded-full bg-blue-50 dark:bg-blue-950/50 text-blue-700 dark:text-blue-300 text-[11px] font-semibold border border-blue-200 dark:border-blue-800/60">
+                      <span className="px-1.5 py-0.5 rounded bg-blue-50 dark:bg-blue-950/50 text-blue-700 dark:text-blue-300 text-[10px] font-semibold border border-blue-200 dark:border-blue-900/40">
                         {unreadCount} new
                       </span>
                     )}
@@ -143,9 +158,9 @@ export const Navbar: React.FC<NavbarProps> = ({
                   )}
                 </div>
 
-                <div className="mt-2 max-h-72 overflow-y-auto space-y-1 divide-y divide-slate-100 dark:divide-[#262626]">
+                <div className="mt-2 max-h-72 overflow-y-auto space-y-1 divide-y divide-slate-100 dark:divide-[#27272A]">
                   {notifications.length === 0 ? (
-                    <div className="py-8 text-center text-slate-400 dark:text-[#737373] text-xs font-medium">
+                    <div className="py-8 text-center text-slate-400 dark:text-zinc-500 text-xs font-medium">
                       No notifications at this time.
                     </div>
                   ) : (
@@ -153,8 +168,8 @@ export const Navbar: React.FC<NavbarProps> = ({
                       <div
                         key={n.id}
                         onClick={() => markAsRead(n.id)}
-                        className={`pt-2.5 pb-2 px-2 flex items-start gap-2.5 cursor-pointer rounded-lg transition-colors ${
-                          n.is_read ? 'opacity-65 hover:opacity-100 hover:bg-slate-50 dark:hover:bg-[#171717]' : 'bg-blue-50/50 dark:bg-blue-950/30 hover:bg-blue-50 dark:hover:bg-blue-950/50'
+                        className={`pt-2 pb-2 px-2 flex items-start gap-2.5 cursor-pointer rounded-md transition-colors duration-150 ${
+                          n.is_read ? 'opacity-70 hover:opacity-100 hover:bg-slate-50 dark:hover:bg-[#18181B]' : 'bg-blue-50/50 dark:bg-blue-950/20 hover:bg-blue-50 dark:hover:bg-blue-950/40'
                         }`}
                       >
                         <div className="mt-0.5 flex-shrink-0">
@@ -169,13 +184,13 @@ export const Navbar: React.FC<NavbarProps> = ({
                           )}
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="text-xs font-semibold text-slate-900 dark:text-white truncate">{n.title}</p>
-                          <p className="text-[11px] text-slate-600 dark:text-[#A3A3A3] line-clamp-2 mt-0.5">{n.message}</p>
-                          <span className="text-[10px] text-slate-400 dark:text-[#737373] mt-1 block font-medium">
+                          <p className="text-xs font-semibold text-slate-900 dark:text-zinc-100 truncate">{n.title}</p>
+                          <p className="text-[11px] text-slate-600 dark:text-zinc-400 line-clamp-2 mt-0.5">{n.message}</p>
+                          <span className="text-[10px] text-slate-400 dark:text-zinc-500 mt-1 block font-medium">
                             {new Date(n.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                           </span>
                         </div>
-                        {!n.is_read && <span className="w-2 h-2 rounded-full bg-blue-600 dark:bg-blue-500 mt-1 flex-shrink-0" />}
+                        {!n.is_read && <span className="w-2 h-2 rounded-full bg-blue-600 dark:bg-blue-500 mt-1.5 flex-shrink-0" />}
                       </div>
                     ))
                   )}
@@ -186,14 +201,14 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           {/* User Profile Pill & Dropdown */}
           {user ? (
-            <div className="relative pl-2 border-l border-slate-200 dark:border-[#262626]" ref={userRef}>
+            <div className="relative pl-2 border-l border-slate-200 dark:border-[#27272A]" ref={userRef}>
               <button
                 onClick={() => setShowUserDropdown(!showUserDropdown)}
-                className="flex items-center gap-2.5 p-1.5 rounded-lg hover:bg-slate-50 dark:hover:bg-[#141414] transition-colors focus:outline-none focus:ring-2 focus:ring-blue-600 group"
+                className="flex items-center gap-2.5 p-1 rounded-md hover:bg-slate-100 dark:hover:bg-[#18181B] active:scale-98 transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-blue-600 group"
                 aria-expanded={showUserDropdown}
                 aria-label="User account menu"
               >
-                <div className="w-8 h-8 rounded-full bg-blue-50 dark:bg-blue-950/50 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800/60 flex items-center justify-center text-xs font-bold shadow-xs overflow-hidden">
+                <div className="w-7 h-7 rounded-md bg-blue-50 dark:bg-blue-950/50 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-900/40 flex items-center justify-center text-xs font-bold shadow-xs overflow-hidden">
                   {user.profile_photo_url ? (
                     <img 
                       src={user.profile_photo_url} 
@@ -206,39 +221,44 @@ export const Navbar: React.FC<NavbarProps> = ({
                   )}
                 </div>
                 <div className="text-left hidden sm:block">
-                  <p className="text-xs font-semibold text-slate-900 dark:text-white leading-tight group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                  <p className="text-xs font-semibold text-slate-900 dark:text-zinc-100 leading-tight group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
                     {user.full_name}
                   </p>
-                  <span className="text-[10px] uppercase font-mono font-semibold text-slate-500 dark:text-[#A3A3A3]">
+                  <span className="text-[10px] uppercase font-mono font-semibold text-slate-500 dark:text-zinc-400">
                     {user.role}
                   </span>
                 </div>
-                <ChevronDown className="w-3.5 h-3.5 text-slate-400 dark:text-[#737373] hidden sm:block" />
+                <ChevronDown className="w-3.5 h-3.5 text-slate-400 dark:text-zinc-500 hidden sm:block" />
               </button>
 
               {showUserDropdown && (
-                <div className="absolute right-0 mt-1.5 w-52 bg-white dark:bg-[#111111] rounded-xl border border-slate-200 dark:border-[#262626] shadow-xl py-1.5 z-50 animate-fade-in text-slate-800 dark:text-slate-200">
-                  <div className="px-3 py-2 border-b border-slate-100 dark:border-[#262626]">
-                    <p className="text-xs font-bold text-slate-900 dark:text-white truncate">{user.full_name}</p>
-                    <p className="text-[11px] text-slate-500 dark:text-[#A3A3A3] truncate">{user.email}</p>
+                <div 
+                  role="menu"
+                  className="absolute right-0 mt-1.5 w-52 bg-white dark:bg-[#121215] rounded-lg border border-slate-200 dark:border-[#27272A] shadow-lg py-1 z-50 animate-erp-dropdown text-slate-800 dark:text-zinc-200"
+                >
+                  <div className="px-3 py-2 border-b border-slate-100 dark:border-[#27272A]">
+                    <p className="text-xs font-bold text-slate-900 dark:text-zinc-100 truncate">{user.full_name}</p>
+                    <p className="text-[11px] text-slate-500 dark:text-zinc-400 truncate">{user.email}</p>
                   </div>
                   <div className="py-1">
                     <a
                       href="/profile"
-                      className="flex items-center gap-2.5 px-3 py-2 text-xs font-medium text-slate-700 dark:text-[#D4D4D4] hover:bg-slate-50 dark:hover:bg-[#171717] hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                      role="menuitem"
+                      className="flex items-center gap-2.5 px-3 py-1.5 text-xs font-medium text-slate-700 dark:text-zinc-300 hover:bg-slate-50 dark:hover:bg-[#18181B] hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
                       onClick={() => setShowUserDropdown(false)}
                     >
-                      <UserIcon className="w-3.5 h-3.5 text-slate-500 dark:text-[#A3A3A3]" />
-                      <span>Academic Profile</span>
+                      <UserIcon className="w-3.5 h-3.5 text-slate-500 dark:text-zinc-400" />
+                      <span>Account Profile</span>
                     </a>
                   </div>
-                  <div className="border-t border-slate-100 dark:border-[#262626] pt-1">
+                  <div className="border-t border-slate-100 dark:border-[#27272A] pt-1">
                     <button
+                      role="menuitem"
                       onClick={() => {
                         setShowUserDropdown(false);
                         logout();
                       }}
-                      className="w-full flex items-center gap-2.5 px-3 py-2 text-xs font-medium text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30 transition-colors text-left"
+                      className="w-full flex items-center gap-2.5 px-3 py-1.5 text-xs font-medium text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30 transition-colors text-left"
                     >
                       <LogOut className="w-3.5 h-3.5" />
                       <span>Sign Out</span>
@@ -250,7 +270,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           ) : (
             <a
               href="/login"
-              className="px-3.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-xs font-semibold text-white transition-all shadow-xs"
+              className="erp-btn erp-btn-primary px-3 py-1.5 text-xs font-semibold"
             >
               Sign In
             </a>
@@ -261,4 +281,3 @@ export const Navbar: React.FC<NavbarProps> = ({
     </header>
   );
 };
-

@@ -25,6 +25,7 @@ import { SubjectManagement } from './pages/admin/SubjectManagement';
 import { AdminReports } from './pages/admin/AdminReports';
 import { AdminSystemConfig } from './pages/admin/AdminSystemConfig';
 import { AdminNotifications } from './pages/admin/AdminNotifications';
+import { AdminMLTelemetry } from './pages/admin/AdminMLTelemetry';
 import { FacultyReports } from './pages/faculty/FacultyReports';
 import { RegisterPage } from './pages/RegisterPage';
 import { ProfilePage } from './pages/ProfilePage';
@@ -61,10 +62,10 @@ const AppRoutes: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-[#F7F8FA] dark:bg-black flex items-center justify-center">
+      <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#09090B] flex items-center justify-center">
         <div className="flex flex-col items-center gap-3">
           <div className="w-8 h-8 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
-          <p className="text-xs text-gray-500 dark:text-gray-400 font-medium">Initializing AttendanceAI Portal...</p>
+          <p className="text-xs text-slate-500 dark:text-zinc-400 font-medium">Initializing AttendanceAI Portal...</p>
         </div>
       </div>
     );
@@ -98,7 +99,16 @@ const AppRoutes: React.FC = () => {
   // Route resolver
   let pageComponent = null;
 
-  switch (cleanPath) {
+  // RBAC Guards: Prevent unauthorized route access
+  if (cleanPath.startsWith('/admin') && user.role !== 'admin') {
+    if (user.role === 'student') pageComponent = <StudentDashboard />;
+    else if (user.role === 'faculty') pageComponent = <FacultyDashboard />;
+    else pageComponent = <StudentDashboard />;
+  } else if (cleanPath.startsWith('/faculty') && user.role !== 'faculty' && user.role !== 'admin') {
+    if (user.role === 'student') pageComponent = <StudentDashboard />;
+    else pageComponent = <AdminDashboard />;
+  } else {
+    switch (cleanPath) {
     case '/':
       // If authenticated and visiting /, send to appropriate role dashboard
       if (user.role === 'student') pageComponent = <StudentDashboard />;
@@ -168,6 +178,10 @@ const AppRoutes: React.FC = () => {
     case '/admin/subjects':
       pageComponent = <SubjectManagement />;
       break;
+    case '/admin/telemetry':
+    case '/admin/ml-telemetry':
+      pageComponent = <AdminMLTelemetry />;
+      break;
 
     // Profile Route
     case '/profile':
@@ -182,6 +196,7 @@ const AppRoutes: React.FC = () => {
       else if (user.role === 'faculty') pageComponent = <FacultyDashboard />;
       else pageComponent = <AdminDashboard />;
       break;
+    }
   }
 
   return (

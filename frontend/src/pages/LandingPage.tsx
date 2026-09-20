@@ -44,7 +44,7 @@ export const LandingPage: React.FC = () => {
   const statutoryThreshold = stats?.thresholds?.statutory_minimum ?? 75;
 
   return (
-    <div className="min-h-screen bg-[#F7F8FA] dark:bg-black text-slate-900 dark:text-white flex flex-col selection:bg-blue-100 selection:text-blue-900 font-sans">
+    <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#09090B] text-slate-900 dark:text-white flex flex-col selection:bg-blue-100 selection:text-blue-900 font-sans">
       
       {/* Institutional Sticky Header */}
       <LandingHeader />

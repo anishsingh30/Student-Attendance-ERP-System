@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Download, FileText, Filter, RefreshCw, AlertTriangle, ShieldAlert } from 'lucide-react';
+import { Download, Filter, ShieldAlert } from 'lucide-react';
 import { api } from '../../api/client';
+import { RiskBadge } from '../../components/common/RiskBadge';
+import { DataTable, Column } from '../../components/common/DataTable';
 
 export const FacultyReports: React.FC = () => {
   const [subjects, setSubjects] = useState<any[]>([]);
@@ -9,6 +11,8 @@ export const FacultyReports: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(15);
 
   const loadInitialData = async () => {
     setLoading(true);
@@ -22,7 +26,7 @@ export const FacultyReports: React.FC = () => {
         setStudents(stus);
       }
     } catch (err: any) {
-      setError(err.message || 'Failed to load faculty subjects.');
+      setError(err.message || 'Failed to load faculty courses.');
     } finally {
       setLoading(false);
     }
@@ -35,11 +39,12 @@ export const FacultyReports: React.FC = () => {
   const handleSubjectChange = async (subjectId: number) => {
     setSelectedSubjectId(subjectId);
     setLoading(true);
+    setCurrentPage(1);
     try {
       const stus = await api.getFacultyStudents(subjectId);
       setStudents(stus);
     } catch (err: any) {
-      setError(err.message || 'Failed to load roster.');
+      setError(err.message || 'Failed to load course roster.');
     } finally {
       setLoading(false);
     }
@@ -60,127 +65,163 @@ export const FacultyReports: React.FC = () => {
     );
   });
 
+  const columns: Column<any>[] = [
+    {
+      header: 'Roll Number',
+      accessor: (s) => (
+        <span className="font-mono font-medium text-slate-700 dark:text-zinc-300">
+          {s.roll_number}
+        </span>
+      ),
+    },
+    {
+      header: 'Student Name',
+      accessor: (s) => (
+        <span className="font-medium text-slate-900 dark:text-zinc-100">
+          {s.full_name}
+        </span>
+      ),
+    },
+    {
+      header: 'Email',
+      accessor: (s) => (
+        <span className="text-slate-500 dark:text-zinc-400">
+          {s.email}
+        </span>
+      ),
+    },
+    {
+      header: 'Attended',
+      align: 'center',
+      accessor: (s) => (
+        <span className="font-mono text-slate-700 dark:text-zinc-300">
+          {s.classes_attended ?? 0}
+        </span>
+      ),
+    },
+    {
+      header: 'Held',
+      align: 'center',
+      accessor: (s) => (
+        <span className="font-mono text-slate-600 dark:text-zinc-400">
+          {s.classes_conducted ?? 0}
+        </span>
+      ),
+    },
+    {
+      header: 'Percentage',
+      align: 'center',
+      accessor: (s) => (
+        <span className="font-semibold text-slate-900 dark:text-zinc-100 font-mono">
+          {s.percentage !== undefined ? `${Number(s.percentage).toFixed(1)}%` : '—'}
+        </span>
+      ),
+    },
+    {
+      header: 'Recovery Needed',
+      align: 'center',
+      accessor: (s) => (
+        <span className={`font-medium ${s.consecutive_classes_needed > 0 ? 'text-rose-600 dark:text-rose-400' : 'text-emerald-600 dark:text-emerald-400'}`}>
+          {s.consecutive_classes_needed > 0 ? `+${s.consecutive_classes_needed} classes` : 'Compliant'}
+        </span>
+      ),
+    },
+    {
+      header: 'Compliance Tier',
+      align: 'center',
+      accessor: (s) => (
+        <RiskBadge level={s.risk_level || 'GREEN'} size="sm" />
+      ),
+    }
+  ];
+
+  const paginatedData = filtered.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+
   return (
-    <div className="space-y-6 animate-fade-in pb-12">
+    <div className="space-y-5 pb-10">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-slate-200 dark:border-[#262626]">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-200 dark:border-[#27272A]">
         <div>
-          <h1 className="text-xl font-bold text-slate-900 dark:text-white tracking-tight">Course Attendance Reports</h1>
-          <p className="text-xs text-slate-500 dark:text-[#A3A3A3] mt-1">
-            Generate and export classroom attendance registers, at-risk rosters, and recovery quotas.
+          <h1 className="text-xl font-bold text-slate-900 dark:text-zinc-100 tracking-tight">Course Attendance Reports</h1>
+          <p className="text-xs text-slate-500 dark:text-zinc-400 mt-0.5">
+            Export classroom attendance registers and compliance rosters.
           </p>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
           <a
             href={getCsvDownloadUrl()}
             download
-            className="inline-flex items-center gap-2 px-3.5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-semibold shadow-xs transition-colors erp-button"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white dark:bg-[#121215] hover:bg-slate-50 dark:hover:bg-[#18181B] border border-slate-200 dark:border-[#27272A] text-slate-700 dark:text-zinc-300 rounded-md text-xs font-medium shadow-xs transition-colors"
           >
-            <Download className="w-3.5 h-3.5" /> Download Course CSV Report
+            <Download className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
+            <span>Export Course CSV</span>
           </a>
         </div>
       </div>
 
-      {/* Course Selector & Toolbar */}
-      <div className="flex flex-wrap items-center justify-between gap-4 bg-white dark:bg-[#111111] p-4 rounded-xl border border-slate-200 dark:border-[#262626] shadow-xs">
-        <div className="flex items-center gap-3">
-          <label className="text-xs font-semibold text-slate-700 dark:text-[#D4D4D4]">Select Subject:</label>
+      {/* Course Selector & Search Toolbar */}
+      <div className="flex flex-wrap items-center justify-between gap-3 bg-white dark:bg-[#121215] p-3 rounded-lg border border-slate-200 dark:border-[#27272A] shadow-xs">
+        <div className="flex items-center gap-2">
+          <label className="text-[11px] font-semibold uppercase text-slate-500 dark:text-zinc-400">Course:</label>
           <select
             value={selectedSubjectId}
             onChange={(e) => handleSubjectChange(Number(e.target.value))}
-            className="px-3 py-1.5 text-xs bg-white dark:bg-[#141414] border border-slate-300 dark:border-[#262626] rounded-lg text-slate-900 dark:text-[#F5F5F5] focus:outline-none focus:ring-2 focus:ring-blue-600 shadow-xs font-medium"
+            className="px-2.5 py-1 text-xs bg-white dark:bg-[#18181B] border border-slate-200 dark:border-[#27272A] rounded-md text-slate-900 dark:text-zinc-100 focus:outline-none focus:ring-1 focus:ring-blue-600"
           >
             {subjects.map((sub) => (
               <option key={sub.id} value={sub.id}>
-                {sub.code} - {sub.name}
+                {sub.code} — {sub.name}
               </option>
             ))}
           </select>
         </div>
 
-        <div className="flex items-center gap-3">
-          <div className="relative max-w-xs w-full">
+        <div className="flex items-center gap-2">
+          <div className="relative min-w-[200px]">
             <input
               type="text"
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={(e) => {
+                setSearch(e.target.value);
+                setCurrentPage(1);
+              }}
               placeholder="Search student or roll..."
-              className="w-full pl-8 pr-3 py-1.5 text-xs bg-white dark:bg-[#141414] border border-slate-300 dark:border-[#262626] rounded-lg text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-[#737373] focus:outline-none focus:ring-2 focus:ring-blue-600 shadow-xs"
+              className="w-full pl-8 pr-3 py-1 text-xs bg-white dark:bg-[#18181B] border border-slate-200 dark:border-[#27272A] rounded-md text-slate-900 dark:text-zinc-100 placeholder-slate-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-blue-600"
             />
-            <Filter className="w-3.5 h-3.5 absolute left-2.5 top-2.5 text-slate-400 dark:text-[#737373]" />
+            <Filter className="w-3 h-3 absolute left-2.5 top-2 text-slate-400 dark:text-zinc-500" />
           </div>
         </div>
       </div>
 
       {error && (
-        <div className="p-4 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800/60 rounded-xl text-rose-700 dark:text-rose-300 text-xs flex items-center gap-2">
+        <div className="p-3 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/40 rounded-md text-rose-700 dark:text-rose-300 text-xs flex items-center gap-2">
           <ShieldAlert className="w-4 h-4 shrink-0" />
           <span>{error}</span>
         </div>
       )}
 
-      {/* Table */}
-      <div className="bg-white dark:bg-[#111111] border border-slate-200 dark:border-[#262626] rounded-xl shadow-xs overflow-hidden flex flex-col">
-        <div className="overflow-x-auto overflow-y-auto max-h-[62vh]">
-          <table className="w-full text-xs text-left border-collapse">
-            <thead className="sticky top-0 z-10 bg-slate-50 dark:bg-[#171717] text-slate-600 dark:text-[#A3A3A3] font-semibold border-b border-slate-200 dark:border-[#262626] shadow-[0_1px_2px_rgba(0,0,0,0.03)] dark:shadow-[0_1px_2px_rgba(0,0,0,0.4)]">
-              <tr>
-                <th className="py-3 px-4 bg-slate-50 dark:bg-[#171717]">Roll Number</th>
-                <th className="py-3 px-4 bg-slate-50 dark:bg-[#171717]">Student Name</th>
-                <th className="py-3 px-4 bg-slate-50 dark:bg-[#171717]">Email</th>
-                <th className="py-3 px-4 text-center bg-slate-50 dark:bg-[#171717]">Classes Attended</th>
-                <th className="py-3 px-4 text-center bg-slate-50 dark:bg-[#171717]">Total Conducted</th>
-                <th className="py-3 px-4 text-center bg-slate-50 dark:bg-[#171717]">Current %</th>
-                <th className="py-3 px-4 text-center bg-slate-50 dark:bg-[#171717]">Recovery Classes</th>
-                <th className="py-3 px-4 text-center bg-slate-50 dark:bg-[#171717]">Risk Tier</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100 dark:divide-[#262626]">
-              {filtered.length === 0 ? (
-                <tr>
-                  <td colSpan={8} className="text-center py-8 text-slate-400 dark:text-[#737373]">
-                    No students found.
-                  </td>
-                </tr>
-              ) : (
-                filtered.map((s, idx) => (
-                  <tr key={idx} className="hover:bg-slate-50/50 dark:hover:bg-[#171717] transition-colors erp-table-row">
-                    <td className="py-3 px-4 font-mono font-bold text-slate-900 dark:text-white">{s.roll_number}</td>
-                    <td className="py-3 px-4 font-medium text-slate-900 dark:text-white">{s.full_name}</td>
-                    <td className="py-3 px-4 text-slate-500 dark:text-[#A3A3A3]">{s.email}</td>
-                    <td className="py-3 px-4 text-center text-slate-800 dark:text-[#D4D4D4]">{s.classes_attended ?? 0}</td>
-                    <td className="py-3 px-4 text-center text-slate-600 dark:text-[#A3A3A3]">{s.classes_conducted ?? 0}</td>
-                    <td className="py-3 px-4 text-center font-bold text-slate-900 dark:text-white">
-                      {s.percentage !== undefined ? `${Number(s.percentage).toFixed(1)}%` : 'N/A'}
-                    </td>
-                    <td className="py-3 px-4 text-center font-semibold text-blue-600 dark:text-blue-400">
-                      {s.consecutive_classes_needed > 0 ? `+${s.consecutive_classes_needed}` : 'Safe'}
-                    </td>
-                    <td className="py-3 px-4 text-center">
-                      <span
-                        className={`px-2 py-0.5 rounded-full text-[11px] font-semibold ${
-                          s.risk_level === 'RED'
-                            ? 'bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-800/60'
-                            : s.risk_level === 'ORANGE' || s.risk_level === 'YELLOW'
-                            ? 'bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800/60'
-                            : 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/60'
-                        }`}
-                      >
-                        {s.risk_level || 'GREEN'}
-                      </span>
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
-
-        {/* Footer Record Count */}
-        <div className="px-4 py-2.5 bg-slate-50/50 dark:bg-[#141414] border-t border-slate-200 dark:border-[#262626] text-[11px] text-slate-500 dark:text-[#A3A3A3] font-mono">
-          Showing <strong className="text-slate-900 dark:text-white">{filtered.length}</strong> of <strong className="text-slate-900 dark:text-white">{students.length}</strong> students
-        </div>
-      </div>
+      {/* Data Table */}
+      <DataTable
+        columns={columns}
+        data={paginatedData}
+        keyExtractor={(s, idx) => s.roll_number || idx}
+        loading={loading}
+        emptyMessage="No student records found."
+        emptySubtitle="Try selecting a different course or clearing your search query."
+        maxHeight="max-h-[62vh]"
+        pagination={{
+          page: currentPage,
+          pageSize: pageSize,
+          total: filtered.length,
+          totalPages: Math.max(1, Math.ceil(filtered.length / pageSize)),
+          onPageChange: setCurrentPage,
+          onPageSizeChange: (size) => {
+            setPageSize(size);
+            setCurrentPage(1);
+          },
+          pageSizeOptions: [10, 15, 25, 50]
+        }}
+      />
     </div>
   );
 };

@@ -43,7 +43,7 @@ export const SecuritySection: React.FC = () => {
   ];
 
   return (
-    <section id="security" className="py-16 sm:py-20 px-4 sm:px-6 lg:px-8 bg-white dark:bg-[#0A0A0A] border-b border-slate-200 dark:border-[#262626]">
+    <section id="security" className="py-16 sm:py-20 px-4 sm:px-6 lg:px-8 bg-white dark:bg-[#09090B] border-b border-slate-200 dark:border-[#27272A]">
       <div className="max-w-7xl mx-auto">
         
         {/* Section Header */}
@@ -55,7 +55,7 @@ export const SecuritySection: React.FC = () => {
           <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
             Enterprise Security &amp; Compliance Architecture
           </h2>
-          <p className="mt-3 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed max-w-2xl mx-auto">
+          <p className="mt-3 text-xs sm:text-sm text-slate-600 dark:text-zinc-300 leading-relaxed max-w-2xl mx-auto">
             Engineered with strict academic governance standards to safeguard student privacy, prevent unauthorized modifications, and maintain audit-grade compliance.
           </p>
         </div>
@@ -67,7 +67,7 @@ export const SecuritySection: React.FC = () => {
             return (
               <div
                 key={idx}
-                className="bg-[#F8FAFC] dark:bg-[#111111] border border-slate-200/90 dark:border-[#262626] hover:border-blue-200 dark:hover:border-blue-800 p-6 rounded-2xl transition-all duration-180 flex flex-col justify-between"
+                className="bg-slate-50 dark:bg-[#121215] border border-slate-200 dark:border-[#27272A] hover:border-blue-200 dark:hover:border-blue-800 p-6 rounded-xl transition-all duration-180 flex flex-col justify-between"
               >
                 <div>
                   <div className="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-950/50 border border-blue-100 dark:border-blue-900/60 flex items-center justify-center text-blue-600 dark:text-blue-400 mb-4">
@@ -76,12 +76,12 @@ export const SecuritySection: React.FC = () => {
                   <h3 className="text-xs font-bold text-slate-900 dark:text-white leading-snug">
                     {sec.title}
                   </h3>
-                  <p className="mt-2 text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                  <p className="mt-2 text-xs text-slate-600 dark:text-zinc-400 leading-relaxed">
                     {sec.description}
                   </p>
                 </div>
 
-                <div className="mt-4 pt-3 border-t border-slate-200/70 dark:border-[#262626] flex items-center gap-1.5 text-[10px] text-blue-700 dark:text-blue-400 font-semibold font-mono">
+                <div className="mt-4 pt-3 border-t border-slate-200 dark:border-[#27272A] flex items-center gap-1.5 text-[10px] text-blue-700 dark:text-blue-400 font-semibold font-mono">
                   <span className="w-1.5 h-1.5 rounded-full bg-blue-600 dark:bg-blue-400" />
                   <span>Verified Platform Property</span>
                 </div>

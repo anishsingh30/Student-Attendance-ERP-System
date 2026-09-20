@@ -54,23 +54,23 @@ export const ForceChangePasswordPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#F7F8FA] dark:bg-black flex flex-col justify-center py-12 sm:px-6 lg:px-8 selection:bg-blue-100 selection:text-blue-900 transition-colors duration-200">
+    <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#09090B] flex flex-col justify-center py-12 sm:px-6 lg:px-8 selection:bg-blue-100 selection:text-blue-900 transition-colors duration-200">
       <div className="sm:mx-auto sm:w-full sm:max-w-md text-center">
-        <div className="w-12 h-12 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/60 text-amber-600 dark:text-amber-400 flex items-center justify-center mx-auto mb-3 shadow-xs">
-          <KeyRound className="w-6 h-6" />
+        <div className="w-12 h-12 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/60 text-amber-600 dark:text-amber-400 flex items-center justify-center mx-auto mb-3 shadow-xs">
+          <KeyRound className="w-5 h-5" />
         </div>
         <h2 className="text-xl font-bold text-slate-900 dark:text-white tracking-tight">
           Mandatory Password Update
         </h2>
-        <p className="mt-1 text-xs text-slate-500 dark:text-[#A3A3A3] font-medium">
-          Apex Institute of Technology • Account Security Policy
+        <p className="mt-1 text-xs text-slate-500 dark:text-zinc-400 font-medium">
+          AttendanceAI • Institutional Account Security Policy
         </p>
       </div>
 
       <div className="mt-6 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white dark:bg-[#111111] border border-slate-200 dark:border-[#262626] py-8 px-6 shadow-xs rounded-2xl sm:px-10 space-y-5">
+        <div className="bg-white dark:bg-[#121215] border border-slate-200 dark:border-[#27272A] py-8 px-6 shadow-xs rounded-xl sm:px-10 space-y-5">
           
-          <div className="p-3.5 rounded-xl bg-amber-50/80 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/50 text-amber-900 dark:text-amber-300 text-xs space-y-1">
+          <div className="p-3.5 rounded-lg bg-amber-50/80 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/50 text-amber-900 dark:text-amber-300 text-xs space-y-1">
             <div className="flex items-center gap-2 font-bold text-amber-800 dark:text-amber-300">
               <ShieldAlert className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0" />
               <span>Password Reset Required</span>
@@ -80,19 +80,19 @@ export const ForceChangePasswordPage: React.FC = () => {
             </p>
           </div>
 
-          <div className="p-3 bg-slate-50 dark:bg-[#171717] border border-slate-200 dark:border-[#262626] rounded-xl space-y-1 text-xs">
+          <div className="p-3 bg-slate-50 dark:bg-[#18181B] border border-slate-200 dark:border-[#27272A] rounded-lg space-y-1 text-xs">
             <div className="flex justify-between">
-              <span className="text-slate-500 dark:text-[#A3A3A3] font-medium">Account:</span>
+              <span className="text-slate-500 dark:text-zinc-400 font-medium">Account:</span>
               <span className="font-semibold text-slate-900 dark:text-white">{user?.full_name}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-slate-500 dark:text-[#A3A3A3] font-medium">Email / ID:</span>
-              <span className="font-mono text-slate-700 dark:text-slate-300">{user?.roll_number || user?.employee_id || user?.email}</span>
+              <span className="text-slate-500 dark:text-zinc-400 font-medium">Email / ID:</span>
+              <span className="font-mono text-slate-700 dark:text-zinc-300">{user?.roll_number || user?.employee_id || user?.email}</span>
             </div>
           </div>
 
           {error && (
-            <div className="p-3 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800/60 flex items-center gap-2 text-rose-700 dark:text-rose-300 text-xs">
+            <div className="p-3 rounded-lg bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800/60 flex items-center gap-2 text-rose-700 dark:text-rose-300 text-xs">
               <AlertCircle className="w-4 h-4 shrink-0" />
               <span>{error}</span>
             </div>
@@ -100,11 +100,11 @@ export const ForceChangePasswordPage: React.FC = () => {
 
           <form className="space-y-4" onSubmit={handleSubmit}>
             <div>
-              <label className="block text-xs font-semibold text-slate-700 dark:text-[#D4D4D4] mb-1.5">
+              <label className="block text-xs font-semibold text-slate-700 dark:text-zinc-300 mb-1.5">
                 New Permanent Password <span className="text-rose-500">*</span>
               </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 dark:text-[#737373]">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 dark:text-zinc-500">
                   <Lock className="w-4 h-4" />
                 </div>
                 <input
@@ -113,17 +113,17 @@ export const ForceChangePasswordPage: React.FC = () => {
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
                   placeholder="Min. 8 characters (letters + digits)"
-                  className="block w-full pl-9 pr-3 py-2.5 text-xs bg-white dark:bg-[#141414] border border-slate-300 dark:border-[#262626] rounded-lg text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-[#737373] focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-all shadow-xs"
+                  className="block w-full pl-9 pr-3 py-2 text-xs bg-white dark:bg-[#18181B] border border-slate-300 dark:border-[#27272A] rounded-lg text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-all shadow-xs"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-700 dark:text-[#D4D4D4] mb-1.5">
+              <label className="block text-xs font-semibold text-slate-700 dark:text-zinc-300 mb-1.5">
                 Confirm New Password <span className="text-rose-500">*</span>
               </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 dark:text-[#737373]">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 dark:text-zinc-500">
                   <Lock className="w-4 h-4" />
                 </div>
                 <input
@@ -132,7 +132,7 @@ export const ForceChangePasswordPage: React.FC = () => {
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   placeholder="Re-enter new password"
-                  className="block w-full pl-9 pr-3 py-2.5 text-xs bg-white dark:bg-[#141414] border border-slate-300 dark:border-[#262626] rounded-lg text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-[#737373] focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-all shadow-xs"
+                  className="block w-full pl-9 pr-3 py-2 text-xs bg-white dark:bg-[#18181B] border border-slate-300 dark:border-[#27272A] rounded-lg text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-all shadow-xs"
                 />
               </div>
             </div>
@@ -159,7 +159,7 @@ export const ForceChangePasswordPage: React.FC = () => {
           <div className="pt-2 text-center">
             <button
               onClick={logout}
-              className="text-xs text-slate-500 dark:text-[#A3A3A3] hover:text-rose-600 dark:hover:text-rose-400 transition-colors cursor-pointer"
+              className="text-xs text-slate-500 dark:text-zinc-400 hover:text-rose-600 dark:hover:text-rose-400 transition-colors cursor-pointer"
             >
               Sign out and change later
             </button>

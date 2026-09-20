@@ -19,8 +19,8 @@ export const FinalCTA: React.FC = () => {
   };
 
   return (
-    <section className="py-16 sm:py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-white to-[#F8FAFC] dark:from-black dark:to-[#0A0A0A]">
-      <div className="max-w-5xl mx-auto bg-gradient-to-br from-slate-900 via-slate-900 to-blue-950 dark:from-[#0E0E0E] dark:via-[#0A0A0A] dark:to-[#111827] border border-transparent dark:border-[#262626] rounded-3xl p-8 sm:p-12 text-white text-center shadow-xl relative overflow-hidden">
+    <section className="py-16 sm:py-20 px-4 sm:px-6 lg:px-8 bg-slate-50 dark:bg-[#09090B] border-t border-slate-200 dark:border-[#27272A]">
+      <div className="max-w-5xl mx-auto bg-gradient-to-br from-slate-900 via-slate-900 to-blue-950 dark:from-[#121215] dark:via-[#09090B] dark:to-[#18181B] border border-slate-800 dark:border-[#27272A] rounded-2xl p-8 sm:p-12 text-white text-center shadow-xl relative overflow-hidden">
         
         {/* Subtle background ambient light */}
         <div className="absolute top-0 right-1/4 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
@@ -28,9 +28,9 @@ export const FinalCTA: React.FC = () => {
 
         <div className="relative z-10 max-w-2xl mx-auto space-y-6">
           
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/20 text-blue-200 text-xs font-semibold backdrop-blur-xs">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/20 text-blue-200 text-xs font-semibold backdrop-blur-xs font-mono">
             <Building2 className="w-3.5 h-3.5 text-blue-300" />
-            <span>Apex Institute of Technology • AttendanceAI ERP</span>
+            <span>AttendanceAI • Student Attendance ERP System</span>
           </div>
 
           <h2 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight leading-tight">
@@ -44,7 +44,7 @@ export const FinalCTA: React.FC = () => {
           <div className="pt-2 flex flex-wrap items-center justify-center gap-4">
             <a
               href={getPortalLink()}
-              className="px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs sm:text-sm font-semibold shadow-lg shadow-blue-600/30 inline-flex items-center gap-2 hover:scale-[1.01] active:scale-[0.98] transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400"
+              className="px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs sm:text-sm font-semibold shadow-lg shadow-blue-600/30 inline-flex items-center gap-2 hover:scale-[1.01] active:scale-[0.98] transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 erp-button"
             >
               <GraduationCap className="w-4 h-4" />
               <span>Access ERP Portal</span>
@@ -55,7 +55,7 @@ export const FinalCTA: React.FC = () => {
           <div className="pt-6 border-t border-white/10 flex flex-wrap items-center justify-center gap-6 text-[11px] text-slate-400">
             <span className="flex items-center gap-1.5">
               <CheckCircle2 className="w-3.5 h-3.5 text-blue-400" />
-              Statutory 75% Verification
+              Configurable Compliance Rules
             </span>
             <span className="flex items-center gap-1.5">
               <CheckCircle2 className="w-3.5 h-3.5 text-blue-400" />

@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { GraduationCap, ArrowRight, Lock, Users, Shield, AlertCircle, RefreshCw } from 'lucide-react';
+import { GraduationCap, ArrowRight, Lock, Users, Shield, AlertCircle, RefreshCw, CheckCircle2, ShieldCheck } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { ThemeToggle } from '../components/common/ThemeToggle';
 
@@ -15,7 +15,6 @@ export const LoginPage: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Client-side field level validation
     const trimmedId = identifier.trim();
     if (!trimmedId) {
       if (selectedRole === 'student') {
@@ -40,13 +39,11 @@ export const LoginPage: React.FC = () => {
     try {
       const u = await login(trimmedId, password, selectedRole);
 
-      // Check if administrative password reset requires mandatory password change
       if (u.must_change_password) {
         window.location.href = '/force-change-password';
         return;
       }
 
-      // Backend authoritatively returned actual authenticated role
       if (u.role === 'student') {
         window.location.href = '/student/dashboard';
       } else if (u.role === 'faculty') {
@@ -55,7 +52,6 @@ export const LoginPage: React.FC = () => {
         window.location.href = '/admin/dashboard';
       }
     } catch (err: any) {
-      // Clear password and refocus for secure retry while keeping identifier
       setPassword('');
       passwordInputRef.current?.focus();
       setError(err.message || 'Incorrect ID/email or password. Please check your credentials and try again.');
@@ -99,7 +95,7 @@ export const LoginPage: React.FC = () => {
         };
       case 'admin':
         return {
-          label: 'Admin ID or Email',
+          label: 'Administrator ID or Email',
           placeholder: 'e.g. admin@college.edu',
           icon: Shield,
         };
@@ -110,230 +106,243 @@ export const LoginPage: React.FC = () => {
   const IconComponent = currentConfig.icon;
 
   return (
-    <div className="min-h-screen bg-[#F7F8FA] dark:bg-black text-slate-900 dark:text-white flex flex-col justify-center py-16 sm:py-20 sm:px-6 lg:px-8 relative selection:bg-blue-100 selection:text-blue-900 transition-colors duration-200">
-      
-      {/* Top Header Bar with Brand and Theme Toggle */}
-      <header className="absolute top-4 left-4 right-4 sm:top-6 sm:left-8 sm:right-8 flex items-center justify-between z-20">
+    <div className="min-h-screen bg-slate-50 dark:bg-[#09090B] text-slate-900 dark:text-zinc-100 flex flex-col justify-between transition-colors duration-200">
+      {/* Top Header Bar */}
+      <header className="px-6 py-4 border-b border-slate-200 dark:border-[#27272A] bg-white dark:bg-[#121215] flex items-center justify-between">
         <a 
           href="/" 
-          className="inline-flex items-center gap-2 group focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 rounded-lg p-1" 
+          className="inline-flex items-center gap-2.5 focus:outline-none focus-visible:ring-1 focus-visible:ring-blue-600 rounded" 
           title="Return to AttendanceAI Home"
         >
-          <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white shadow-xs group-hover:bg-blue-700 transition-colors">
-            <GraduationCap className="w-5 h-5" />
+          <div className="w-7 h-7 rounded bg-blue-600 flex items-center justify-center text-white shadow-xs">
+            <GraduationCap className="w-4 h-4" />
           </div>
-          <span className="text-base font-bold text-slate-900 dark:text-white tracking-tight">
-            Attendance<span className="text-blue-600">AI</span>
-          </span>
+          <div>
+            <span className="text-sm font-bold tracking-tight text-slate-900 dark:text-zinc-100">
+              Attendance<span className="text-blue-600">AI</span>
+            </span>
+            <span className="hidden sm:inline-block ml-2 text-[11px] text-slate-500 dark:text-zinc-400 font-mono">
+              University Attendance ERP
+            </span>
+          </div>
         </a>
 
-        {/* Reference Theme Toggle */}
-        <ThemeToggle />
+        <div className="flex items-center gap-3">
+          <span className="hidden sm:inline-flex items-center gap-1.5 text-xs text-slate-500 dark:text-zinc-400 font-medium">
+            <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+            Institutional Sign-In
+          </span>
+          <ThemeToggle />
+        </div>
       </header>
 
-      {/* Main Center Form Header */}
-      <div className="sm:mx-auto sm:w-full sm:max-w-md text-center">
-        <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-blue-600 text-white shadow-xs mb-3 mx-auto">
-          <GraduationCap className="w-7 h-7" />
-        </div>
-        <h2 className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">
-          Apex Institute of Technology
-        </h2>
-        <p className="mt-1 text-xs text-slate-500 dark:text-slate-400 font-medium">
-          Authoritative Academic Attendance &amp; Compliance Portal
-        </p>
-      </div>
+      {/* Center Container */}
+      <div className="flex-1 flex items-center justify-center p-4 sm:p-6 lg:p-8">
+        <div className="w-full max-w-md">
+          <div className="bg-white dark:bg-[#121215] border border-slate-200 dark:border-[#27272A] rounded-lg p-6 sm:p-7 shadow-xs">
+            
+            {/* Header within card */}
+            <div className="mb-5 pb-4 border-b border-slate-100 dark:border-[#27272A]">
+              <h2 className="text-base font-bold tracking-tight text-slate-900 dark:text-zinc-100">
+                Sign In to Your Account
+              </h2>
+              <p className="mt-0.5 text-xs text-slate-500 dark:text-zinc-400">
+                Attendance and Academic Compliance Portal
+              </p>
+            </div>
 
-      <div className="mt-6 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white dark:bg-[#0A0A0A] border border-slate-200 dark:border-[#262626] py-8 px-6 shadow-xs dark:shadow-2xl rounded-2xl sm:px-10 transition-colors duration-200">
-          
-          {/* Role Selection Tabs */}
-          <div className="mb-6">
-            <label className="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">
-              Select Portal Role
-            </label>
-            <div className="grid grid-cols-3 gap-1.5 p-1 bg-slate-100 dark:bg-[#141414] rounded-xl border border-slate-200 dark:border-[#262626]">
-              {(['student', 'faculty', 'admin'] as const).map((r) => (
+            {/* Role Selection Tabs */}
+            <div className="mb-4">
+              <label className="block text-[10px] font-semibold text-slate-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5">
+                Select Portal Role
+              </label>
+              <div className="grid grid-cols-3 gap-1 p-1 bg-slate-100 dark:bg-[#18181B] rounded-md border border-slate-200 dark:border-[#27272A]">
+                {(['student', 'faculty', 'admin'] as const).map((r) => (
+                  <button
+                    key={r}
+                    type="button"
+                    onClick={() => {
+                      setSelectedRole(r);
+                      if (error) setError(null);
+                    }}
+                    className={`py-1 text-xs font-medium rounded capitalize transition-colors ${
+                      selectedRole === r
+                        ? 'bg-white dark:bg-[#27272A] text-slate-900 dark:text-zinc-100 shadow-xs'
+                        : 'text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-zinc-200'
+                    }`}
+                  >
+                    {r === 'admin' ? 'Administrator' : r}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {error && (
+              <div
+                role="alert"
+                aria-live="assertive"
+                className="mb-4 p-3 rounded-md bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/50 flex items-start gap-2 text-rose-800 dark:text-rose-300 text-xs"
+              >
+                <AlertCircle className="w-4 h-4 text-rose-600 dark:text-rose-400 mt-0.5 shrink-0" />
+                <div className="flex-1 leading-relaxed">
+                  {error}
+                </div>
+              </div>
+            )}
+
+            <form className="space-y-3.5" onSubmit={handleSubmit} noValidate>
+              <div>
+                <label className="block text-xs font-medium text-slate-700 dark:text-zinc-300 mb-1">
+                  {currentConfig.label}
+                </label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none text-slate-400 dark:text-zinc-500">
+                    <IconComponent className="w-4 h-4" />
+                  </div>
+                  <input
+                    type="text"
+                    value={identifier}
+                    onChange={(e) => {
+                      setIdentifier(e.target.value);
+                      if (error) setError(null);
+                    }}
+                    onFocus={() => {
+                      if (error) setError(null);
+                    }}
+                    placeholder={currentConfig.placeholder}
+                    className="block w-full pl-8 pr-3 py-1.5 text-xs bg-white dark:bg-[#18181B] border border-slate-200 dark:border-[#27272A] rounded-md text-slate-900 dark:text-zinc-100 placeholder-slate-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-blue-600 transition-colors"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-medium text-slate-700 dark:text-zinc-300 mb-1">
+                  Password
+                </label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none text-slate-400 dark:text-zinc-500">
+                    <Lock className="w-4 h-4" />
+                  </div>
+                  <input
+                    ref={passwordInputRef}
+                    type="password"
+                    value={password}
+                    onChange={(e) => {
+                      setPassword(e.target.value);
+                      if (error) setError(null);
+                    }}
+                    onFocus={() => {
+                      if (error) setError(null);
+                    }}
+                    placeholder="••••••••"
+                    className="block w-full pl-8 pr-3 py-1.5 text-xs bg-white dark:bg-[#18181B] border border-slate-200 dark:border-[#27272A] rounded-md text-slate-900 dark:text-zinc-100 placeholder-slate-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-blue-600 transition-colors"
+                  />
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full flex items-center justify-center gap-1.5 py-2 px-4 rounded-md bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-1 focus:ring-blue-600 text-xs font-medium text-white shadow-xs transition-colors disabled:opacity-50 mt-2"
+              >
+                {loading ? (
+                  <>
+                    <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                    <span>Signing in...</span>
+                  </>
+                ) : (
+                  <>
+                    <span>Sign In</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </>
+                )}
+              </button>
+            </form>
+
+            {/* Quick Demo Portals Section */}
+            <div className="mt-5 pt-4 border-t border-slate-100 dark:border-[#27272A]">
+              <p className="text-center text-[10px] font-semibold text-slate-500 dark:text-zinc-400 uppercase tracking-wider mb-2">
+                Fast Access Demo Portals
+              </p>
+              <div className="space-y-1.5">
                 <button
-                  key={r}
                   type="button"
-                  onClick={() => {
-                    setSelectedRole(r);
-                    if (error) setError(null);
-                  }}
-                  className={`py-2 text-xs font-semibold rounded-lg capitalize transition-all ${
-                    selectedRole === r
-                      ? 'bg-white dark:bg-[#222222] text-slate-900 dark:text-white shadow-xs border border-slate-200 dark:border-[#333333]'
-                      : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-                  }`}
+                  onClick={() => handleDemoClick('student_borderline')}
+                  className="w-full flex items-center justify-between p-2 rounded-md bg-slate-50 dark:bg-[#18181B] hover:bg-slate-100 dark:hover:bg-zinc-800 border border-slate-200 dark:border-[#27272A] text-xs text-left transition-colors"
                 >
-                  {r === 'admin' ? 'Administrator' : r}
+                  <div className="flex items-center gap-2">
+                    <GraduationCap className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400 shrink-0" />
+                    <div>
+                      <p className="text-slate-900 dark:text-zinc-200 font-medium">Rahul Verma (Borderline Risk)</p>
+                      <p className="text-[10px] text-slate-500 dark:text-zinc-400 font-mono">student123 • Roll: CS2022-001</p>
+                    </div>
+                  </div>
+                  <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400 border border-amber-200 dark:border-amber-900/50">
+                    Student
+                  </span>
                 </button>
-              ))}
+
+                <button
+                  type="button"
+                  onClick={() => handleDemoClick('student_safe')}
+                  className="w-full flex items-center justify-between p-2 rounded-md bg-slate-50 dark:bg-[#18181B] hover:bg-slate-100 dark:hover:bg-zinc-800 border border-slate-200 dark:border-[#27272A] text-xs text-left transition-colors"
+                >
+                  <div className="flex items-center gap-2">
+                    <GraduationCap className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                    <div>
+                      <p className="text-slate-900 dark:text-zinc-200 font-medium">Priya Sharma (Compliant)</p>
+                      <p className="text-[10px] text-slate-500 dark:text-zinc-400 font-mono">student123 • Roll: CS2022-002</p>
+                    </div>
+                  </div>
+                  <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-900/50">
+                    Student
+                  </span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => handleDemoClick('faculty')}
+                  className="w-full flex items-center justify-between p-2 rounded-md bg-slate-50 dark:bg-[#18181B] hover:bg-slate-100 dark:hover:bg-zinc-800 border border-slate-200 dark:border-[#27272A] text-xs text-left transition-colors"
+                >
+                  <div className="flex items-center gap-2">
+                    <Users className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400 shrink-0" />
+                    <div>
+                      <p className="text-slate-900 dark:text-zinc-200 font-medium">Prof. Rajesh Kumar (Faculty)</p>
+                      <p className="text-[10px] text-slate-500 dark:text-zinc-400 font-mono">faculty123 • Computer Networks</p>
+                    </div>
+                  </div>
+                  <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-indigo-50 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-900/50">
+                    Faculty
+                  </span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => handleDemoClick('admin')}
+                  className="w-full flex items-center justify-between p-2 rounded-md bg-slate-50 dark:bg-[#18181B] hover:bg-slate-100 dark:hover:bg-zinc-800 border border-slate-200 dark:border-[#27272A] text-xs text-left transition-colors"
+                >
+                  <div className="flex items-center gap-2">
+                    <Shield className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400 shrink-0" />
+                    <div>
+                      <p className="text-slate-900 dark:text-zinc-200 font-medium">Dr. Anand Roy (Academic Dean)</p>
+                      <p className="text-[10px] text-slate-500 dark:text-zinc-400 font-mono">admin123 • IT / Dean</p>
+                    </div>
+                  </div>
+                  <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-purple-50 dark:bg-purple-950/40 text-purple-700 dark:text-purple-400 border border-purple-200 dark:border-purple-900/50">
+                    Admin
+                  </span>
+                </button>
+              </div>
             </div>
+
           </div>
-
-          {error && (
-            <div
-              role="alert"
-              aria-live="assertive"
-              className="mb-5 p-3.5 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/60 flex items-start gap-2.5 text-rose-800 dark:text-rose-300 text-xs animate-shake"
-            >
-              <AlertCircle className="w-4 h-4 text-rose-600 dark:text-rose-400 mt-0.5 flex-shrink-0" />
-              <div className="flex-1 leading-relaxed font-medium">
-                {error}
-              </div>
-            </div>
-          )}
-
-          <form className="space-y-4" onSubmit={handleSubmit} noValidate>
-            <div>
-              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
-                {currentConfig.label}
-              </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 dark:text-slate-500">
-                  <IconComponent className="w-4 h-4" />
-                </div>
-                <input
-                  type="text"
-                  value={identifier}
-                  onChange={(e) => {
-                    setIdentifier(e.target.value);
-                    if (error) setError(null);
-                  }}
-                  onFocus={() => {
-                    if (error) setError(null);
-                  }}
-                  placeholder={currentConfig.placeholder}
-                  className="block w-full pl-9 pr-3 py-2.5 text-xs bg-white dark:bg-[#141414] border border-slate-300 dark:border-[#262626] rounded-lg text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-600 dark:focus:ring-blue-500 focus:border-transparent transition-all shadow-xs"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
-                Password
-              </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 dark:text-slate-500">
-                  <Lock className="w-4 h-4" />
-                </div>
-                <input
-                  ref={passwordInputRef}
-                  type="password"
-                  value={password}
-                  onChange={(e) => {
-                    setPassword(e.target.value);
-                    if (error) setError(null);
-                  }}
-                  onFocus={() => {
-                    if (error) setError(null);
-                  }}
-                  placeholder="••••••••"
-                  className="block w-full pl-9 pr-3 py-2.5 text-xs bg-white dark:bg-[#141414] border border-slate-300 dark:border-[#262626] rounded-lg text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-600 dark:focus:ring-blue-500 focus:border-transparent transition-all shadow-xs"
-                />
-              </div>
-            </div>
-
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-600 text-xs font-semibold text-white shadow-xs transition-all disabled:opacity-50 erp-button"
-            >
-              {loading ? (
-                <>
-                  <RefreshCw className="w-4 h-4 animate-spin" />
-                  <span>Signing in...</span>
-                </>
-              ) : (
-                <>
-                  <span>Sign In</span>
-                  <ArrowRight className="w-4 h-4" />
-                </>
-              )}
-            </button>
-          </form>
-
-          {/* Quick Demo Portals Section */}
-          <div className="mt-8 pt-6 border-t border-slate-100 dark:border-[#262626]">
-            <p className="text-center text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-3">
-              Fast Access Demo Accounts
-            </p>
-            <div className="space-y-2">
-              <button
-                type="button"
-                onClick={() => handleDemoClick('student_borderline')}
-                className="w-full flex items-center justify-between p-2.5 rounded-lg bg-slate-50 dark:bg-[#111111] hover:bg-blue-50/60 dark:hover:bg-[#181818] border border-slate-200 dark:border-[#262626] hover:border-blue-300 dark:hover:border-blue-500/40 text-xs text-left transition-all erp-button"
-              >
-                <div className="flex items-center gap-2.5">
-                  <GraduationCap className="w-4 h-4 text-amber-600 dark:text-amber-400" />
-                  <div>
-                    <p className="text-slate-900 dark:text-white font-semibold">Rahul Verma (At Risk / 68%)</p>
-                    <p className="text-[10px] text-slate-500 dark:text-slate-400">student123 • Roll: CS2022-001</p>
-                  </div>
-                </div>
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800/60 font-semibold">
-                  Student
-                </span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => handleDemoClick('student_safe')}
-                className="w-full flex items-center justify-between p-2.5 rounded-lg bg-slate-50 dark:bg-[#111111] hover:bg-blue-50/60 dark:hover:bg-[#181818] border border-slate-200 dark:border-[#262626] hover:border-blue-300 dark:hover:border-blue-500/40 text-xs text-left transition-all erp-button"
-              >
-                <div className="flex items-center gap-2.5">
-                  <GraduationCap className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-                  <div>
-                    <p className="text-slate-900 dark:text-white font-semibold">Priya Sharma (Safe / 92%)</p>
-                    <p className="text-[10px] text-slate-500 dark:text-slate-400">student123 • Roll: CS2022-002</p>
-                  </div>
-                </div>
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/60 font-semibold">
-                  Student
-                </span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => handleDemoClick('faculty')}
-                className="w-full flex items-center justify-between p-2.5 rounded-lg bg-slate-50 dark:bg-[#111111] hover:bg-blue-50/60 dark:hover:bg-[#181818] border border-slate-200 dark:border-[#262626] hover:border-blue-300 dark:hover:border-blue-500/40 text-xs text-left transition-all erp-button"
-              >
-                <div className="flex items-center gap-2.5">
-                  <Users className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
-                  <div>
-                    <p className="text-slate-900 dark:text-white font-semibold">Prof. Rajesh Kumar (Head)</p>
-                    <p className="text-[10px] text-slate-500 dark:text-slate-400">faculty123 • Computer Networks</p>
-                  </div>
-                </div>
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-indigo-50 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800/60 font-semibold">
-                  Faculty
-                </span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => handleDemoClick('admin')}
-                className="w-full flex items-center justify-between p-2.5 rounded-lg bg-slate-50 dark:bg-[#111111] hover:bg-blue-50/60 dark:hover:bg-[#181818] border border-slate-200 dark:border-[#262626] hover:border-blue-300 dark:hover:border-blue-500/40 text-xs text-left transition-all erp-button"
-              >
-                <div className="flex items-center gap-2.5">
-                  <Shield className="w-4 h-4 text-purple-600 dark:text-purple-400" />
-                  <div>
-                    <p className="text-slate-900 dark:text-white font-semibold">Dr. Anand Roy (Academic Dean)</p>
-                    <p className="text-[10px] text-slate-500 dark:text-slate-400">admin123 • IT / Dean</p>
-                  </div>
-                </div>
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-purple-50 dark:bg-purple-950/40 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800/60 font-semibold">
-                  Admin
-                </span>
-              </button>
-            </div>
-          </div>
-
         </div>
       </div>
+
+      {/* Footer Bar */}
+      <footer className="px-6 py-3 border-t border-slate-200 dark:border-[#27272A] bg-white dark:bg-[#121215] text-center text-xs text-slate-500 dark:text-zinc-500">
+        AttendanceAI ERP &copy; {new Date().getFullYear()} — Institutional Student Attendance Management System
+      </footer>
     </div>
   );
 };
-

@@ -52,7 +52,7 @@ class AttendanceScheduler:
         enabled = enabled_val.lower() == "true"
         interval_hours = int(interval_val) if interval_val.isdigit() else 24
 
-        last_run = db.query(AgentRun).filter(AgentRun.trigger_type == "SCHEDULED").order_by(AgentRun.start_time.desc()).first()
+        last_run = db.query(AgentRun).order_by(AgentRun.start_time.desc()).first()
         last_time = last_run.start_time if last_run else self._last_run_time
 
         next_time = (last_time + timedelta(hours=interval_hours)) if last_time and enabled else None
@@ -84,7 +84,7 @@ class AttendanceScheduler:
                 trigger_type="MANUAL" if triggered_by_user_id else "SCHEDULED"
             )
             result = agent.run()
-            self._last_run_time = datetime.utcnow()
+            self._last_run_time = datetime.now(timezone.utc)
             return result
         finally:
             self._is_executing = False
@@ -102,9 +102,14 @@ class AttendanceScheduler:
                         continue
 
                     # Check if run is due
-                    last_run = db.query(AgentRun).filter(AgentRun.trigger_type == "SCHEDULED").order_by(AgentRun.start_time.desc()).first()
+                    last_run = db.query(AgentRun).order_by(AgentRun.start_time.desc()).first()
                     interval = timedelta(hours=status["interval_hours"])
-                    is_due = (last_run is None) or (datetime.utcnow() - last_run.start_time >= interval)
+                    now_utc = datetime.now(timezone.utc)
+                    last_start = last_run.start_time if last_run else None
+                    if last_start and last_start.tzinfo is None:
+                        last_start = last_start.replace(tzinfo=timezone.utc)
+
+                    is_due = (last_start is None) or (now_utc - last_start >= interval)
 
                     if is_due:
                         logger.info("Triggering scheduled automated attendance scan.")
@@ -112,7 +117,7 @@ class AttendanceScheduler:
                         try:
                             agent = AttendanceMonitoringAgent(db=db, triggered_by_user_id=None, trigger_type="SCHEDULED")
                             agent.run()
-                            self._last_run_time = datetime.utcnow()
+                            self._last_run_time = datetime.now(timezone.utc)
                         finally:
                             self._is_executing = False
                 finally:

@@ -37,7 +37,7 @@ export const RolePortals: React.FC = () => {
         'Live course attendance percentages',
         'Deterministic recovery calculation',
         'Interactive What-If simulator',
-        'Personalized AI academic assistant',
+        'Contextual academic advisory',
         'In-app threshold & shortage alerts'
       ],
       ctaText: 'Access Student Portal'
@@ -62,35 +62,35 @@ export const RolePortals: React.FC = () => {
     {
       id: 'admin',
       title: 'Administrator Portal',
-      subtitle: 'Institutional Governance & Configuration',
+      subtitle: 'Institutional Governance & Telemetry',
       icon: Shield,
-      color: 'purple',
-      badge: 'Admin Access',
-      description: 'Full institutional oversight for academic deans and ERP administrators to configure threshold policies, manage user roles, and inspect audit logs.',
+      color: 'slate',
+      badge: 'Administrative Access',
+      description: 'Provides institution-wide attendance oversight, statutory threshold configuration, subject lifecycle management, audit logs, and agent observability.',
       features: [
-        'University threshold & policy control',
-        'Student & faculty account management',
-        'Automated monitoring agent telemetry',
-        'Tamper-evident audit activity logs',
-        'System-wide attendance analytics'
+        'Statutory threshold & policy configuration',
+        'Academic subject & roster controls',
+        'Automated evaluation pipeline observability',
+        'Immutable audit logs & access history',
+        'Comprehensive compliance export'
       ],
-      ctaText: 'Access Admin Portal'
+      ctaText: 'Access Administrator Portal'
     }
   ];
 
   return (
-    <section id="portals" className="py-16 sm:py-20 px-4 sm:px-6 lg:px-8 bg-white dark:bg-[#0A0A0A] border-b border-slate-200 dark:border-[#262626]">
+    <section id="portals" className="py-16 sm:py-20 px-4 sm:px-6 lg:px-8 bg-white dark:bg-[#09090B] border-b border-slate-200 dark:border-[#27272A]">
       <div className="max-w-7xl mx-auto">
         
         {/* Section Header */}
         <div className="max-w-3xl mx-auto text-center mb-12 sm:mb-16">
-          <span className="text-xs uppercase font-bold tracking-wider text-blue-600 dark:text-blue-400">
+          <span className="text-xs uppercase font-bold tracking-wider text-blue-600 dark:text-blue-400 font-mono">
             Institutional Access
           </span>
           <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white mt-1 tracking-tight">
             Role-Based Academic Portals
           </h2>
-          <p className="mt-3 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed max-w-2xl mx-auto">
+          <p className="mt-3 text-xs sm:text-sm text-slate-600 dark:text-zinc-300 leading-relaxed max-w-2xl mx-auto">
             Tailored interfaces engineered for each university stakeholder with strict role-based access control and secure authentication.
           </p>
         </div>
@@ -102,15 +102,15 @@ export const RolePortals: React.FC = () => {
             return (
               <div
                 key={portal.id}
-                className="bg-[#F8FAFC] dark:bg-[#111111] border border-slate-200/90 dark:border-[#262626] hover:border-blue-300 dark:hover:border-blue-700 rounded-2xl p-6 sm:p-7 flex flex-col justify-between transition-all duration-200 hover:-translate-y-1 shadow-2xs hover:shadow-lg group"
+                className="erp-card-interactive group bg-slate-50 dark:bg-[#121215] border border-slate-200 dark:border-[#27272A] rounded-xl p-6 sm:p-7 flex flex-col justify-between"
               >
                 <div>
                   {/* Top Icon & Badge */}
                   <div className="flex items-center justify-between mb-4">
-                    <div className="w-12 h-12 rounded-xl bg-blue-50 dark:bg-blue-950/50 border border-blue-100 dark:border-blue-900/60 flex items-center justify-center text-blue-600 dark:text-blue-400 group-hover:scale-105 transition-transform">
-                      <Icon className="w-6 h-6" aria-hidden="true" />
+                    <div className="w-12 h-12 rounded-xl bg-blue-50 dark:bg-blue-950/50 border border-blue-100 dark:border-blue-900/60 flex items-center justify-center text-blue-600 dark:text-blue-400 group-hover:border-blue-300 dark:group-hover:border-blue-700 transition-colors duration-200">
+                      <Icon className="w-6 h-6 transition-transform duration-200 group-hover:scale-105" aria-hidden="true" />
                     </div>
-                    <span className="px-2.5 py-1 rounded-full text-[10px] font-semibold bg-white dark:bg-[#1A1A1A] text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-[#262626] font-mono">
+                    <span className="px-2.5 py-1 rounded text-[10px] font-semibold bg-white dark:bg-[#18181B] text-slate-700 dark:text-zinc-300 border border-slate-200 dark:border-[#27272A] font-mono">
                       {portal.badge}
                     </span>
                   </div>
@@ -122,14 +122,14 @@ export const RolePortals: React.FC = () => {
                     {portal.subtitle}
                   </p>
 
-                  <p className="mt-3 text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                  <p className="mt-3 text-xs text-slate-600 dark:text-zinc-400 leading-relaxed">
                     {portal.description}
                   </p>
 
                   {/* Capabilities List */}
-                  <div className="mt-6 pt-5 border-t border-slate-200/80 dark:border-[#262626] space-y-2.5">
+                  <div className="mt-6 pt-5 border-t border-slate-200 dark:border-[#27272A] space-y-2.5">
                     {portal.features.map((feat, idx) => (
-                      <div key={idx} className="flex items-start gap-2 text-xs text-slate-700 dark:text-slate-300 font-medium">
+                      <div key={idx} className="flex items-start gap-2 text-xs text-slate-700 dark:text-zinc-300 font-medium">
                         <CheckCircle2 className="w-4 h-4 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
                         <span>{feat}</span>
                       </div>
@@ -141,10 +141,10 @@ export const RolePortals: React.FC = () => {
                 <div className="mt-8 pt-4">
                   <a
                     href={getPortalLink(portal.id as any)}
-                    className="w-full py-2.5 px-4 rounded-xl bg-white dark:bg-[#1A1A1A] hover:bg-blue-600 dark:hover:bg-blue-600 border border-slate-300 dark:border-[#262626] text-slate-800 dark:text-slate-200 hover:text-white dark:hover:text-white text-xs font-semibold shadow-2xs inline-flex items-center justify-center gap-2 transition-all group-hover:bg-blue-600 group-hover:text-white group-hover:border-blue-600"
+                    className="erp-btn erp-btn-secondary erp-link w-full py-2.5 px-4 text-xs font-semibold inline-flex items-center justify-center gap-2"
                   >
                     <span>{portal.ctaText}</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
+                    <ArrowRight className="w-3.5 h-3.5 erp-arrow" />
                   </a>
                 </div>
               </div>

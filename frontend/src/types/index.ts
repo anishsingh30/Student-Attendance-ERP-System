@@ -146,23 +146,45 @@ export interface SchedulerStatus {
 }
 
 export interface MLMetrics {
-  model_name: string;
-  version: string;
-  status: string;
-  trained_at: string;
-  evaluation_metrics: {
+  model_version?: string;
+  model_name?: string;
+  version?: string;
+  algorithm?: string;
+  status?: string;
+  evaluated_at?: string;
+  trained_at?: string;
+  hyperparameters?: Record<string, string | number | boolean | null>;
+  feature_schema?: string[];
+  target_definition?: string;
+  split_methodology?: string;
+  total_empirical_samples?: number;
+  raw_train_samples?: number;
+  augmented_train_samples?: number;
+  test_samples?: number;
+  training_samples?: number;
+  class_distribution?: Record<string, number>;
+  leakage_prevention_verified?: boolean;
+  metrics?: {
     accuracy: number;
     precision: number;
     recall: number;
     f1_score: number;
   };
-  confusion_matrix: {
-    labels: string[];
-    matrix: number[][];
+  evaluation_metrics?: {
+    accuracy: number;
+    precision: number;
+    recall: number;
+    f1_score: number;
   };
-  feature_importances: Record<string, number>;
-  training_samples: number;
-  test_samples: number;
+  baseline_comparison?: {
+    baseline_accuracy: number;
+    baseline_precision: number;
+    baseline_recall: number;
+    baseline_f1_score: number;
+  };
+  labels?: string[];
+  confusion_matrix?: number[][] | { labels: string[]; matrix: number[][] };
+  feature_importances?: Record<string, number>;
 }
 
 export interface AgentLogItem {

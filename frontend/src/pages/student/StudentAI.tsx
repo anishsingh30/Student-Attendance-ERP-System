@@ -1,8 +1,19 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Bot, Send, User as UserIcon, Sparkles, AlertCircle, Clock, Zap } from 'lucide-react';
+import { 
+  MessageSquareText, 
+  Send, 
+  User as UserIcon, 
+  Clock, 
+  BookOpen, 
+  AlertTriangle, 
+  CheckCircle2, 
+  HelpCircle,
+  RotateCw,
+  ExternalLink
+} from 'lucide-react';
 import { api } from '../../api/client';
 import { useAuth } from '../../context/AuthContext';
-import { useNotifications } from '../../context/NotificationContext';
+import { StudentDashboardData } from '../../types';
 import { MarkdownMessage } from '../../components/common/MarkdownMessage';
 
 interface ChatEntry {
@@ -24,16 +35,16 @@ interface ChatEntry {
 
 export const StudentAI: React.FC = () => {
   const { user } = useAuth();
-  const { engineStatus } = useNotifications();
+  const [dashboard, setDashboard] = useState<StudentDashboardData | null>(null);
   const [messages, setMessages] = useState<ChatEntry[]>([
     {
       role: 'assistant',
-      content: `### Academic Attendance Advisor\nHello **${user?.full_name || 'Student'}**! I am your University Academic Attendance Advisor. I have access to your verified course attendance records and deterministic recovery calculations.\n\nHow can I assist you with your academic compliance today?`,
+      content: `### Attendance Advisory Assistant\nWelcome to the Academic Attendance Advisory service. I have access to your official semester attendance records and recovery guidelines.\n\nYou can ask about your current attendance status, specific course deficit quotas, or how to avoid debarment.`,
       suggested_actions: [
-        'Explain my attendance situation to me in simple language, and give me practical advice for the next 2 weeks.',
-        'Compare my attendance across all subjects and explain which subjects are most urgent and why.',
-        'Which subject has my lowest attendance?',
-        'How many classes do I need to attend to reach 75%?',
+        'What is my overall attendance standing and deficit across all courses?',
+        'Which course currently has the lowest attendance rate?',
+        'How many consecutive classes must I attend in my shortage subjects to reach 75%?',
+        'Explain the consequences of an attendance shortage under university regulations.'
       ],
       timestamp: new Date(),
     },
@@ -41,9 +52,19 @@ export const StudentAI: React.FC = () => {
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [activeStage, setActiveStage] = useState<string | null>(null);
-  const [isSlowWarning, setIsSlowWarning] = useState(false);
   const endRef = useRef<HTMLDivElement>(null);
-  const slowTimerRef = useRef<any>(null);
+
+  useEffect(() => {
+    const fetchContext = async () => {
+      try {
+        const d = await api.getStudentDashboard();
+        setDashboard(d);
+      } catch (err) {
+        console.error('Failed to load student context in advisory:', err);
+      }
+    };
+    fetchContext();
+  }, []);
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -59,7 +80,6 @@ export const StudentAI: React.FC = () => {
       timestamp: new Date(),
     };
 
-    // Forward last 6 messages as conversation context
     const recentHistory = messages.slice(-6).map((m) => ({
       role: m.role,
       content: m.content,
@@ -68,15 +88,8 @@ export const StudentAI: React.FC = () => {
     setMessages((prev) => [...prev, userEntry]);
     if (!textToSend) setInput('');
     setLoading(true);
-    setActiveStage('Retrieving authorized academic attendance records...');
-    setIsSlowWarning(false);
+    setActiveStage('Retrieving registered attendance audit logs...');
 
-    // Trigger slow warning after 8 seconds of continuous processing
-    slowTimerRef.current = setTimeout(() => {
-      setIsSlowWarning(true);
-    }, 8000);
-
-    // Temporary placeholder for streaming assistant response
     let accumulatedText = '';
     let hasCreatedAssistantBubble = false;
 
@@ -115,10 +128,7 @@ export const StudentAI: React.FC = () => {
           }
         },
         onDone: (doneData) => {
-          if (slowTimerRef.current) clearTimeout(slowTimerRef.current);
-          setIsSlowWarning(false);
           setActiveStage(null);
-
           setMessages((prev) => {
             const updated = [...prev];
             if (hasCreatedAssistantBubble) {
@@ -148,189 +158,260 @@ export const StudentAI: React.FC = () => {
           });
         },
         onError: (err) => {
-          if (slowTimerRef.current) clearTimeout(slowTimerRef.current);
-          setIsSlowWarning(false);
           setActiveStage(null);
-          console.error('[AI Assistant Error]', err);
           setMessages((prev) => [
             ...prev,
             {
               role: 'assistant',
-              content: 'I encountered a temporary connection issue. Your verified attendance records and What-If calculators remain available on your dashboard.',
+              content: `⚠️ **Advisory Notice**: An error occurred while retrieving attendance guidance (${err.message}). Your attendance data remains fully accessible through the official Attendance Records tab.`,
               timestamp: new Date(),
-              isStreaming: false,
             },
           ]);
         },
       });
     } catch (e: any) {
-      if (slowTimerRef.current) clearTimeout(slowTimerRef.current);
-      setIsSlowWarning(false);
-      setActiveStage(null);
       setMessages((prev) => [
         ...prev,
         {
           role: 'assistant',
-          content: 'Live AI is temporarily unavailable. Your attendance data remains fully accessible.',
+          content: `⚠️ **Advisory Error**: ${e.message || 'Unable to connect to advisory service.'}`,
           timestamp: new Date(),
-          isStreaming: false,
         },
       ]);
     } finally {
-      if (slowTimerRef.current) clearTimeout(slowTimerRef.current);
       setLoading(false);
       setActiveStage(null);
-      setIsSlowWarning(false);
     }
   };
 
   return (
-    <div className="h-[calc(100vh-8rem)] flex flex-col bg-white dark:bg-[#111111] rounded-xl border border-slate-200 dark:border-[#262626] shadow-xs overflow-hidden animate-fade-in">
+    <div className="space-y-4 max-w-6xl mx-auto pb-10">
       
-      {/* Chat Header */}
-      <div className="p-4 border-b border-slate-200 dark:border-[#262626] bg-slate-50 dark:bg-[#141414] flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-lg bg-blue-100 dark:bg-blue-950/50 border border-blue-200 dark:border-blue-800/60 flex items-center justify-center text-blue-700 dark:text-blue-300">
-            <Bot className="w-5 h-5" />
-          </div>
+      {/* Top Header */}
+      <div className="bg-white dark:bg-[#121215] border border-slate-200 dark:border-[#27272A] rounded-lg p-5 shadow-xs">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
-            <h3 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
-              Academic Attendance Advisor
-              <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/60 font-semibold flex items-center gap-1">
-                <Zap className="w-2.5 h-2.5 text-emerald-600 dark:text-emerald-400" />
-                Live Fast AI
+            <div className="flex items-center gap-2">
+              <h1 className="text-xl font-bold text-slate-900 dark:text-zinc-100 tracking-tight">
+                Academic Advisory
+              </h1>
+              <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-400 border border-blue-200 dark:border-blue-900/50 font-semibold">
+                Attendance Advisory Assistant
               </span>
-            </h3>
-            <p className="text-[11px] text-slate-500 dark:text-[#A3A3A3]">
-              Deterministic calculations • Role-isolated context • High-speed streaming
+            </div>
+            <p className="text-xs text-slate-500 dark:text-zinc-400 mt-0.5">
+              Integrated academic guidance powered by institutional attendance records and statutory recovery policies
             </p>
           </div>
-        </div>
 
-        {engineStatus && (
-          <div className="text-right hidden sm:block">
-            <span className="text-[10px] text-slate-400 dark:text-[#737373] font-medium">Active Engine:</span>
-            <p className="text-xs font-semibold text-slate-800 dark:text-slate-200">{engineStatus.display_badge}</p>
-          </div>
-        )}
+          {dashboard && (
+            <div className="text-right hidden sm:block">
+              <span className="text-xs text-slate-500 dark:text-zinc-400 font-mono">
+                Overall Standing: <strong>{dashboard.overall_percentage}%</strong> (Cutoff: 75%)
+              </span>
+            </div>
+          )}
+        </div>
       </div>
 
-      {/* Messages Area */}
-      <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 bg-white dark:bg-[#0A0A0A]">
-        {messages.map((m, idx) => (
-          <div
-            key={idx}
-            className={`flex items-start gap-3 ${m.role === 'user' ? 'flex-row-reverse' : ''}`}
-          >
-            <div
-              className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-bold shadow-xs ${
-                m.role === 'user'
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-blue-50 dark:bg-blue-950/50 border border-blue-200 dark:border-blue-800/60 text-blue-700 dark:text-blue-300'
-              }`}
-            >
-              {m.role === 'user' ? <UserIcon className="w-4 h-4" /> : <Bot className="w-4 h-4" />}
-            </div>
-
-            <div className={`max-w-xl space-y-2 ${m.role === 'user' ? 'items-end' : ''}`}>
-              <div
-                className={`p-4 rounded-xl text-xs leading-relaxed ${
-                  m.role === 'user'
-                    ? 'bg-blue-600 text-white rounded-tr-none shadow-xs whitespace-pre-wrap'
-                    : 'bg-slate-50 dark:bg-[#141414] border border-slate-200 dark:border-[#262626] text-slate-800 dark:text-slate-200 rounded-tl-none shadow-xs'
-                }`}
-              >
-                {m.role === 'assistant' ? (
-                  <MarkdownMessage content={m.content} />
-                ) : (
-                  <span>{m.content}</span>
-                )}
-                {m.isStreaming && (
-                  <span className="inline-block w-1.5 h-3.5 bg-blue-600 dark:bg-blue-400 animate-pulse ml-1 align-middle" />
-                )}
-              </div>
-
-              {/* Suggestion action pills */}
-              {m.suggested_actions && m.suggested_actions.length > 0 && !m.isStreaming && (
-                <div className="flex flex-wrap gap-1.5 pt-1">
-                  {m.suggested_actions.map((act, aIdx) => (
-                    <button
-                      key={aIdx}
-                      onClick={() => handleSend(act)}
-                      className="text-[11px] px-2.5 py-1 rounded-md bg-white dark:bg-[#171717] hover:bg-blue-50 dark:hover:bg-blue-950/40 border border-slate-200 dark:border-[#262626] hover:border-blue-300 dark:hover:border-blue-700 text-slate-700 dark:text-[#D4D4D4] hover:text-blue-700 dark:hover:text-blue-300 transition-all text-left shadow-xs erp-button cursor-pointer"
-                    >
-                      {act}
-                    </button>
-                  ))}
-                </div>
-              )}
-
-              <div className="flex items-center gap-2 px-1 text-[10px] text-slate-400 dark:text-[#737373]">
-                <span>{m.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
-                {m.telemetry && m.telemetry.provider && (
-                  <span className="flex items-center gap-1 text-[9px] px-1.5 py-0.5 rounded bg-slate-100 dark:bg-[#171717] text-slate-600 dark:text-[#A3A3A3] border border-slate-200 dark:border-[#262626]">
-                    <Sparkles className="w-2.5 h-2.5 text-blue-600 dark:text-blue-400" />
-                    {m.telemetry.provider.toUpperCase()}
-                    {m.telemetry.model && ` (${m.telemetry.model})`}
-                    {m.telemetry.latency_ms && ` • ${(m.telemetry.latency_ms / 1000).toFixed(1)}s`}
-                    {m.telemetry.first_token_latency_ms && ` (1st: ${(m.telemetry.first_token_latency_ms / 1000).toFixed(1)}s)`}
-                  </span>
-                )}
-              </div>
-            </div>
+      {/* Main Workspace Layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+        
+        {/* Left Column (8 cols): Conversation Workspace */}
+        <div className="lg:col-span-8 bg-white dark:bg-[#121215] border border-slate-200 dark:border-[#27272A] rounded-lg shadow-xs flex flex-col h-[600px] overflow-hidden">
+          
+          {/* Conversation Header */}
+          <div className="px-4 py-3 border-b border-slate-100 dark:border-[#27272A] bg-slate-50/50 dark:bg-[#151518] flex items-center justify-between">
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-zinc-300 flex items-center gap-2">
+              <MessageSquareText className="w-4 h-4 text-blue-600" />
+              <span>Advisory Dialogue</span>
+            </span>
+            <span className="text-[11px] text-slate-500 dark:text-zinc-400">
+              Deterministic attendance responses
+            </span>
           </div>
-        ))}
 
-        {loading && activeStage && (
-          <div className="space-y-2">
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-blue-50 dark:bg-blue-950/50 border border-blue-200 dark:border-blue-800/60 flex items-center justify-center text-blue-700 dark:text-blue-300">
-                <Bot className="w-4 h-4 animate-spin" />
-              </div>
-              <div className="p-3 rounded-xl bg-slate-50 dark:bg-[#141414] border border-slate-200 dark:border-[#262626] text-xs text-slate-600 dark:text-[#A3A3A3] flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-blue-600 dark:bg-blue-500 animate-pulse" />
-                <span className="font-medium text-slate-700 dark:text-slate-200">{activeStage}</span>
-              </div>
-            </div>
+          {/* Messages Stream */}
+          <div className="flex-1 overflow-y-auto p-4 space-y-4">
+            {messages.map((m, idx) => (
+              <div
+                key={idx}
+                className={`flex items-start gap-3 ${m.role === 'user' ? 'flex-row-reverse' : ''}`}
+              >
+                <div
+                  className={`w-7 h-7 rounded flex items-center justify-center flex-shrink-0 text-xs font-bold ${
+                    m.role === 'user'
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-slate-100 dark:bg-[#18181B] border border-slate-200 dark:border-[#27272A] text-slate-700 dark:text-zinc-300'
+                  }`}
+                >
+                  {m.role === 'user' ? (
+                    <UserIcon className="w-3.5 h-3.5" />
+                  ) : (
+                    <span className="font-mono text-[10px]">ERP</span>
+                  )}
+                </div>
 
-            {isSlowWarning && (
-              <div className="ml-11 flex items-center gap-1.5 text-[11px] text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/60 px-3 py-1.5 rounded-lg max-w-md animate-fade-in">
-                <Clock className="w-3.5 h-3.5 flex-shrink-0 text-amber-600 dark:text-amber-400" />
-                <span>AI is taking longer than usual. Your attendance data is still available.</span>
+                <div className={`max-w-xl space-y-2 ${m.role === 'user' ? 'items-end' : ''}`}>
+                  <div
+                    className={`p-3.5 rounded-lg text-xs leading-relaxed ${
+                      m.role === 'user'
+                        ? 'bg-blue-600 text-white'
+                        : 'bg-slate-50 dark:bg-[#18181B] border border-slate-200 dark:border-[#27272A] text-slate-800 dark:text-zinc-200'
+                    }`}
+                  >
+                    {m.role === 'assistant' ? (
+                      <MarkdownMessage content={m.content} />
+                    ) : (
+                      <span>{m.content}</span>
+                    )}
+                    {m.isStreaming && (
+                      <span className="inline-block w-1.5 h-3.5 bg-blue-600 dark:bg-blue-400 animate-pulse ml-1 align-middle" />
+                    )}
+                  </div>
+
+                  {/* Suggested Follow-up Actions */}
+                  {m.suggested_actions && m.suggested_actions.length > 0 && !m.isStreaming && (
+                    <div className="flex flex-wrap gap-1.5 pt-1">
+                      {m.suggested_actions.map((act, aIdx) => (
+                        <button
+                          key={aIdx}
+                          onClick={() => handleSend(act)}
+                          className="erp-btn erp-btn-secondary text-[11px] px-2.5 py-1 text-left"
+                        >
+                          {act}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+
+                  <div className="text-[10px] text-slate-400 dark:text-zinc-500 font-mono px-1">
+                    {m.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                  </div>
+                </div>
+              </div>
+            ))}
+
+            {loading && activeStage && (
+              <div className="flex items-center gap-2.5 text-xs text-slate-500 dark:text-zinc-400 p-2 bg-slate-50 dark:bg-[#18181B] rounded border border-slate-200 dark:border-[#27272A]">
+                <Clock className="w-3.5 h-3.5 text-blue-600 animate-spin" />
+                <span>{activeStage}</span>
               </div>
             )}
+
+            <div ref={endRef} />
           </div>
-        )}
 
-        <div ref={endRef} />
-      </div>
+          {/* Input Bar */}
+          <div className="p-3 border-t border-slate-200 dark:border-[#27272A] bg-slate-50/50 dark:bg-[#151518]">
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                handleSend();
+              }}
+              className="flex items-center gap-2"
+            >
+              <input
+                type="text"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                placeholder="Ask about your course recovery quotas or debarment thresholds..."
+                disabled={loading}
+                className="erp-input flex-1 bg-white dark:bg-[#18181B] border border-slate-200 dark:border-[#27272A] rounded-md px-3 py-2 text-xs text-slate-900 dark:text-zinc-100 placeholder-slate-400"
+              />
+              <button
+                type="submit"
+                disabled={!input.trim() || loading}
+                className="erp-btn erp-btn-primary p-2 text-white"
+                aria-label="Send Query"
+              >
+                <Send className="w-4 h-4" />
+              </button>
+            </form>
+          </div>
 
-      {/* Input Bar */}
-      <div className="p-3 sm:p-4 border-t border-slate-200 dark:border-[#262626] bg-slate-50 dark:bg-[#141414]">
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            handleSend();
-          }}
-          className="flex items-center gap-2"
-        >
-          <input
-            type="text"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder="Ask about your attendance, recovery requirements, lowest subjects..."
-            disabled={loading}
-            className="flex-1 bg-white dark:bg-[#111111] border border-slate-300 dark:border-[#262626] rounded-lg px-4 py-2.5 text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-[#737373] focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-all shadow-xs disabled:bg-slate-100 dark:disabled:bg-[#1A1A1A]"
-          />
-          <button
-            type="submit"
-            disabled={!input.trim() || loading}
-            className="p-2.5 rounded-lg bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white transition-all shadow-xs erp-button cursor-pointer"
-            aria-label="Send message"
-          >
-            <Send className="w-4 h-4" />
-          </button>
-        </form>
+        </div>
+
+        {/* Right Column (4 cols): Verified Academic Attendance Context */}
+        <div className="lg:col-span-4 bg-white dark:bg-[#121215] border border-slate-200 dark:border-[#27272A] rounded-lg p-5 shadow-xs space-y-4">
+          <div className="pb-3 border-b border-slate-100 dark:border-[#27272A]">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-zinc-100">
+              Verified Attendance Context
+            </h3>
+            <p className="text-[11px] text-slate-500 dark:text-zinc-400 mt-0.5">
+              Live semester records used to evaluate queries
+            </p>
+          </div>
+
+          {dashboard ? (
+            <div className="space-y-3">
+              <div className="p-3 bg-slate-50 dark:bg-[#18181B] rounded border border-slate-200 dark:border-[#27272A]">
+                <div className="flex justify-between items-baseline">
+                  <span className="text-[11px] font-semibold text-slate-500 dark:text-zinc-400">Cumulative Rate</span>
+                  <span className={`text-base font-bold ${
+                    dashboard.overall_percentage >= 75 ? 'text-slate-900 dark:text-zinc-100' : 'text-rose-600 dark:text-rose-400'
+                  }`}>
+                    {dashboard.overall_percentage}%
+                  </span>
+                </div>
+                <div className="mt-1 text-[11px] text-slate-500 dark:text-zinc-400">
+                  Required: <strong>75%</strong> • At-Risk Subjects: <strong>{dashboard.subjects_below_threshold}</strong>
+                </div>
+              </div>
+
+              <div>
+                <span className="text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:text-zinc-400 block mb-2">
+                  Course Breakdown
+                </span>
+                <div className="space-y-2 max-h-64 overflow-y-auto pr-1">
+                  {dashboard.subjects.map((sub) => (
+                    <div 
+                      key={sub.subject_id}
+                      className="p-2.5 rounded bg-slate-50 dark:bg-[#18181B] border border-slate-200 dark:border-[#27272A] text-xs flex items-center justify-between"
+                    >
+                      <div className="min-w-0 pr-2">
+                        <span className="font-mono text-[10px] text-slate-500 block">{sub.subject_code}</span>
+                        <span className="font-medium text-slate-900 dark:text-zinc-100 truncate block">{sub.subject_name}</span>
+                      </div>
+                      <div className="text-right shrink-0">
+                        <span className={`font-bold ${
+                          sub.percentage >= sub.required_threshold ? 'text-slate-900 dark:text-zinc-100' : 'text-rose-600 dark:text-rose-400'
+                        }`}>
+                          {sub.percentage}%
+                        </span>
+                        {sub.consecutive_classes_needed > 0 && (
+                          <span className="text-[10px] text-rose-600 block">
+                            +{sub.consecutive_classes_needed} needed
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="pt-3 border-t border-slate-100 dark:border-[#27272A] space-y-1.5">
+                <a
+                  href="/student/simulator"
+                  className="w-full text-center px-3 py-1.5 rounded border border-slate-200 dark:border-[#27272A] bg-white dark:bg-[#18181B] hover:bg-slate-50 text-xs font-medium text-slate-700 dark:text-zinc-300 transition-colors block"
+                >
+                  Open What-If Simulator
+                </a>
+                <a
+                  href="/student/attendance"
+                  className="w-full text-center px-3 py-1.5 rounded border border-slate-200 dark:border-[#27272A] bg-white dark:bg-[#18181B] hover:bg-slate-50 text-xs font-medium text-slate-700 dark:text-zinc-300 transition-colors block"
+                >
+                  Full Attendance History
+                </a>
+              </div>
+            </div>
+          ) : (
+            <div className="py-6 text-center text-xs text-slate-400">
+              Loading student attendance context...
+            </div>
+          )}
+        </div>
+
       </div>
 
     </div>

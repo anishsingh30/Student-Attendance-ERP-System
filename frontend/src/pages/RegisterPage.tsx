@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { GraduationCap, ArrowRight, Lock, Mail, User as UserIcon, BookOpen, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { GraduationCap, ArrowRight, Lock, Mail, User as UserIcon, BookOpen, AlertCircle, CheckCircle2, ShieldCheck } from 'lucide-react';
 import { api } from '../api/client';
 import { ThemeToggle } from '../components/common/ThemeToggle';
 
@@ -55,240 +55,256 @@ export const RegisterPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#F7F8FA] dark:bg-black text-slate-900 dark:text-white flex flex-col justify-center py-16 sm:py-20 sm:px-6 lg:px-8 relative selection:bg-blue-100 selection:text-blue-900 transition-colors duration-200">
-      
-      {/* Top Header Bar with Brand and Theme Toggle */}
-      <header className="absolute top-4 left-4 right-4 sm:top-6 sm:left-8 sm:right-8 flex items-center justify-between z-20">
+    <div className="min-h-screen bg-slate-50 dark:bg-[#09090B] text-slate-900 dark:text-zinc-100 flex flex-col justify-between transition-colors duration-200">
+      {/* Top Header Bar */}
+      <header className="px-6 py-4 border-b border-slate-200 dark:border-[#27272A] bg-white dark:bg-[#121215] flex items-center justify-between">
         <a 
           href="/" 
-          className="inline-flex items-center gap-2 group focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 rounded-lg p-1" 
+          className="inline-flex items-center gap-2.5 focus:outline-none focus-visible:ring-1 focus-visible:ring-blue-600 rounded" 
           title="Return to AttendanceAI Home"
         >
-          <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white shadow-xs group-hover:bg-blue-700 transition-colors">
-            <GraduationCap className="w-5 h-5" />
+          <div className="w-7 h-7 rounded bg-blue-600 flex items-center justify-center text-white shadow-xs">
+            <GraduationCap className="w-4 h-4" />
           </div>
-          <span className="text-base font-bold text-slate-900 dark:text-white tracking-tight">
-            Attendance<span className="text-blue-600">AI</span>
-          </span>
+          <div>
+            <span className="text-sm font-bold tracking-tight text-slate-900 dark:text-zinc-100">
+              Attendance<span className="text-blue-600">AI</span>
+            </span>
+            <span className="hidden sm:inline-block ml-2 text-[11px] text-slate-500 dark:text-zinc-400 font-mono">
+              University Attendance ERP
+            </span>
+          </div>
         </a>
 
-        {/* Reference Theme Toggle */}
-        <ThemeToggle />
+        <div className="flex items-center gap-3">
+          <span className="hidden sm:inline-flex items-center gap-1.5 text-xs text-slate-500 dark:text-zinc-400 font-medium">
+            <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+            Institutional Registration
+          </span>
+          <ThemeToggle />
+        </div>
       </header>
 
-      <div className="sm:mx-auto sm:w-full sm:max-w-md text-center">
-        <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-blue-600 text-white shadow-xs mb-3 mx-auto">
-          <GraduationCap className="w-7 h-7" />
-        </div>
-        <h2 className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">
-          Apex Institute of Technology
-        </h2>
-        <p className="mt-1 text-xs text-slate-500 dark:text-[#A3A3A3] font-medium">
-          New Student & Faculty Portal Registration
-        </p>
-      </div>
-
-      <div className="mt-6 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white dark:bg-[#111111] border border-slate-200 dark:border-[#262626] py-8 px-6 shadow-xs rounded-2xl sm:px-10">
-          {/* Role selector tabs */}
-          <div className="flex rounded-lg bg-slate-100 dark:bg-[#171717] p-1 mb-6 border border-slate-200 dark:border-[#262626]">
-            <button
-              type="button"
-              onClick={() => setRole('student')}
-              className={`flex-1 py-1.5 text-xs font-semibold rounded-md transition-all ${
-                role === 'student'
-                  ? 'bg-white dark:bg-[#262626] text-slate-900 dark:text-white shadow-xs'
-                  : 'text-slate-500 dark:text-[#A3A3A3] hover:text-slate-800 dark:hover:text-white'
-              }`}
-            >
-              Student Account
-            </button>
-            <button
-              type="button"
-              onClick={() => setRole('faculty')}
-              className={`flex-1 py-1.5 text-xs font-semibold rounded-md transition-all ${
-                role === 'faculty'
-                  ? 'bg-white dark:bg-[#262626] text-slate-900 dark:text-white shadow-xs'
-                  : 'text-slate-500 dark:text-[#A3A3A3] hover:text-slate-800 dark:hover:text-white'
-              }`}
-            >
-              Faculty Account
-            </button>
-          </div>
-
-          {error && (
-            <div className="mb-5 p-3 rounded-lg bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/50 flex items-center gap-2 text-rose-700 dark:text-rose-300 text-xs">
-              <AlertCircle className="w-4 h-4 flex-shrink-0" />
-              <span>{error}</span>
-            </div>
-          )}
-
-          {success && (
-            <div className="mb-5 p-3 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900/50 flex items-center gap-2 text-emerald-700 dark:text-emerald-300 text-xs">
-              <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
-              <span>{success}</span>
-            </div>
-          )}
-
-          <form className="space-y-4" onSubmit={handleSubmit}>
-            <div>
-              <label className="block text-xs font-semibold text-slate-700 dark:text-[#D4D4D4] mb-1.5">
-                Full Name
-              </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 dark:text-[#737373]">
-                  <UserIcon className="w-4 h-4" />
-                </div>
-                <input
-                  type="text"
-                  required
-                  value={fullName}
-                  onChange={(e) => setFullName(e.target.value)}
-                  placeholder={role === 'student' ? 'e.g. Rahul Sharma' : 'e.g. Dr. Priya Nair'}
-                  className="block w-full pl-9 pr-3 py-2 text-xs bg-white dark:bg-[#141414] border border-slate-300 dark:border-[#262626] rounded-lg text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-[#737373] focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-all shadow-xs"
-                />
-              </div>
+      {/* Center Container */}
+      <div className="flex-1 flex items-center justify-center p-4 sm:p-6 lg:p-8">
+        <div className="w-full max-w-md">
+          <div className="bg-white dark:bg-[#121215] border border-slate-200 dark:border-[#27272A] rounded-lg p-6 sm:p-7 shadow-xs">
+            {/* Form Header */}
+            <div className="mb-5 pb-4 border-b border-slate-100 dark:border-[#27272A]">
+              <h2 className="text-base font-bold tracking-tight text-slate-900 dark:text-zinc-100">
+                Register Institutional Account
+              </h2>
+              <p className="mt-0.5 text-xs text-slate-500 dark:text-zinc-400">
+                Enroll student or faculty credentials into the registry
+              </p>
             </div>
 
-            <div>
-              <label className="block text-xs font-semibold text-slate-700 dark:text-[#D4D4D4] mb-1.5">
-                Institutional Email Address
-              </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 dark:text-[#737373]">
-                  <Mail className="w-4 h-4" />
-                </div>
-                <input
-                  type="email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder={role === 'student' ? 'student@apex.edu' : 'faculty@apex.edu'}
-                  className="block w-full pl-9 pr-3 py-2 text-xs bg-white dark:bg-[#141414] border border-slate-300 dark:border-[#262626] rounded-lg text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-[#737373] focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-all shadow-xs"
-                />
-              </div>
+            {/* Role selector tabs */}
+            <div className="flex rounded-md bg-slate-100 dark:bg-[#18181B] p-1 mb-4 border border-slate-200 dark:border-[#27272A]">
+              <button
+                type="button"
+                onClick={() => setRole('student')}
+                className={`flex-1 py-1 text-xs font-medium rounded transition-colors ${
+                  role === 'student'
+                    ? 'bg-white dark:bg-[#27272A] text-slate-900 dark:text-zinc-100 shadow-xs'
+                    : 'text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-zinc-200'
+                }`}
+              >
+                Student Account
+              </button>
+              <button
+                type="button"
+                onClick={() => setRole('faculty')}
+                className={`flex-1 py-1 text-xs font-medium rounded transition-colors ${
+                  role === 'faculty'
+                    ? 'bg-white dark:bg-[#27272A] text-slate-900 dark:text-zinc-100 shadow-xs'
+                    : 'text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-zinc-200'
+                }`}
+              >
+                Faculty Account
+              </button>
             </div>
 
-            {role === 'student' && (
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-xs font-semibold text-slate-700 dark:text-[#D4D4D4] mb-1.5">
-                    Roll Number
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    value={rollNumber}
-                    onChange={(e) => setRollNumber(e.target.value)}
-                    placeholder="CS-2024-042"
-                    className="block w-full px-3 py-2 text-xs bg-white dark:bg-[#141414] border border-slate-300 dark:border-[#262626] rounded-lg text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-[#737373] focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-all shadow-xs font-mono"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-semibold text-slate-700 dark:text-[#D4D4D4] mb-1.5">
-                    Semester
-                  </label>
-                  <select
-                    value={semester}
-                    onChange={(e) => setSemester(Number(e.target.value))}
-                    className="block w-full px-3 py-2 text-xs bg-white dark:bg-[#141414] border border-slate-300 dark:border-[#262626] rounded-lg text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-all shadow-xs"
-                  >
-                    {[1, 2, 3, 4, 5, 6, 7, 8].map((s) => (
-                      <option key={s} value={s}>
-                        Semester {s}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+            {error && (
+              <div className="mb-4 p-3 rounded-md bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/50 flex items-center gap-2 text-rose-700 dark:text-rose-300 text-xs">
+                <AlertCircle className="w-4 h-4 shrink-0" />
+                <span>{error}</span>
               </div>
             )}
 
-            <div>
-              <label className="block text-xs font-semibold text-slate-700 dark:text-[#D4D4D4] mb-1.5">
-                Department
-              </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 dark:text-[#737373]">
-                  <BookOpen className="w-4 h-4" />
-                </div>
-                <select
-                  value={department}
-                  onChange={(e) => setDepartment(e.target.value)}
-                  className="block w-full pl-9 pr-3 py-2 text-xs bg-white dark:bg-[#141414] border border-slate-300 dark:border-[#262626] rounded-lg text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-all shadow-xs"
-                >
-                  <option value="Computer Science">Computer Science & Engineering</option>
-                  <option value="Information Technology">Information Technology</option>
-                  <option value="Electronics">Electronics & Communication</option>
-                  <option value="Mechanical">Mechanical Engineering</option>
-                  <option value="Electrical">Electrical Engineering</option>
-                </select>
+            {success && (
+              <div className="mb-4 p-3 rounded-md bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900/50 flex items-center gap-2 text-emerald-700 dark:text-emerald-300 text-xs">
+                <CheckCircle2 className="w-4 h-4 shrink-0" />
+                <span>{success}</span>
               </div>
-            </div>
+            )}
 
-            <div className="grid grid-cols-2 gap-3">
+            <form className="space-y-3.5" onSubmit={handleSubmit}>
               <div>
-                <label className="block text-xs font-semibold text-slate-700 dark:text-[#D4D4D4] mb-1.5">
-                  Password
+                <label className="block text-xs font-medium text-slate-700 dark:text-zinc-300 mb-1">
+                  Full Name
                 </label>
                 <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 dark:text-[#737373]">
-                    <Lock className="w-4 h-4" />
+                  <div className="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none text-slate-400 dark:text-zinc-500">
+                    <UserIcon className="w-4 h-4" />
                   </div>
                   <input
-                    type="password"
+                    type="text"
                     required
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="••••••••"
-                    className="block w-full pl-9 pr-3 py-2 text-xs bg-white dark:bg-[#141414] border border-slate-300 dark:border-[#262626] rounded-lg text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-[#737373] focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-all shadow-xs"
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                    placeholder={role === 'student' ? 'e.g. Rahul Sharma' : 'e.g. Dr. Priya Nair'}
+                    className="block w-full pl-8 pr-3 py-1.5 text-xs bg-white dark:bg-[#18181B] border border-slate-200 dark:border-[#27272A] rounded-md text-slate-900 dark:text-zinc-100 placeholder-slate-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-blue-600 transition-colors"
                   />
                 </div>
               </div>
+
               <div>
-                <label className="block text-xs font-semibold text-slate-700 dark:text-[#D4D4D4] mb-1.5">
-                  Confirm
+                <label className="block text-xs font-medium text-slate-700 dark:text-zinc-300 mb-1">
+                  Institutional Email Address
                 </label>
                 <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 dark:text-[#737373]">
-                    <Lock className="w-4 h-4" />
+                  <div className="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none text-slate-400 dark:text-zinc-500">
+                    <Mail className="w-4 h-4" />
                   </div>
                   <input
-                    type="password"
+                    type="email"
                     required
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    placeholder="••••••••"
-                    className="block w-full pl-9 pr-3 py-2 text-xs bg-white dark:bg-[#141414] border border-slate-300 dark:border-[#262626] rounded-lg text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-[#737373] focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-all shadow-xs"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder={role === 'student' ? 'student@university.edu' : 'faculty@university.edu'}
+                    className="block w-full pl-8 pr-3 py-1.5 text-xs bg-white dark:bg-[#18181B] border border-slate-200 dark:border-[#27272A] rounded-md text-slate-900 dark:text-zinc-100 placeholder-slate-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-blue-600 transition-colors"
                   />
                 </div>
               </div>
-            </div>
 
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full flex justify-center items-center gap-2 py-2.5 px-4 border border-transparent rounded-lg shadow-xs text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-600 transition-all cursor-pointer disabled:opacity-50 mt-2 erp-button"
-            >
-              {loading ? (
-                'Creating Account...'
-              ) : (
-                <>
-                  Register Account <ArrowRight className="w-3.5 h-3.5" />
-                </>
+              {role === 'student' && (
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-medium text-slate-700 dark:text-zinc-300 mb-1">
+                      Roll Number
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={rollNumber}
+                      onChange={(e) => setRollNumber(e.target.value)}
+                      placeholder="CS-2024-042"
+                      className="block w-full px-3 py-1.5 text-xs bg-white dark:bg-[#18181B] border border-slate-200 dark:border-[#27272A] rounded-md text-slate-900 dark:text-zinc-100 placeholder-slate-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-blue-600 transition-colors font-mono"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-slate-700 dark:text-zinc-300 mb-1">
+                      Semester
+                    </label>
+                    <select
+                      value={semester}
+                      onChange={(e) => setSemester(Number(e.target.value))}
+                      className="block w-full px-2.5 py-1.5 text-xs bg-white dark:bg-[#18181B] border border-slate-200 dark:border-[#27272A] rounded-md text-slate-900 dark:text-zinc-100 focus:outline-none focus:ring-1 focus:ring-blue-600 transition-colors"
+                    >
+                      {[1, 2, 3, 4, 5, 6, 7, 8].map((s) => (
+                        <option key={s} value={s}>
+                          Semester {s}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
               )}
-            </button>
-          </form>
 
-          <div className="mt-6 text-center border-t border-slate-100 dark:border-[#262626] pt-4">
-            <p className="text-xs text-slate-500 dark:text-[#A3A3A3]">
-              Already have an account?{' '}
-              <a href="/login" className="font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 hover:underline">
-                Sign in here
-              </a>
-            </p>
+              <div>
+                <label className="block text-xs font-medium text-slate-700 dark:text-zinc-300 mb-1">
+                  Department
+                </label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none text-slate-400 dark:text-zinc-500">
+                    <BookOpen className="w-4 h-4" />
+                  </div>
+                  <select
+                    value={department}
+                    onChange={(e) => setDepartment(e.target.value)}
+                    className="block w-full pl-8 pr-3 py-1.5 text-xs bg-white dark:bg-[#18181B] border border-slate-200 dark:border-[#27272A] rounded-md text-slate-900 dark:text-zinc-100 focus:outline-none focus:ring-1 focus:ring-blue-600 transition-colors"
+                  >
+                    <option value="Computer Science">Computer Science & Engineering</option>
+                    <option value="Information Technology">Information Technology</option>
+                    <option value="Electronics">Electronics & Communication</option>
+                    <option value="Mechanical">Mechanical Engineering</option>
+                    <option value="Electrical">Electrical Engineering</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-medium text-slate-700 dark:text-zinc-300 mb-1">
+                    Password
+                  </label>
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none text-slate-400 dark:text-zinc-500">
+                      <Lock className="w-4 h-4" />
+                    </div>
+                    <input
+                      type="password"
+                      required
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      placeholder="••••••••"
+                      className="block w-full pl-8 pr-3 py-1.5 text-xs bg-white dark:bg-[#18181B] border border-slate-200 dark:border-[#27272A] rounded-md text-slate-900 dark:text-zinc-100 placeholder-slate-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-blue-600 transition-colors"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-slate-700 dark:text-zinc-300 mb-1">
+                    Confirm Password
+                  </label>
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none text-slate-400 dark:text-zinc-500">
+                      <Lock className="w-4 h-4" />
+                    </div>
+                    <input
+                      type="password"
+                      required
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      placeholder="••••••••"
+                      className="block w-full pl-8 pr-3 py-1.5 text-xs bg-white dark:bg-[#18181B] border border-slate-200 dark:border-[#27272A] rounded-md text-slate-900 dark:text-zinc-100 placeholder-slate-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-blue-600 transition-colors"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full flex justify-center items-center gap-1.5 py-2 px-4 rounded-md shadow-xs text-xs font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-1 focus:ring-blue-600 transition-colors cursor-pointer disabled:opacity-50 mt-2"
+              >
+                {loading ? (
+                  'Enrolling Account...'
+                ) : (
+                  <>
+                    <span>Register Account</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </>
+                )}
+              </button>
+            </form>
+
+            <div className="mt-5 text-center border-t border-slate-100 dark:border-[#27272A] pt-4">
+              <p className="text-xs text-slate-500 dark:text-zinc-400">
+                Already registered?{' '}
+                <a href="/login" className="font-medium text-blue-600 dark:text-blue-400 hover:underline">
+                  Sign in to your portal
+                </a>
+              </p>
+            </div>
           </div>
         </div>
       </div>
+
+      {/* Footer Bar */}
+      <footer className="px-6 py-3 border-t border-slate-200 dark:border-[#27272A] bg-white dark:bg-[#121215] text-center text-xs text-slate-500 dark:text-zinc-500">
+        AttendanceAI ERP &copy; {new Date().getFullYear()} — Institutional Student Attendance Management System
+      </footer>
     </div>
   );
 };

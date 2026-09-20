@@ -6,7 +6,7 @@ import {
   ClipboardCheck,
   Building,
   ShieldCheck,
-  Sparkles
+  AlertCircle
 } from 'lucide-react';
 import { PublicLandingStats } from '../../types';
 
@@ -70,45 +70,45 @@ export const SystemOverview: React.FC<SystemOverviewProps> = ({ stats, loading }
             return (
               <div 
                 key={idx}
-                className="bg-white dark:bg-[#111111] p-5 rounded-2xl border border-slate-200 dark:border-[#262626] shadow-xs hover:shadow-md hover:border-blue-200 dark:hover:border-blue-800 transition-all duration-180 flex flex-col justify-between"
+                className="bg-white dark:bg-[#121215] p-5 rounded-xl border border-slate-200 dark:border-[#27272A] shadow-xs hover:shadow-md hover:border-blue-200 dark:hover:border-blue-800 transition-all duration-180 flex flex-col justify-between"
               >
                 <div className="flex items-center justify-between mb-3">
                   <div className="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-950/50 border border-blue-100 dark:border-blue-900/60 flex items-center justify-center text-blue-600 dark:text-blue-400">
                     <Icon className="w-5 h-5" aria-hidden="true" />
                   </div>
-                  <span className="text-[10px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider font-mono">
+                  <span className="text-[10px] font-semibold text-slate-400 dark:text-zinc-500 uppercase tracking-wider font-mono">
                     Live System Data
                   </span>
                 </div>
                 <div>
                   <div className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white font-mono tracking-tight">
                     {loading ? (
-                      <div className="h-8 w-16 bg-slate-200 dark:bg-[#262626] animate-pulse rounded" />
+                      <div className="h-8 w-16 bg-slate-200 dark:bg-[#18181B] animate-pulse rounded" />
                     ) : (
                       item.value
                     )}
                   </div>
-                  <h3 className="text-xs font-bold text-slate-800 dark:text-slate-200 mt-1">
+                  <div className="text-xs font-semibold text-slate-900 dark:text-white mt-1">
                     {item.label}
-                  </h3>
-                  <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+                  </div>
+                  <div className="text-[11px] text-slate-500 dark:text-zinc-400 mt-0.5 leading-snug">
                     {item.description}
-                  </p>
+                  </div>
                 </div>
               </div>
             );
           })}
         </div>
 
-        {/* 3 Core Architecture Pillars */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 bg-slate-50 dark:bg-[#0E0E0E] p-6 rounded-2xl border border-slate-200 dark:border-[#262626]">
+        {/* 3 Core Highlights Strip */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-8 border-t border-slate-200 dark:border-[#27272A]">
           <div className="space-y-1.5">
             <div className="flex items-center gap-2 text-slate-900 dark:text-white font-bold text-sm">
-              <ShieldCheck className="w-4 h-4 text-blue-600 dark:text-blue-400 flex-shrink-0" />
-              <span>Statutory Compliance</span>
+              <ShieldCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400 flex-shrink-0" />
+              <span>Full Accountability</span>
             </div>
-            <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-              Enforces university attendance rules with multi-tier risk classification, ensuring every student understands their compliance standing.
+            <p className="text-xs text-slate-600 dark:text-zinc-400 leading-relaxed">
+              Transparent, student-visible calculations eliminate disputes between academic departments and enrolled students.
             </p>
           </div>
 
@@ -117,17 +117,17 @@ export const SystemOverview: React.FC<SystemOverviewProps> = ({ stats, loading }
               <ClipboardCheck className="w-4 h-4 text-blue-600 dark:text-blue-400 flex-shrink-0" />
               <span>Authoritative Calculations</span>
             </div>
-            <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+            <p className="text-xs text-slate-600 dark:text-zinc-400 leading-relaxed">
               Every percentage and recovery calculation is computed deterministically through verified algebraic functions with zero hallucination.
             </p>
           </div>
 
           <div className="space-y-1.5">
             <div className="flex items-center gap-2 text-slate-900 dark:text-white font-bold text-sm">
-              <Sparkles className="w-4 h-4 text-blue-600 dark:text-blue-400 flex-shrink-0" />
+              <AlertCircle className="w-4 h-4 text-amber-600 dark:text-amber-400 flex-shrink-0" />
               <span>Proactive Early Warnings</span>
             </div>
-            <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+            <p className="text-xs text-slate-600 dark:text-zinc-400 leading-relaxed">
               Automated notifications alert students, faculty mentors, and academic advisors weeks before debarment thresholds are breached.
             </p>
           </div>
@@ -137,4 +137,3 @@ export const SystemOverview: React.FC<SystemOverviewProps> = ({ stats, loading }
     </section>
   );
 };
-

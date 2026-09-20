@@ -4,8 +4,7 @@ import {
   AlertTriangle, 
   AlertOctagon, 
   Calculator, 
-  Bot, 
-  Sparkles, 
+  Activity, 
   ArrowUpRight,
   Clock,
   ShieldCheck,
@@ -120,23 +119,17 @@ export const HeroProductVisual: React.FC<HeroProductVisualProps> = ({
       {/* Container simulating high-definition ERP application window */}
       <div className="bg-white dark:bg-[#0A0A0A] rounded-2xl border border-slate-200/90 dark:border-[#262626] shadow-xl shadow-slate-200/50 dark:shadow-none overflow-hidden transition-all duration-200 hover:border-slate-300 dark:hover:border-[#383838]">
         
-        {/* Mock ERP Application Top Bar */}
-        <div className="bg-slate-50 dark:bg-[#111111] px-4 py-2.5 border-b border-slate-200 dark:border-[#262626] flex items-center justify-between text-xs">
+        {/* Authentic ERP Application Header */}
+        <div className="bg-slate-100 dark:bg-[#111111] px-4 py-2.5 border-b border-slate-200 dark:border-[#262626] flex items-center justify-between text-xs">
           <div className="flex items-center gap-2">
-            <div className="flex gap-1.5" aria-hidden="true">
-              <div className="w-2.5 h-2.5 rounded-full bg-slate-300 dark:bg-slate-600" />
-              <div className="w-2.5 h-2.5 rounded-full bg-slate-300 dark:bg-slate-600" />
-              <div className="w-2.5 h-2.5 rounded-full bg-slate-300 dark:bg-slate-600" />
-            </div>
-            <span className="text-slate-400 dark:text-slate-600">|</span>
-            <span className="font-semibold text-slate-700 dark:text-slate-200 tracking-tight text-[11px]">
-              AttendanceAI Academic Portal
+            <span className="font-semibold text-slate-800 dark:text-slate-200 tracking-tight text-[11px]">
+              AttendanceAI • Academic Portal Preview
             </span>
           </div>
           <div className="flex items-center gap-2">
             <span className="inline-flex items-center gap-1 text-[10px] font-medium text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/40 px-2 py-0.5 rounded border border-emerald-200 dark:border-emerald-800/60">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-              Deterministic Engine Live
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+              Academic Attendance Verified
             </span>
           </div>
         </div>
@@ -266,11 +259,11 @@ export const HeroProductVisual: React.FC<HeroProductVisualProps> = ({
               </div>
             </div>
 
-            {/* AI Contextual Insight Box */}
-            <div className="bg-white dark:bg-[#111111] p-3 rounded-xl border border-slate-200 dark:border-[#262626] shadow-xs">
-              <div className="flex items-center gap-1.5 text-indigo-700 dark:text-indigo-400 text-[11px] font-bold mb-1">
-                <Sparkles className="w-3.5 h-3.5" />
-                <span>AI Academic Insight</span>
+            {/* Automated Insight Box */}
+            <div className="bg-white dark:bg-[#121215] p-3 rounded-xl border border-slate-200 dark:border-[#27272A] shadow-xs">
+              <div className="flex items-center gap-1.5 text-blue-700 dark:text-blue-400 text-[11px] font-bold mb-1 font-mono">
+                <Activity className="w-3.5 h-3.5" />
+                <span>Automated Evaluation Insight</span>
               </div>
               <p className="text-[11px] text-slate-700 dark:text-slate-300 leading-snug">
                 {selectedSubject.percentage < statutoryThreshold ? (

@@ -70,13 +70,43 @@ export const AdminSystemConfig: React.FC = () => {
     setMsg(null);
     try {
       const res = await api.triggerSchedulerRun();
+      if (res.status === 'ALREADY_RUNNING') {
+        setMsg({
+          type: 'error',
+          text: res.message || 'An attendance evaluation cycle is already in progress.'
+        });
+        return;
+      }
+
+      const analyzed = res.students_analyzed ?? res.students_processed ?? 0;
+      const created = res.alerts_created ?? res.alerts_generated ?? 0;
+      const atRisk = res.at_risk_found ?? 0;
+      const suppressed = res.duplicates_suppressed ?? 0;
+      const recovered = res.recovered_resolved ?? 0;
+      const critical = res.critical_cases_count ?? 0;
+      const warning = res.warning_cases_count ?? 0;
+
+      let msgText = `Attendance evaluation completed successfully! Evaluated ${analyzed} student profiles.`;
+      if (created > 0) {
+        msgText += ` Detected ${atRisk} deficit cases (${critical} critical, ${warning} warning) and published ${created} new alerts.`;
+      } else if (atRisk > 0) {
+        msgText += ` Detected ${atRisk} deficit cases (${suppressed} existing alerts retained under 24h idempotency cooldown).`;
+      } else if (analyzed === 0) {
+        msgText = `No eligible attendance records found for evaluation.`;
+      } else {
+        msgText += ` All student records meet institutional compliance thresholds.`;
+      }
+      if (recovered > 0) {
+        msgText += ` Auto-resolved ${recovered} recovered cases now in good standing.`;
+      }
+
       setMsg({
         type: 'success',
-        text: `Agent monitoring run initiated successfully! Processed ${res.students_processed ?? 0} students and generated ${res.alerts_generated ?? 0} alerts.`
+        text: msgText
       });
-      loadSettings();
+      await loadSettings();
     } catch (err: any) {
-      setMsg({ type: 'error', text: err.message || 'Failed to trigger agent run.' });
+      setMsg({ type: 'error', text: err.message || 'Attendance evaluation could not be completed.' });
     } finally {
       setActionLoading(false);
     }
@@ -99,19 +129,19 @@ export const AdminSystemConfig: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6 animate-fade-in pb-12">
+    <div className="space-y-5 pb-10">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-slate-200 dark:border-[#262626]">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-200 dark:border-[#27272A]">
         <div>
-          <h1 className="text-xl font-bold text-slate-900 dark:text-white tracking-tight">System Settings &amp; Engine Telemetry</h1>
-          <p className="text-xs text-slate-500 dark:text-[#A3A3A3] mt-1">
-            Manage background attendance scanners, machine learning risk engines, and notification dispatchers.
+          <h1 className="text-xl font-bold text-slate-900 dark:text-zinc-100 tracking-tight">System Settings &amp; Engine Telemetry</h1>
+          <p className="text-xs text-slate-500 dark:text-zinc-400 mt-0.5">
+            Configure automated attendance evaluation schedules, predictive risk models, and notification gateways.
           </p>
         </div>
         <button
           onClick={loadSettings}
           disabled={loading}
-          className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold bg-white dark:bg-[#111111] border border-slate-300 dark:border-[#262626] text-slate-700 dark:text-[#D4D4D4] hover:bg-slate-50 dark:hover:bg-[#1a1a1a] rounded-lg shadow-xs transition-colors erp-button"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-white dark:bg-[#18181B] border border-slate-200 dark:border-[#27272A] text-slate-700 dark:text-zinc-300 hover:bg-slate-50 dark:hover:bg-zinc-800 rounded-md shadow-xs transition-colors"
         >
           <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} /> Refresh Status
         </button>
@@ -119,7 +149,7 @@ export const AdminSystemConfig: React.FC = () => {
 
       {msg && (
         <div
-          className={`p-4 rounded-xl border text-xs flex items-center gap-2 ${
+          className={`p-3 rounded-md border text-xs flex items-center gap-2 ${
             msg.type === 'success'
               ? 'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-200 dark:border-emerald-900/50 text-emerald-800 dark:text-emerald-300'
               : 'bg-rose-50 dark:bg-rose-950/40 border-rose-200 dark:border-rose-900/50 text-rose-800 dark:text-rose-300'
@@ -135,35 +165,35 @@ export const AdminSystemConfig: React.FC = () => {
       )}
 
       {/* Grid of config panels */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
         {/* Automated Background Scheduler */}
-        <div className="bg-white dark:bg-[#111111] border border-slate-200 dark:border-[#262626] rounded-2xl p-6 shadow-xs space-y-5">
+        <div className="bg-white dark:bg-[#121215] border border-slate-200 dark:border-[#27272A] rounded-lg p-5 shadow-xs space-y-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-900/50 flex items-center justify-center text-blue-600 dark:text-blue-400">
-                <Clock className="w-5 h-5" />
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-900/50 flex items-center justify-center text-blue-600 dark:text-blue-400">
+                <Clock className="w-4 h-4" />
               </div>
               <div>
-                <h3 className="text-sm font-bold text-slate-900 dark:text-white">Autonomous Attendance Scheduler</h3>
-                <p className="text-xs text-slate-500 dark:text-[#A3A3A3]">Periodic risk scanning &amp; early debarment alerts</p>
+                <h3 className="text-sm font-semibold text-slate-900 dark:text-zinc-100">Automated Attendance Scheduler</h3>
+                <p className="text-xs text-slate-500 dark:text-zinc-400">Periodic risk scanning &amp; early debarment alerts</p>
               </div>
             </div>
             <span
-              className={`px-2.5 py-1 rounded-full text-xs font-semibold ${
+              className={`px-2 py-0.5 rounded text-[11px] font-medium ${
                 schedulerStatus?.enabled
                   ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-900/50'
-                  : 'bg-slate-100 dark:bg-[#1a1a1a] text-slate-600 dark:text-[#A3A3A3] border border-slate-200 dark:border-[#262626]'
+                  : 'bg-slate-100 dark:bg-zinc-800 text-slate-600 dark:text-zinc-400 border border-slate-200 dark:border-[#27272A]'
               }`}
             >
               {schedulerStatus?.enabled ? 'Active Daemon' : 'Paused'}
             </span>
           </div>
 
-          <div className="space-y-4 pt-2">
-            <div className="flex items-center justify-between p-3 bg-slate-50 dark:bg-[#141414] rounded-xl border border-slate-200 dark:border-[#262626]">
+          <div className="space-y-3 pt-1">
+            <div className="flex items-center justify-between p-2.5 bg-slate-50 dark:bg-[#18181B] rounded-md border border-slate-200 dark:border-[#27272A]">
               <div>
-                <div className="text-xs font-semibold text-slate-900 dark:text-white">Automated Monitoring Loop</div>
-                <div className="text-[11px] text-slate-500 dark:text-[#A3A3A3]">Enables unattended background scanning at intervals</div>
+                <div className="text-xs font-medium text-slate-900 dark:text-zinc-100">Automated Evaluation Loop</div>
+                <div className="text-[11px] text-slate-500 dark:text-zinc-400">Enables unattended background scanning at intervals</div>
               </div>
               <label className="relative inline-flex items-center cursor-pointer">
                 <input
@@ -172,18 +202,18 @@ export const AdminSystemConfig: React.FC = () => {
                   onChange={(e) => setSchedulerEnabled(e.target.checked)}
                   className="sr-only peer"
                 />
-                <div className="w-9 h-5 bg-slate-200 dark:bg-[#262626] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-blue-600"></div>
+                <div className="w-8 h-4.5 bg-slate-200 dark:bg-zinc-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-3.5 after:w-3.5 after:transition-all peer-checked:bg-blue-600"></div>
               </label>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-700 dark:text-[#D4D4D4] mb-1.5">
+              <label className="block text-xs font-medium text-slate-700 dark:text-zinc-300 mb-1">
                 Scan Interval (Hours)
               </label>
               <select
                 value={intervalHours}
                 onChange={(e) => setIntervalHours(Number(e.target.value))}
-                className="w-full px-3 py-2 text-xs bg-white dark:bg-[#141414] border border-slate-300 dark:border-[#262626] rounded-lg text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-600 shadow-xs"
+                className="w-full px-2.5 py-1.5 text-xs bg-white dark:bg-[#18181B] border border-slate-200 dark:border-[#27272A] rounded-md text-slate-900 dark:text-zinc-100 focus:outline-none focus:ring-1 focus:ring-blue-600 shadow-xs"
               >
                 <option value={1}>Every 1 Hour (High Frequency)</option>
                 <option value={6}>Every 6 Hours</option>
@@ -194,18 +224,18 @@ export const AdminSystemConfig: React.FC = () => {
               </select>
             </div>
 
-            <div className="grid grid-cols-2 gap-3 text-xs">
-              <div className="p-3 bg-slate-50 dark:bg-[#141414] rounded-xl border border-slate-200 dark:border-[#262626]">
-                <span className="text-slate-500 dark:text-[#A3A3A3] block mb-0.5 font-medium">Last Autonomous Scan</span>
-                <span className="font-semibold text-slate-800 dark:text-[#D4D4D4]">
+            <div className="grid grid-cols-2 gap-2.5 text-xs">
+              <div className="p-2.5 bg-slate-50 dark:bg-[#18181B] rounded-md border border-slate-200 dark:border-[#27272A]">
+                <span className="text-slate-500 dark:text-zinc-400 block mb-0.5 text-[11px]">Last Evaluation Scan</span>
+                <span className="font-medium text-slate-800 dark:text-zinc-200">
                   {schedulerStatus?.last_run_time
                     ? new Date(schedulerStatus.last_run_time).toLocaleString()
                     : 'None recorded'}
                 </span>
               </div>
-              <div className="p-3 bg-slate-50 dark:bg-[#141414] rounded-xl border border-slate-200 dark:border-[#262626]">
-                <span className="text-slate-500 dark:text-[#A3A3A3] block mb-0.5 font-medium">Next Scheduled Scan</span>
-                <span className="font-semibold text-slate-800 dark:text-[#D4D4D4]">
+              <div className="p-2.5 bg-slate-50 dark:bg-[#18181B] rounded-md border border-slate-200 dark:border-[#27272A]">
+                <span className="text-slate-500 dark:text-zinc-400 block mb-0.5 text-[11px]">Next Scheduled Scan</span>
+                <span className="font-medium text-slate-800 dark:text-zinc-200">
                   {schedulerStatus?.next_scheduled_run
                     ? new Date(schedulerStatus.next_scheduled_run).toLocaleString()
                     : 'Awaiting trigger'}
@@ -213,80 +243,85 @@ export const AdminSystemConfig: React.FC = () => {
               </div>
             </div>
 
-            <div className="flex gap-3 pt-2">
+            <div className="flex gap-2 pt-1">
               <button
                 onClick={handleSaveScheduler}
                 disabled={actionLoading}
-                className="flex-1 py-2 px-3 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-lg shadow-xs transition-colors cursor-pointer erp-button"
+                className="flex-1 py-1.5 px-3 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded-md shadow-xs transition-colors cursor-pointer"
               >
                 Save Schedule Settings
               </button>
               <button
                 onClick={handleTriggerRun}
                 disabled={actionLoading}
-                className="inline-flex items-center justify-center gap-1.5 py-2 px-4 bg-slate-900 dark:bg-[#1a1a1a] hover:bg-slate-800 dark:hover:bg-[#262626] text-white text-xs font-semibold rounded-lg shadow-xs transition-colors cursor-pointer border border-transparent dark:border-[#262626] erp-button"
+                className="inline-flex items-center justify-center gap-1.5 py-1.5 px-3 bg-slate-900 dark:bg-zinc-800 hover:bg-slate-800 dark:hover:bg-zinc-700 text-white text-xs font-medium rounded-md shadow-xs transition-colors cursor-pointer border border-transparent dark:border-[#27272A] disabled:opacity-50"
               >
-                <Play className="w-3.5 h-3.5 text-emerald-400" /> Run Now
+                {actionLoading ? (
+                  <RefreshCw className="w-3.5 h-3.5 text-emerald-400 animate-spin" />
+                ) : (
+                  <Play className="w-3.5 h-3.5 text-emerald-400" />
+                )}
+                <span>{actionLoading ? 'Running Evaluation...' : 'Run Evaluation'}</span>
               </button>
             </div>
           </div>
         </div>
 
         {/* Machine Learning & Predictive Risk Engine */}
-        <div className="bg-white dark:bg-[#111111] border border-slate-200 dark:border-[#262626] rounded-2xl p-6 shadow-xs space-y-5">
+        <div className="bg-white dark:bg-[#121215] border border-slate-200 dark:border-[#27272A] rounded-lg p-5 shadow-xs space-y-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-900/50 flex items-center justify-center text-indigo-600 dark:text-indigo-400">
-                <Brain className="w-5 h-5" />
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-900/50 flex items-center justify-center text-indigo-600 dark:text-indigo-400">
+                <Brain className="w-4 h-4" />
               </div>
               <div>
-                <h3 className="text-sm font-bold text-slate-900 dark:text-white">Predictive Risk &amp; Trajectory ML</h3>
-                <p className="text-xs text-slate-500 dark:text-[#A3A3A3]">Scikit-Learn Random Forest Classifier</p>
+                <h3 className="text-sm font-semibold text-slate-900 dark:text-zinc-100">Predictive Risk &amp; Trajectory ML</h3>
+                <p className="text-xs text-slate-500 dark:text-zinc-400">Scikit-Learn Random Forest Classifier</p>
               </div>
             </div>
-            <span className="px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-900/50">
+            <span className="px-2 py-0.5 rounded text-[11px] font-medium bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-900/50">
               Model Verified
             </span>
           </div>
 
-          <div className="space-y-4 pt-2">
-            <div className="p-3 bg-slate-50 dark:bg-[#141414] border border-slate-200 dark:border-[#262626] rounded-xl space-y-2 text-xs">
+          <div className="space-y-3 pt-1">
+            <div className="p-2.5 bg-slate-50 dark:bg-[#18181B] border border-slate-200 dark:border-[#27272A] rounded-md space-y-1.5 text-xs">
               <div className="flex justify-between">
-                <span className="text-slate-500 dark:text-[#A3A3A3] font-medium">Model Architecture:</span>
-                <span className="font-semibold text-slate-800 dark:text-[#D4D4D4]">Random Forest Classifier (100 estimators)</span>
+                <span className="text-slate-500 dark:text-zinc-400">Model Architecture:</span>
+                <span className="font-medium text-slate-800 dark:text-zinc-200">Random Forest Classifier (100 estimators)</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-500 dark:text-[#A3A3A3] font-medium">Deterministic Partition:</span>
-                <span className="font-semibold text-emerald-700 dark:text-emerald-400">Official Statutory Math Guaranteed</span>
+                <span className="text-slate-500 dark:text-zinc-400">Deterministic Partition:</span>
+                <span className="font-medium text-emerald-700 dark:text-emerald-400">Official Statutory Math Guaranteed</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-500 dark:text-[#A3A3A3] font-medium">Persistence Target:</span>
-                <span className="font-mono text-slate-700 dark:text-[#A3A3A3]">backend/app/ml/model_store/</span>
+                <span className="text-slate-500 dark:text-zinc-400">Persistence Target:</span>
+                <span className="font-mono text-slate-700 dark:text-zinc-400">backend/app/ml/model_store/</span>
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-3 text-xs">
-              <div className="p-3 bg-white dark:bg-[#141414] border border-slate-200 dark:border-[#262626] rounded-xl text-center">
-                <span className="text-slate-500 dark:text-[#A3A3A3] block mb-1">Empirical Accuracy</span>
-                <span className="text-lg font-bold text-slate-900 dark:text-white">90.9%</span>
+            <div className="grid grid-cols-2 gap-2.5 text-xs">
+              <div className="p-2.5 bg-white dark:bg-[#18181B] border border-slate-200 dark:border-[#27272A] rounded-md text-center">
+                <span className="text-slate-500 dark:text-zinc-400 block mb-0.5 text-[11px]">Empirical Accuracy</span>
+                <span className="text-base font-bold text-slate-900 dark:text-zinc-100">90.9%</span>
               </div>
-              <div className="p-3 bg-white dark:bg-[#141414] border border-slate-200 dark:border-[#262626] rounded-xl text-center">
-                <span className="text-slate-500 dark:text-[#A3A3A3] block mb-1">Macro F1 Score</span>
-                <span className="text-lg font-bold text-emerald-600 dark:text-emerald-400">90.4%</span>
+              <div className="p-2.5 bg-white dark:bg-[#18181B] border border-slate-200 dark:border-[#27272A] rounded-md text-center">
+                <span className="text-slate-500 dark:text-zinc-400 block mb-0.5 text-[11px]">Macro F1 Score</span>
+                <span className="text-base font-bold text-emerald-600 dark:text-emerald-400">90.4%</span>
               </div>
             </div>
 
-            <div className="flex gap-3 pt-2">
-              <button
-                onClick={() => setIsMLModalOpen(true)}
-                className="flex-1 py-2 px-3 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-lg shadow-xs transition-colors cursor-pointer erp-button"
+            <div className="flex gap-2 pt-1">
+              <a
+                href="/admin/telemetry"
+                className="flex-1 py-1.5 px-3 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded-md shadow-xs transition-colors cursor-pointer text-center inline-flex items-center justify-center"
               >
-                Inspect Telemetry &amp; Confusion Matrix
-              </button>
+                Inspect Telemetry &amp; Matrix
+              </a>
               <button
                 onClick={handleRetrainML}
                 disabled={retrainLoading}
-                className="inline-flex items-center justify-center gap-1.5 py-2 px-3 bg-white dark:bg-[#141414] border border-slate-300 dark:border-[#262626] text-slate-700 dark:text-[#D4D4D4] hover:bg-slate-50 dark:hover:bg-[#1a1a1a] text-xs font-semibold rounded-lg shadow-xs transition-colors cursor-pointer erp-button"
+                className="inline-flex items-center justify-center gap-1 py-1.5 px-3 bg-white dark:bg-[#18181B] border border-slate-200 dark:border-[#27272A] text-slate-700 dark:text-zinc-300 hover:bg-slate-50 dark:hover:bg-zinc-800 text-xs font-medium rounded-md shadow-xs transition-colors cursor-pointer"
               >
                 <RefreshCw className={`w-3.5 h-3.5 ${retrainLoading ? 'animate-spin' : ''}`} /> Retrain Model
               </button>
@@ -294,20 +329,20 @@ export const AdminSystemConfig: React.FC = () => {
           </div>
         </div>
 
-        {/* LLM Provider & AI Assistant Configuration */}
-        <div className="bg-white dark:bg-[#111111] border border-slate-200 dark:border-[#262626] rounded-2xl p-6 shadow-xs space-y-4">
+        {/* LLM Provider Configuration */}
+        <div className="bg-white dark:bg-[#121215] border border-slate-200 dark:border-[#27272A] rounded-lg p-5 shadow-xs space-y-3">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900/50 flex items-center justify-center text-amber-600 dark:text-amber-400">
-                <Cpu className="w-5 h-5" />
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900/50 flex items-center justify-center text-amber-600 dark:text-amber-400">
+                <Cpu className="w-4 h-4" />
               </div>
               <div>
-                <h3 className="text-sm font-bold text-slate-900 dark:text-white">Language Model &amp; Conversational AI</h3>
-                <p className="text-xs text-slate-500 dark:text-[#A3A3A3]">Natural language explanations &amp; student advice</p>
+                <h3 className="text-sm font-semibold text-slate-900 dark:text-zinc-100">Language Model &amp; Attendance Assistant</h3>
+                <p className="text-xs text-slate-500 dark:text-zinc-400">Natural language explanations &amp; academic advice</p>
               </div>
             </div>
             <span
-              className={`px-2.5 py-1 rounded-full text-xs font-semibold ${
+              className={`px-2 py-0.5 rounded text-[11px] font-medium ${
                 engineStatus?.is_live
                   ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-900/50'
                   : engineStatus?.status === 'CONFIGURATION_ERROR'
@@ -319,50 +354,50 @@ export const AdminSystemConfig: React.FC = () => {
             </span>
           </div>
 
-          <div className="p-3 bg-slate-50 dark:bg-[#141414] rounded-xl border border-slate-200 dark:border-[#262626] space-y-2 text-xs">
+          <div className="p-2.5 bg-slate-50 dark:bg-[#18181B] rounded-md border border-slate-200 dark:border-[#27272A] space-y-1.5 text-xs">
             <div className="flex justify-between">
-              <span className="text-slate-500 dark:text-[#A3A3A3] font-medium">Active Provider:</span>
-              <span className="font-semibold text-slate-800 dark:text-[#D4D4D4] uppercase">{engineStatus?.provider?.replace('_', ' ') || 'OFFLINE ENGINE'}</span>
+              <span className="text-slate-500 dark:text-zinc-400">Active Provider:</span>
+              <span className="font-medium text-slate-800 dark:text-zinc-200 uppercase">{engineStatus?.provider?.replace('_', ' ') || 'OFFLINE ENGINE'}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-slate-500 dark:text-[#A3A3A3] font-medium">Model Designation:</span>
-              <span className="font-mono text-slate-700 dark:text-[#A3A3A3]">{engineStatus?.model || 'deterministic-academic-engine'}</span>
+              <span className="text-slate-500 dark:text-zinc-400">Model Designation:</span>
+              <span className="font-mono text-slate-700 dark:text-zinc-300">{engineStatus?.model || 'deterministic-academic-engine'}</span>
             </div>
-            <div className="text-[11px] text-slate-500 dark:text-[#A3A3A3] pt-1 border-t border-slate-200 dark:border-[#262626]">
+            <div className="text-[11px] text-slate-500 dark:text-zinc-400 pt-1 border-t border-slate-200 dark:border-[#27272A]">
               {engineStatus?.description}
             </div>
           </div>
         </div>
 
         {/* Multi-Channel Notification Infrastructure */}
-        <div className="bg-white dark:bg-[#111111] border border-slate-200 dark:border-[#262626] rounded-2xl p-6 shadow-xs space-y-4">
+        <div className="bg-white dark:bg-[#121215] border border-slate-200 dark:border-[#27272A] rounded-lg p-5 shadow-xs space-y-3">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/50 flex items-center justify-center text-rose-600 dark:text-rose-400">
-                <Mail className="w-5 h-5" />
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/50 flex items-center justify-center text-rose-600 dark:text-rose-400">
+                <Mail className="w-4 h-4" />
               </div>
               <div>
-                <h3 className="text-sm font-bold text-slate-900 dark:text-white">Notification Dispatch Gateway</h3>
-                <p className="text-xs text-slate-500 dark:text-[#A3A3A3]">In-App &amp; SMTP Institutional Email</p>
+                <h3 className="text-sm font-semibold text-slate-900 dark:text-zinc-100">Notification Dispatch Gateway</h3>
+                <p className="text-xs text-slate-500 dark:text-zinc-400">In-App &amp; SMTP Institutional Email</p>
               </div>
             </div>
-            <span className="px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-900/50">
+            <span className="px-2 py-0.5 rounded text-[11px] font-medium bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-900/50">
               Operational
             </span>
           </div>
 
-          <div className="p-3 bg-slate-50 dark:bg-[#141414] rounded-xl border border-slate-200 dark:border-[#262626] space-y-2 text-xs">
+          <div className="p-2.5 bg-slate-50 dark:bg-[#18181B] rounded-md border border-slate-200 dark:border-[#27272A] space-y-1.5 text-xs">
             <div className="flex justify-between">
-              <span className="text-slate-500 dark:text-[#A3A3A3] font-medium">Primary Channel:</span>
-              <span className="font-semibold text-slate-800 dark:text-[#D4D4D4]">In-App Bell Alerts + Email</span>
+              <span className="text-slate-500 dark:text-zinc-400">Primary Channel:</span>
+              <span className="font-medium text-slate-800 dark:text-zinc-200">In-App Alerts + Email</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-slate-500 dark:text-[#A3A3A3] font-medium">Email Dispatch Mode:</span>
-              <span className="font-semibold text-slate-800 dark:text-[#D4D4D4]">HTML Templates + Console Logger (Simulated)</span>
+              <span className="text-slate-500 dark:text-zinc-400">Email Dispatch Mode:</span>
+              <span className="font-medium text-slate-800 dark:text-zinc-200">HTML Templates + Console Logger (Simulated)</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-slate-500 dark:text-[#A3A3A3] font-medium">Delivery Tracking:</span>
-              <span className="font-semibold text-emerald-700 dark:text-emerald-400">QUEUED / SENT / FAILED / READ</span>
+              <span className="text-slate-500 dark:text-zinc-400">Delivery Tracking:</span>
+              <span className="font-medium text-emerald-700 dark:text-emerald-400">QUEUED / SENT / FAILED / READ</span>
             </div>
           </div>
         </div>

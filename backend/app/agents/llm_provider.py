@@ -228,6 +228,9 @@ class LLMProvider:
                                 break
                         except Exception as g_err:
                             logger.info(f"Gemini model {gemini_model_name} failed: {g_err}")
+                            err_str = str(g_err).upper()
+                            if any(k in err_str for k in ["API_KEY_INVALID", "UNAUTHENTICATED", "PERMISSION_DENIED", "400", "401", "403", "INVALID_ARGUMENT"]):
+                                break
                             continue
                     if text and "{" in text and "}" in text:
                         clean_json = text[text.find("{"):text.rfind("}")+1]

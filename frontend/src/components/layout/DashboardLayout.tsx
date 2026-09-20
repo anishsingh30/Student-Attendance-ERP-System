@@ -35,22 +35,24 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, curr
   }, [currentPath]);
 
   return (
-    <div className="min-h-screen bg-[#F7F8FA] dark:bg-black text-[#111827] dark:text-white flex flex-col antialiased selection:bg-blue-100 selection:text-blue-900 transition-colors duration-200">
-      <Navbar 
-        onMenuToggle={() => setIsMobileOpen(!isMobileOpen)} 
-        isMobileOpen={isMobileOpen}
-        isSidebarCollapsed={isCollapsed}
-        onToggleSidebar={toggleCollapse}
+    <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#09090B] text-slate-900 dark:text-zinc-100 antialiased selection:bg-blue-100 selection:text-blue-900 transition-colors duration-150">
+      <Sidebar 
+        currentPath={currentPath} 
+        isCollapsed={isCollapsed}
+        onToggleCollapse={toggleCollapse}
+        isMobileOpen={isMobileOpen} 
+        onCloseMobile={() => setIsMobileOpen(false)} 
       />
-      <div className="flex flex-1 overflow-hidden relative">
-        <Sidebar 
-          currentPath={currentPath} 
-          isCollapsed={isCollapsed}
-          onToggleCollapse={toggleCollapse}
-          isMobileOpen={isMobileOpen} 
-          onCloseMobile={() => setIsMobileOpen(false)} 
+      
+      <div className={`flex flex-col min-h-screen transition-all duration-200 ${
+        isCollapsed ? 'md:pl-16' : 'md:pl-64'
+      }`}>
+        <Navbar 
+          onMenuToggle={() => setIsMobileOpen(!isMobileOpen)} 
+          isSidebarCollapsed={isCollapsed}
+          onToggleSidebar={toggleCollapse}
         />
-        <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full transition-all duration-200">
+        <main className="flex-1 p-4 sm:p-6 max-w-7xl w-full mx-auto">
           {children}
         </main>
       </div>
