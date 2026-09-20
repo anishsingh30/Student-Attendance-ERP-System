@@ -22,11 +22,11 @@ logger = logging.getLogger("attendance.main")
 # Application lifespan: manage scheduler background tasks & database initialization
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    if settings.ENVIRONMENT == "development":
-        # Development convenience: ensure SQLite tables exist for local testing
+    # Ensure tables (including model_versions) exist on startup
+    try:
         Base.metadata.create_all(bind=engine)
-    else:
-        logger.info("Production mode: schema management governed via Alembic migrations.")
+    except Exception as e:
+        logger.warning(f"Schema verification note: {e}")
 
     if settings.SCHEDULER_IN_PROCESS and not os.getenv("VERCEL"):
         attendance_scheduler.start()

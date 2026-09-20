@@ -9,6 +9,7 @@ from app.models.notification import Notification
 from app.models.agent import AgentRun, AgentLog
 from app.models.audit import AuditLog
 from app.models.system_setting import SystemSetting
+from app.models.model_version import ModelVersion
 
 __all__ = [
     "User",
@@ -25,5 +26,6 @@ __all__ = [
     "AgentRun",
     "AgentLog",
     "AuditLog",
-    "SystemSetting"
+    "SystemSetting",
+    "ModelVersion"
 ]

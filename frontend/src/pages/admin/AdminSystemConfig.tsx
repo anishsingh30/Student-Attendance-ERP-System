@@ -296,7 +296,7 @@ export const AdminSystemConfig: React.FC = () => {
               </div>
               <div className="flex justify-between">
                 <span className="text-slate-500 dark:text-zinc-400">Persistence Target:</span>
-                <span className="font-mono text-slate-700 dark:text-zinc-400">backend/app/ml/model_store/</span>
+                <span className="font-mono text-slate-700 dark:text-zinc-300">PostgreSQL (Neon BYTEA)</span>
               </div>
             </div>
 

@@ -86,8 +86,8 @@ def test_ml_retrain_and_reload_persistence():
         metrics = train_and_evaluate_model(db)
         assert metrics["status"] if "status" in metrics else True
         
-        # Test reloading the persisted weights into the singleton
-        reload_success = ml_predictor.reload()
+        # Test reloading the persisted weights into the singleton from database
+        reload_success = ml_predictor.reload(db)
         assert reload_success is True
 
         student = db.query(Student).first()
@@ -95,7 +95,7 @@ def test_ml_retrain_and_reload_persistence():
         if student and subject:
             pred = ml_predictor.predict_student_subject(db, student.id, subject.id)
             assert pred["is_ml_active"] is True
-            assert pred["model_version"] == "v2.1.0-rf-leakage-free"
+            assert pred["model_version"].startswith("v2.2.0-rf-leakage-free")
             assert "predicted_risk_tier" in pred
     finally:
         db.close()

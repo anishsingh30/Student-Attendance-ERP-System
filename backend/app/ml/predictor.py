@@ -1,4 +1,5 @@
 import os
+import io
 import json
 import logging
 from typing import Dict, Any, Optional, List
@@ -7,83 +8,101 @@ import joblib
 from sqlalchemy.orm import Session
 from app.ml.dataset import extract_student_subject_features, FEATURE_NAMES, RISK_TIERS
 from app.ml.train import MODEL_PATH, METRICS_PATH, train_and_evaluate_model
+from app.services.model_storage_service import model_storage_service
 
 logger = logging.getLogger("attendance.ml")
 
 class MLAttendancePredictor:
     """
     Inference service for real Machine Learning Attendance Risk Prediction.
-    Loads persisted weights, provides explainable factor breakdowns, and generates
-    calibrated risk forecasts with explicit transparent fallback when uninitialized.
+    Loads persisted model weights from PostgreSQL BYTEA storage into memory,
+    caches the estimator for sub-millisecond inference, and supports zero-downtime hot-reload.
     """
 
     def __init__(self):
         self._model = None
-        self._metrics = None
+        self._model_version = None
 
     def get_metrics(self, db: Optional[Session] = None) -> Dict[str, Any]:
-        """Loads and returns verified model evaluation metrics, baseline comparison and confusion matrix."""
-        if not os.path.exists(METRICS_PATH):
-            if db is not None:
-                try:
-                    return train_and_evaluate_model(db)
-                except Exception as e:
-                    logger.warning(f"Could not auto-train model for metrics: {e}")
-            return {
-                "model_version": "v2.1.0-uninitialized",
-                "algorithm": "RandomForestClassifier",
-                "status": "NOT_TRAINED",
-                "metrics": {"accuracy": 0.0, "precision": 0.0, "recall": 0.0, "f1_score": 0.0},
-                "baseline_comparison": {"baseline_accuracy": 0.0, "baseline_precision": 0.0, "baseline_recall": 0.0, "baseline_f1_score": 0.0},
-                "confusion_matrix": [],
-                "feature_importances": {}
-            }
+        """Loads and returns verified model evaluation metrics from persistent database storage."""
+        if db is not None:
+            try:
+                active_meta = model_storage_service.get_active_model_metadata(db)
+                if active_meta:
+                    return active_meta
+                # Attempt initial training to populate active model in database
+                res = train_and_evaluate_model(db)
+                active_meta = model_storage_service.get_active_model_metadata(db)
+                if active_meta:
+                    return active_meta
+                return res
+            except Exception as e:
+                logger.warning(f"Could not load active model metrics from database: {e}")
 
-        try:
-            with open(METRICS_PATH, "r", encoding="utf-8") as f:
-                return json.load(f)
-        except Exception as e:
-            logger.error(f"Error reading model metrics: {e}")
-            return {
-                "model_version": "v2.1.0-error",
-                "algorithm": "RandomForestClassifier",
-                "status": "ERROR",
-                "metrics": {"accuracy": 0.0, "precision": 0.0, "recall": 0.0, "f1_score": 0.0},
-                "baseline_comparison": {"baseline_accuracy": 0.0, "baseline_precision": 0.0, "baseline_recall": 0.0, "baseline_f1_score": 0.0},
-                "confusion_matrix": [],
-                "feature_importances": {}
-            }
+        # Fallback to static development metrics if database is uninitialized
+        if os.path.exists(METRICS_PATH):
+            try:
+                with open(METRICS_PATH, "r", encoding="utf-8") as f:
+                    return json.load(f)
+            except Exception as e:
+                logger.error(f"Error reading fallback model metrics: {e}")
+
+        return {
+            "model_version": "v2.2.0-uninitialized",
+            "algorithm": "RandomForestClassifier",
+            "status": "NOT_TRAINED",
+            "metrics": {"accuracy": 0.0, "precision": 0.0, "recall": 0.0, "f1_score": 0.0},
+            "baseline_comparison": {"baseline_accuracy": 0.0, "baseline_precision": 0.0, "baseline_recall": 0.0, "baseline_f1_score": 0.0},
+            "confusion_matrix": [],
+            "feature_importances": {}
+        }
 
     def _ensure_model(self, db: Session) -> bool:
         if self._model is not None:
             return True
-        if not os.path.exists(MODEL_PATH):
-            try:
-                train_and_evaluate_model(db)
-            except Exception as e:
-                logger.warning(f"Model auto-training deferred: {e}")
-                return False
-        try:
-            self._model = joblib.load(MODEL_PATH)
-            return True
-        except Exception as e:
-            logger.error(f"Failed to load ML model artifact: {e}")
-            return False
 
-    def reload(self) -> bool:
-        """Forces immediate reload of the persisted model artifact from disk into memory."""
+        # 1. Primary: Load active model bytes from PostgreSQL BYTEA storage
         try:
-            if os.path.exists(MODEL_PATH):
-                self._model = joblib.load(MODEL_PATH)
-                logger.info(f"Reloaded persisted ML model from {MODEL_PATH}")
+            raw_bytes = model_storage_service.load_active_model(db)
+            if raw_bytes and len(raw_bytes) > 0:
+                self._model = joblib.load(io.BytesIO(raw_bytes))
+                rec = model_storage_service.get_active_model_record(db)
+                self._model_version = rec.model_version if rec else "v2.2.0-rf"
+                logger.info(f"Loaded active ML model {self._model_version} from database BYTEA ({len(raw_bytes)} bytes)")
                 return True
-            else:
-                self._model = None
-                return False
         except Exception as e:
-            logger.error(f"Failed to reload persisted model: {e}")
-            self._model = None
-            return False
+            logger.warning(f"Failed loading model from database storage: {e}")
+
+        # 2. If database has no active model, train and persist on-demand
+        try:
+            train_and_evaluate_model(db)
+            raw_bytes = model_storage_service.load_active_model(db)
+            if raw_bytes and len(raw_bytes) > 0:
+                self._model = joblib.load(io.BytesIO(raw_bytes))
+                rec = model_storage_service.get_active_model_record(db)
+                self._model_version = rec.model_version if rec else "v2.2.0-rf"
+                return True
+        except Exception as e:
+            logger.warning(f"On-demand model training deferred: {e}")
+
+        # 3. Static development fallback if present
+        if os.path.exists(MODEL_PATH):
+            try:
+                self._model = joblib.load(MODEL_PATH)
+                self._model_version = "v2.1.0-dev-static"
+                return True
+            except Exception as e:
+                logger.error(f"Failed to load fallback static ML model artifact: {e}")
+
+        return False
+
+    def reload(self, db: Optional[Session] = None) -> bool:
+        """Forces immediate reload of the active model artifact from database into memory."""
+        self._model = None
+        self._model_version = None
+        if db is not None:
+            return self._ensure_model(db)
+        return True
 
     def explain_factors(self, features: List[float]) -> List[Dict[str, Any]]:
         """
@@ -205,7 +224,7 @@ class MLAttendancePredictor:
         )
 
         return {
-            "model_version": "v2.1.0-rf-leakage-free",
+            "model_version": self._model_version or "v2.2.0-rf-leakage-free",
             "algorithm": "RandomForestClassifier",
             "is_ml_active": True,
             "predicted_risk_tier": RISK_TIERS[pred_label_idx] if pred_label_idx < len(RISK_TIERS) else f"TIER_{pred_label_idx}",

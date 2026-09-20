@@ -1,8 +1,9 @@
 import os
+import io
 import json
 import logging
 from datetime import datetime, timezone
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 import numpy as np
 import joblib
 from sklearn.ensemble import RandomForestClassifier
@@ -10,6 +11,7 @@ from sklearn.model_selection import train_test_split, GroupShuffleSplit
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, confusion_matrix
 from sqlalchemy.orm import Session
 from app.ml.dataset import build_raw_dataset_from_db, augment_training_data_only, FEATURE_NAMES, RISK_TIERS
+from app.services.model_storage_service import model_storage_service
 
 logger = logging.getLogger("attendance.ml")
 
@@ -46,9 +48,11 @@ def _evaluate_deterministic_baseline(X_test: np.ndarray, y_test: np.ndarray) -> 
         "baseline_f1_score": round(float(f1_score(y_test, y_base_pred, average="weighted", zero_division=0)), 4),
     }
 
-def train_and_evaluate_model(db: Session) -> Dict[str, Any]:
+def train_and_evaluate_model(db: Session, created_by_user_id: Optional[int] = None) -> Dict[str, Any]:
     """
     Trains a Random Forest classifier on university attendance records without data leakage.
+    Serializes model in-memory and persists model artifact and evaluation metadata into
+    PostgreSQL BYTEA via ModelStorageService, preventing read-only filesystem errors on Vercel.
     
     Scientific Rigor & Leakage Prevention:
     1. Raw empirical data (X_raw, y_raw) is extracted directly from student attendance records.
@@ -57,7 +61,6 @@ def train_and_evaluate_model(db: Session) -> Dict[str, Any]:
     4. Evaluates both a Deterministic Threshold Baseline and the Random Forest model on the same test data.
     5. Stores full model provenance, feature schema, hyperparameters, and dynamic confusion matrices.
     """
-    os.makedirs(MODEL_DIR, exist_ok=True)
     samples, X_raw, y_raw, student_ids = build_raw_dataset_from_db(db)
 
     if len(X_raw) < 10:
@@ -120,22 +123,31 @@ def train_and_evaluate_model(db: Session) -> Dict[str, Any]:
     # Class distribution
     class_dist = {RISK_TIERS[i]: int(count) for i, count in zip(*np.unique(y_raw, return_counts=True))}
 
-    # Persist model
-    joblib.dump(clf, MODEL_PATH)
+    # 1. Serialize model entirely in-memory (zero writes to read-only production filesystem)
+    buffer = io.BytesIO()
+    joblib.dump(clf, buffer)
+    model_bytes = buffer.getvalue()
+
+    timestamp_str = datetime.now(timezone.utc).strftime("%Y%m%d%H%M%S")
+    model_version = f"v2.2.0-rf-leakage-free-{timestamp_str}"
 
     metrics_payload = {
-        "model_version": "v2.1.0-rf-leakage-free",
+        "model_version": model_version,
         "algorithm": "RandomForestClassifier",
         "hyperparameters": {k: str(v) if v is not None else None for k, v in hyperparams.items()},
         "feature_schema": FEATURE_NAMES,
         "target_definition": "Attendance Trajectory Shortage Risk Tier (0=SAFE, 1=WARNING, 2=SHORTAGE, 3=CRITICAL)",
         "split_methodology": split_method,
-        "total_empirical_samples": len(X_raw),
-        "raw_train_samples": len(X_train_raw),
-        "augmented_train_samples": len(X_train),
-        "test_samples": len(X_test),
-        "class_distribution": class_dist,
         "leakage_prevention_verified": True,
+        "dataset_metadata": {
+            "total_empirical_samples": len(X_raw),
+            "raw_train_samples": len(X_train_raw),
+            "augmented_train_samples": len(X_train),
+            "test_samples": len(X_test),
+            "class_distribution": class_dist,
+            "leakage_prevention_verified": True,
+        },
+        "trained_at": datetime.now(timezone.utc).isoformat(),
         "evaluated_at": datetime.now(timezone.utc).isoformat(),
         "metrics": {
             "accuracy": round(acc, 4),
@@ -149,8 +161,21 @@ def train_and_evaluate_model(db: Session) -> Dict[str, Any]:
         "feature_importances": importances
     }
 
-    with open(METRICS_PATH, "w", encoding="utf-8") as f:
-        json.dump(metrics_payload, f, indent=2)
+    # 2. Transactional model version and artifact persistence in PostgreSQL BYTEA
+    try:
+        model_storage_service.save_model(
+            model_version=model_version,
+            model_bytes=model_bytes,
+            metadata=metrics_payload,
+            db=db,
+            created_by_user_id=created_by_user_id
+        )
+        # 3. Atomically activate newly persisted model
+        model_storage_service.activate_model(db, model_version)
+    except Exception as persist_err:
+        db.rollback()
+        logger.error(f"Failed to persist retrained model to database: {persist_err}")
+        raise
 
-    logger.info(f"Trained leakage-free ML model: {metrics_payload['metrics']} vs Baseline: {baseline_eval}")
+    logger.info(f"Trained and persisted leakage-free ML model {model_version}: {metrics_payload['metrics']} vs Baseline: {baseline_eval}")
     return metrics_payload

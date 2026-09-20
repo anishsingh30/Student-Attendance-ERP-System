@@ -77,8 +77,8 @@ def retrain_ml_model(
     and recalculates test metrics and confusion matrix.
     """
     try:
-        metrics = train_and_evaluate_model(db)
-        ml_predictor.reload()
+        metrics = train_and_evaluate_model(db, created_by_user_id=current_user.id)
+        ml_predictor.reload(db)
         return {"status": "SUCCESS", "message": "ML model successfully retrained and evaluated.", "results": metrics}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Model retraining failed: {str(e)}")
