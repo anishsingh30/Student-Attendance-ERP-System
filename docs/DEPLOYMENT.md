@@ -34,14 +34,6 @@ npm run dev -- --host 127.0.0.1 --port 5173
 ```
 - Portal URL: `http://127.0.0.1:5173`
 
-### 2.3 Gradio Demo Setup (Optional)
-```bash
-cd gradio
-pip install -r requirements.txt
-python app.py
-```
-- Gradio Demo URL: `http://127.0.0.1:7860`
-
 ---
 
 ## 3. Docker Containerized Deployment
@@ -50,7 +42,6 @@ The repository includes complete multi-service orchestration via `docker-compose
 - `frontend`: Nginx serving production Vite bundle (`http://localhost:3000` or `5173`)
 - `backend`: FastAPI Uvicorn ASGI server (`http://localhost:8000`)
 - `database`: PostgreSQL 15 (`localhost:5432`)
-- `gradio`: Dedicated AI/Agent demonstration container (`http://localhost:7860`)
 
 ### 3.1 Launching with Docker Compose
 ```bash

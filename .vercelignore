@@ -2,9 +2,6 @@
 # AttendanceAI Vercel Deployment Ignore
 # ==========================================
 
-# Gradio local interface (run locally via run_gradio.bat)
-gradio/**
-
 # Backend unit and integration tests
 backend/tests/**
 
@@ -41,7 +38,6 @@ gradio/Dockerfile
 .git/**
 .github/**
 
-# Documentation files not required by runtime
-DEPLOYMENT.md
-DEPLOYMENT_ENV_MAP.md
-understand.md
+# Documentation directory not required by runtime
+docs/**
+

@@ -13,7 +13,6 @@ The platform is designed around a **strict separation of responsibilities**:
 ```mermaid
 graph TD
     UI[React + TypeScript ERP Frontend] -->|REST + JWT| API[FastAPI Application Gateway]
-    GRADIO[Gradio AI Demonstration Portal] -->|Direct Backend Import| SERVICES[Core Services Layer]
     
     API --> AUTH[Authentication & RBAC Middleware]
     AUTH --> SERVICES

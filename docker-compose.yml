@@ -49,18 +49,6 @@ services:
     ports:
       - "3000:80"
 
-  gradio:
-    build:
-      context: .
-      dockerfile: gradio/Dockerfile
-    container_name: attendance_gradio
-    restart: unless-stopped
-    depends_on:
-      - backend
-    environment:
-      DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres:5432/${POSTGRES_DB:-attendance_ai}
-    ports:
-      - "7860:7860"
-
 volumes:
   pgdata:
+
