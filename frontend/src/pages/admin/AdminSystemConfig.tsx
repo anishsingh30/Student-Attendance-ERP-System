@@ -15,12 +15,13 @@ import {
   Server
 } from 'lucide-react';
 import { api } from '../../api/client';
-import { SchedulerStatus, EngineStatus } from '../../types';
+import { SchedulerStatus, EngineStatus, MLMetrics } from '../../types';
 import { MLTelemetryModal } from '../../components/ml/MLTelemetryModal';
 
 export const AdminSystemConfig: React.FC = () => {
   const [schedulerStatus, setSchedulerStatus] = useState<SchedulerStatus | null>(null);
   const [engineStatus, setEngineStatus] = useState<EngineStatus | null>(null);
+  const [mlMetrics, setMlMetrics] = useState<MLMetrics | null>(null);
   const [intervalHours, setIntervalHours] = useState<number>(24);
   const [schedulerEnabled, setSchedulerEnabled] = useState<boolean>(true);
   const [loading, setLoading] = useState(false);
@@ -32,14 +33,16 @@ export const AdminSystemConfig: React.FC = () => {
   const loadSettings = async () => {
     setLoading(true);
     try {
-      const [sched, eng] = await Promise.all([
+      const [sched, eng, mlData] = await Promise.all([
         api.getSchedulerStatus(),
-        api.getEngineStatus()
+        api.getEngineStatus(),
+        api.getMLMetrics().catch(() => null)
       ]);
       setSchedulerStatus(sched);
       setSchedulerEnabled(sched.enabled);
       setIntervalHours(sched.interval_hours);
       setEngineStatus(eng);
+      if (mlData) setMlMetrics(mlData);
     } catch (err: any) {
       setMsg({ type: 'error', text: err.message || 'Failed to load system configuration.' });
     } finally {
@@ -120,10 +123,18 @@ export const AdminSystemConfig: React.FC = () => {
       const evalMetrics = res?.results?.metrics || res?.metrics || res?.evaluation_metrics;
       const accText = evalMetrics?.accuracy !== undefined ? ` Accuracy: ${(evalMetrics.accuracy * 100).toFixed(1)}%` : '';
       const f1Text = evalMetrics?.f1_score !== undefined ? `, F1: ${(evalMetrics.f1_score * 100).toFixed(1)}%` : '';
+      if (evalMetrics) {
+        setMlMetrics((prev: any) => ({
+          ...(prev || {}),
+          metrics: evalMetrics,
+          evaluation_metrics: evalMetrics
+        }));
+      }
       setMsg({
         type: 'success',
         text: res?.message ? `${res.message}${accText}${f1Text}` : `ML Model retrained successfully!${accText}${f1Text}`
       });
+      await loadSettings();
     } catch (err: any) {
       setMsg({ type: 'error', text: err.message || 'Model training failed.' });
     } finally {
@@ -306,11 +317,23 @@ export const AdminSystemConfig: React.FC = () => {
             <div className="grid grid-cols-2 gap-2.5 text-xs">
               <div className="p-2.5 bg-white dark:bg-[#18181B] border border-slate-200 dark:border-[#27272A] rounded-md text-center">
                 <span className="text-slate-500 dark:text-zinc-400 block mb-0.5 text-[11px]">Empirical Accuracy</span>
-                <span className="text-base font-bold text-slate-900 dark:text-zinc-100">90.9%</span>
+                <span className="text-base font-bold text-slate-900 dark:text-zinc-100">
+                  {mlMetrics?.metrics?.accuracy !== undefined
+                    ? `${(mlMetrics.metrics.accuracy * 100).toFixed(1)}%`
+                    : mlMetrics?.evaluation_metrics?.accuracy !== undefined
+                    ? `${(mlMetrics.evaluation_metrics.accuracy * 100).toFixed(1)}%`
+                    : loading ? '...' : '—'}
+                </span>
               </div>
               <div className="p-2.5 bg-white dark:bg-[#18181B] border border-slate-200 dark:border-[#27272A] rounded-md text-center">
                 <span className="text-slate-500 dark:text-zinc-400 block mb-0.5 text-[11px]">Macro F1 Score</span>
-                <span className="text-base font-bold text-emerald-600 dark:text-emerald-400">90.4%</span>
+                <span className="text-base font-bold text-emerald-600 dark:text-emerald-400">
+                  {mlMetrics?.metrics?.f1_score !== undefined
+                    ? `${(mlMetrics.metrics.f1_score * 100).toFixed(1)}%`
+                    : mlMetrics?.evaluation_metrics?.f1_score !== undefined
+                    ? `${(mlMetrics.evaluation_metrics.f1_score * 100).toFixed(1)}%`
+                    : loading ? '...' : '—'}
+                </span>
               </div>
             </div>
 
