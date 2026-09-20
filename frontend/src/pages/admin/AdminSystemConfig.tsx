@@ -117,9 +117,12 @@ export const AdminSystemConfig: React.FC = () => {
     setMsg(null);
     try {
       const res = await api.trainMLModel();
+      const evalMetrics = res?.results?.metrics || res?.metrics || res?.evaluation_metrics;
+      const accText = evalMetrics?.accuracy !== undefined ? ` Accuracy: ${(evalMetrics.accuracy * 100).toFixed(1)}%` : '';
+      const f1Text = evalMetrics?.f1_score !== undefined ? `, F1: ${(evalMetrics.f1_score * 100).toFixed(1)}%` : '';
       setMsg({
         type: 'success',
-        text: `ML Model retrained! Accuracy: ${(res.evaluation_metrics.accuracy * 100).toFixed(1)}%, F1: ${(res.evaluation_metrics.f1_score * 100).toFixed(1)}% on real database split.`
+        text: res?.message ? `${res.message}${accText}${f1Text}` : `ML Model retrained successfully!${accText}${f1Text}`
       });
     } catch (err: any) {
       setMsg({ type: 'error', text: err.message || 'Model training failed.' });
